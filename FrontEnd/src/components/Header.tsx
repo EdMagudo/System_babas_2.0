@@ -6,7 +6,7 @@ const Header = () => {
 
   const navigationItems = [
     { name: 'Home', path: '/' },
-    { name: 'Join as Nanny', path: '/register-nannys' },
+    { name: 'Join as Nanny', path: '/register-nanny' },
     { name: 'Join as Client', path: '/register-client' },
     { name: 'Find a Nanny', path: '/search' },
     { name: 'Contact Us', path: '/contact-us' },

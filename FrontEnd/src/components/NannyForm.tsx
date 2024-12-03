@@ -1,261 +1,342 @@
 import React, { useState } from 'react';
-import { User, Mail, Phone, Calendar, ChevronRight, ChevronLeft, Upload } from 'lucide-react';
 
-const ModernNannyForm = () => {
+const NannyRegistrationForm = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState({
-    personalInfo: {
-      firstName: '',
-      lastName: '',
-      email: '',
-      phone: '',
-      dateOfBirth: '',
-    },
-    professionalDetails: {
-      experience: 'none',
-      languages: [],
-      ageGroupsExperience: []
-    },
-    preferences: {
-      jobType: 'fullTime',
-      availableForOvernightShifts: false,
-      willingToWorkWithSpecialNeeds: false
-    }
+    personalInfo: {},
+    qualifications: {},
+    availability: {},
+    experience: {},
+    backgroundCheck: {},
+    workPreferences: {},
+    languages: {},
+    additionalInfo: ''
   });
 
-  const languages = ['English', 'Portuguese', 'Local Languages'];
-  const ageGroups = [
-    'Infants (0-12 months)', 
-    'Toddlers (1-3 years)', 
-    'Preschoolers (4-5 years)', 
-    'School-aged Children (6-12 years)'
+  const steps = [
+    {
+      title: 'Informações Pessoais',
+      component: PersonalInfoStep
+    },
+    {
+      title: 'Formação & Qualificações',
+      component: QualificationsStep
+    },
+    {
+      title: 'Disponibilidade & Experiência',
+      component: AvailabilityStep
+    },
+    {
+      title: 'Verificação de Antecedentes',
+      component: BackgroundCheckStep
+    },
+    {
+      title: 'Preferências de Trabalho',
+      component: WorkPreferencesStep
+    },
+    {
+      title: 'Idiomas & Informações Adicionais',
+      component: LanguagesStep
+    },
+    {
+      title: 'Revisar & Enviar',
+      component: ReviewStep
+    }
   ];
 
-  const handleInputChange = (section, field, value) => {
-    setFormData(prev => ({
-      ...prev,
-      [section]: {
-        ...prev[section],
-        [field]: value
-      }
-    }));
+  const nextStep = () => {
+    if (currentStep < steps.length) {
+      setCurrentStep(currentStep + 1);
+    }
   };
 
-  const nextStep = () => setCurrentStep(prev => Math.min(prev + 1, 3));
-  const prevStep = () => setCurrentStep(prev => Math.max(prev - 1, 1));
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log('Form submitted:', formData);
+  const prevStep = () => {
+    if (currentStep > 1) {
+      setCurrentStep(currentStep - 1);
+    }
   };
 
-  const renderPersonalInfo = () => (
-    <div className="space-y-6">
-      <div className="grid grid-cols-2 gap-4">
-        <div className="relative">
-          <User className="absolute left-3 top-3 text-gray-400" />
-          <input
-            type="text"
-            placeholder="First Name"
-            value={formData.personalInfo.firstName}
-            onChange={(e) => handleInputChange('personalInfo', 'firstName', e.target.value)}
-            className="w-full pl-10 py-3 border-b-2 border-gray-300 focus:border-blue-500 transition-colors"
-            required
-          />
-        </div>
-        <div className="relative">
-          <User className="absolute left-3 top-3 text-gray-400" />
-          <input
-            type="text"
-            placeholder="Last Name"
-            value={formData.personalInfo.lastName}
-            onChange={(e) => handleInputChange('personalInfo', 'lastName', e.target.value)}
-            className="w-full pl-10 py-3 border-b-2 border-gray-300 focus:border-blue-500 transition-colors"
-            required
+  const CurrentStepComponent = steps[currentStep - 1].component;
+
+  return (
+    <div className="max-w-2xl mx-auto p-6 bg-white shadow-2xl rounded-2xl mt-16 mb-8" >
+      <div className="mb-6">
+        <h1 className="text-3xl font-bold text-center text-blue-600 mb-4">
+          Junte-se à Nossa Equipe de Babás Confiáveis
+        </h1>
+        <div className="w-full bg-gray-200 rounded-full h-2.5">
+          <div 
+            className="bg-blue-600 h-2.5 rounded-full" 
+            style={{width: `${(currentStep / steps.length) * 100}%`}}
           />
         </div>
       </div>
 
-      <div className="relative">
-        <Mail className="absolute left-3 top-3 text-gray-400" />
-        <input
-          type="email"
-          placeholder="Email Address"
-          value={formData.personalInfo.email}
-          onChange={(e) => handleInputChange('personalInfo', 'email', e.target.value)}
-          className="w-full pl-10 py-3 border-b-2 border-gray-300 focus:border-blue-500 transition-colors"
-          required
-        />
-      </div>
+      <CurrentStepComponent />
 
-      <div className="relative">
-        <Phone className="absolute left-3 top-3 text-gray-400" />
-        <input
-          type="tel"
-          placeholder="Phone Number"
-          value={formData.personalInfo.phone}
-          onChange={(e) => handleInputChange('personalInfo', 'phone', e.target.value)}
-          className="w-full pl-10 py-3 border-b-2 border-gray-300 focus:border-blue-500 transition-colors"
-          required
-        />
-      </div>
+      <div className="flex justify-between mt-6">
+        {currentStep > 1 && (
+          <button 
+            onClick={prevStep} 
+            className="px-4 py-2 border border-blue-500 text-blue-500 rounded hover:bg-blue-50"
+          >
+            Anterior
+          </button>
+        )}
 
-      <div className="relative">
-        <Calendar className="absolute left-3 top-3 text-gray-400" />
-        <input
-          type="date"
-          placeholder="Date of Birth"
-          value={formData.personalInfo.dateOfBirth}
-          onChange={(e) => handleInputChange('personalInfo', 'dateOfBirth', e.target.value)}
-          className="w-full pl-10 py-3 border-b-2 border-gray-300 focus:border-blue-500 transition-colors"
-          required
-        />
+        {currentStep < steps.length ? (
+          <button 
+            onClick={nextStep} 
+            className="ml-auto px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+          >
+            Próximo
+          </button>
+        ) : (
+          <button 
+            className="ml-auto px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+          >
+            Enviar Inscrição
+          </button>
+        )}
       </div>
     </div>
   );
+};
 
-  const renderProfessionalDetails = () => (
-    <div className="space-y-6">
-      <div className="mt-4">
-        <p className="mb-2 text-gray-600">Languages</p>
-        {languages.map(lang => (
-          <label key={lang} className="inline-flex items-center mr-4 mt-2">
-            <input
-              type="checkbox"
-              value={lang}
-              checked={formData.professionalDetails.languages.includes(lang)}
-              onChange={(e) => {
-                const langs = e.target.checked
-                  ? [...formData.professionalDetails.languages, lang]
-                  : formData.professionalDetails.languages.filter(l => l !== lang);
-                handleInputChange('professionalDetails', 'languages', langs);
-              }}
-              className="form-checkbox h-5 w-5 text-blue-600"
-            />
-            <span className="ml-2">{lang}</span>
-          </label>
-        ))}
+const PersonalInfoStep = () => (
+  <div className="space-y-4">
+    <h2 className="text-xl font-semibold text-blue-700">Informações Pessoais</h2>
+    <div className="grid grid-cols-2 gap-4">
+      <div>
+        <label className="block mb-2">Nome</label>
+        <input 
+          type="text"
+          placeholder="Primeiro Nome" 
+          className="w-full px-3 py-2 border rounded"
+          required 
+        />
       </div>
+      <div>
+        <label className="block mb-2">Sobrenome</label>
+        <input 
+          type="text"
+          placeholder="Último Nome" 
+          className="w-full px-3 py-2 border rounded"
+          required 
+        />
+      </div>
+    </div>
+    <div className="grid grid-cols-2 gap-4">
+      <div>
+        <label className="block mb-2">Data de Nascimento</label>
+        <input 
+          type="date" 
+          className="w-full px-3 py-2 border rounded"
+          required 
+        />
+      </div>
+      <div>
+        <label className="block mb-2">Número de Contato</label>
+        <input 
+          type="tel" 
+          placeholder="+55 123 456 7890" 
+          className="w-full px-3 py-2 border rounded"
+          required 
+        />
+      </div>
+    </div>
+  </div>
+);
 
-      <div className="mt-4">
-        <p className="mb-2 text-gray-600">Age Groups Experience</p>
-        {ageGroups.map(group => (
-          <label key={group} className="inline-flex items-center mr-4 mt-2">
-            <input
-              type="checkbox"
-              value={group}
-              checked={formData.professionalDetails.ageGroupsExperience.includes(group)}
-              onChange={(e) => {
-                const groups = e.target.checked
-                  ? [...formData.professionalDetails.ageGroupsExperience, group]
-                  : formData.professionalDetails.ageGroupsExperience.filter(g => g !== group);
-                handleInputChange('professionalDetails', 'ageGroupsExperience', groups);
-              }}
-              className="form-checkbox h-5 w-5 text-blue-600"
+const QualificationsStep = () => (
+  <div className="space-y-4">
+    <h2 className="text-xl font-semibold text-blue-700">Formação & Qualificações</h2>
+    <div>
+      <label className="block mb-2">Nível de Educação</label>
+      <select 
+        className="w-full px-3 py-2 border rounded"
+      >
+        <option value="">Selecione o Nível de Educação</option>
+        <option value="none">Nenhum</option>
+        <option value="secondary">Estudante (Ensino Médio)</option>
+        <option value="grade10">Ensino Médio Incompleto</option>
+        <option value="grade12">Ensino Médio Completo</option>
+        <option value="tvet-student">Estudante (Técnico ou Universidade)</option>
+        <option value="tvet-graduate">Técnico Graduado</option>
+        <option value="university-graduate">Graduado Universitário</option>
+      </select>
+    </div>
+  </div>
+);
+
+const AvailabilityStep = () => (
+  <div className="space-y-4">
+    <h2 className="text-xl font-semibold text-blue-700">Disponibilidade & Experiência</h2>
+    
+    <div className="space-y-2">
+      <label className="block mb-2">Tipo de Trabalho</label>
+      <div className="flex space-x-4">
+        <label className="inline-flex items-center">
+          <input 
+            type="radio" 
+            name="job-type" 
+            className="form-radio" 
+            value="full-time" 
+          />
+          <span className="ml-2">Tempo Integral</span>
+        </label>
+        <label className="inline-flex items-center">
+          <input 
+            type="radio" 
+            name="job-type" 
+            className="form-radio" 
+            value="temporary" 
+          />
+          <span className="ml-2">Temporário</span>
+        </label>
+      </div>
+    </div>
+
+    <div className="space-y-2">
+      <label className="block mb-2">Experiência</label>
+      <select className="w-full px-3 py-2 border rounded">
+        <option value="">Anos de Experiência</option>
+        <option value="none">Nenhum</option>
+        <option value="1-2">1 - 2 anos</option>
+        <option value="3-5">3 - 5 anos</option>
+        <option value="5+">Mais de 5 anos</option>
+      </select>
+    </div>
+
+    <div className="space-y-2">
+      <label className="block mb-2">Grupos Etários com Experiência</label>
+      <div className="grid grid-cols-2 gap-2">
+        {['Bebês (0-12 meses)', 'Crianças pequenas (1-3 anos)', 
+          'Pré-escolares (4-5 anos)', 'Idade escolar (6-12 anos)', 
+          'Adolescentes (13+ anos)'].map((group, index) => (
+          <label key={index} className="inline-flex items-center">
+            <input 
+              type="checkbox" 
+              className="form-checkbox" 
+              value={group} 
             />
             <span className="ml-2">{group}</span>
           </label>
         ))}
       </div>
     </div>
-  );
+  </div>
+);
 
-  const renderPreferences = () => (
-    <div className="space-y-6">
-      <div className="mt-4">
-        <label className="block mb-2 text-gray-600">Job Type</label>
-        <select
-          value={formData.preferences.jobType}
-          onChange={(e) => handleInputChange('preferences', 'jobType', e.target.value)}
-          className="w-full py-3 px-4 border-b-2 border-gray-300 focus:border-blue-500 transition-colors"
-        >
-          <option value="fullTime">Full Time</option>
-          <option value="partTime">Part Time</option>
-          <option value="temporary">Temporary</option>
-        </select>
-      </div>
-
-      <div className="flex items-center mt-4">
-        <input
-          type="checkbox"
-          checked={formData.preferences.availableForOvernightShifts}
-          onChange={(e) => handleInputChange('preferences', 'availableForOvernightShifts', e.target.checked)}
-          className="form-checkbox h-5 w-5 text-blue-600 mr-3"
-        />
-        <span>Available for Overnight Shifts</span>
-      </div>
-
-      <div className="flex items-center mt-4">
-        <input
-          type="checkbox"
-          checked={formData.preferences.willingToWorkWithSpecialNeeds}
-          onChange={(e) => handleInputChange('preferences', 'willingToWorkWithSpecialNeeds', e.target.checked)}
-          className="form-checkbox h-5 w-5 text-blue-600 mr-3"
-        />
-        <span>Willing to Work with Special Needs Children</span>
-      </div>
-    </div>
-  );
-
-  return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-6">
-      <div className="bg-white shadow-xl rounded-xl w-full max-w-md p-8">
-        <div className="flex justify-between mb-6">
-          {[1, 2, 3].map(step => (
-            <div 
-              key={step} 
-              className={`w-10 h-1 rounded-full transition-colors ${
-                currentStep === step ? 'bg-blue-600' : 'bg-gray-300'
-              }`}
+const BackgroundCheckStep = () => (
+  <div className="space-y-4">
+    <h2 className="text-xl font-semibold text-blue-700">Verificação de Antecedentes</h2>
+    <div className="space-y-2">
+      <div>
+        <label className="block mb-2">Possui Antecedentes Criminais?</label>
+        <div className="flex space-x-4">
+          <label className="inline-flex items-center">
+            <input 
+              type="radio" 
+              name="criminal-record" 
+              className="form-radio" 
+              value="yes" 
             />
-          ))}
+            <span className="ml-2">Sim</span>
+          </label>
+          <label className="inline-flex items-center">
+            <input 
+              type="radio" 
+              name="criminal-record" 
+              className="form-radio" 
+              value="no" 
+            />
+            <span className="ml-2">Não</span>
+          </label>
         </div>
-
-        <form onSubmit={handleSubmit}>
-          <div className="mb-6">
-            <h2 className="text-2xl font-bold text-blue-600">
-              {currentStep === 1 ? 'Personal Information' : 
-               currentStep === 2 ? 'Professional Details' : 
-               'Job Preferences'}
-            </h2>
-          </div>
-
-          {currentStep === 1 && renderPersonalInfo()}
-          {currentStep === 2 && renderProfessionalDetails()}
-          {currentStep === 3 && renderPreferences()}
-
-          <div className="flex justify-between mt-8">
-            {currentStep > 1 && (
-              <button 
-                type="button" 
-                onClick={prevStep} 
-                className="flex items-center text-blue-600 hover:bg-blue-50 px-4 py-2 rounded-md transition-colors"
-              >
-                <ChevronLeft className="mr-2" /> Back
-              </button>
-            )}
-            
-            {currentStep < 3 ? (
-              <button 
-                type="button" 
-                onClick={nextStep} 
-                className="ml-auto flex items-center bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition-colors"
-              >
-                Next <ChevronRight className="ml-2" />
-              </button>
-            ) : (
-              <button 
-                type="submit" 
-                className="ml-auto flex items-center bg-green-600 text-white px-6 py-2 rounded-md hover:bg-green-700 transition-colors"
-              >
-                Submit <Upload className="ml-2" />
-              </button>
-            )}
-          </div>
-        </form>
       </div>
     </div>
-  );
-};
+  </div>
+);
 
-export default ModernNannyForm;
+const WorkPreferencesStep = () => (
+  <div className="space-y-4">
+    <h2 className="text-xl font-semibold text-blue-700">Preferências de Trabalho</h2>
+    <div className="space-y-2">
+      <div>
+        <label className="block mb-2">Disponível para Crianças com Necessidades Especiais?</label>
+        <div className="flex space-x-4">
+          <label className="inline-flex items-center">
+            <input 
+              type="radio" 
+              name="special-needs" 
+              className="form-radio" 
+              value="yes" 
+            />
+            <span className="ml-2">Sim</span>
+          </label>
+          <label className="inline-flex items-center">
+            <input 
+              type="radio" 
+              name="special-needs" 
+              className="form-radio" 
+              value="no" 
+            />
+            <span className="ml-2">Não</span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
+const LanguagesStep = () => (
+  <div className="space-y-4">
+    <h2 className="text-xl font-semibold text-blue-700">Idiomas & Informações Adicionais</h2>
+    <div className="space-y-2">
+      <label className="block mb-2">Idiomas</label>
+      <div className="grid grid-cols-2 gap-2">
+        {['Português', 'Inglês', 'Línguas Locais'].map((lang, index) => (
+          <label key={index} className="inline-flex items-center">
+            <input 
+              type="checkbox" 
+              className="form-checkbox" 
+              value={lang} 
+            />
+            <span className="ml-2">{lang}</span>
+          </label>
+        ))}
+      </div>
+      <div className="mt-2">
+        <label className="block mb-2">Outros Idiomas</label>
+        <input 
+          type="text"
+          placeholder="Especifique outros idiomas" 
+          className="w-full px-3 py-2 border rounded"
+        />
+      </div>
+    </div>
+    <div className="space-y-2 mt-4">
+      <label className="block mb-2">Informações Adicionais</label>
+      <textarea 
+        placeholder="Outras informações que gostaria de compartilhar" 
+        className="w-full px-3 py-2 border rounded h-24"
+      />
+    </div>
+  </div>
+);
+
+const ReviewStep = () => (
+  <div className="space-y-4">
+    <h2 className="text-xl font-semibold text-blue-700">Revisar Inscrição</h2>
+    <div className="bg-blue-50 p-4 rounded-lg">
+      <p>Por favor, revise cuidadosamente todas as suas informações antes de enviar.</p>
+      <p className="mt-2 text-sm text-gray-600">
+        Após clicar em 'Enviar Inscrição', processaremos seu registro 
+        e entraremos em contato com mais instruções.
+      </p>
+    </div>
+  </div>
+);
+
+export default NannyRegistrationForm;

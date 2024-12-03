@@ -24,6 +24,19 @@ const ExpressNanniesHomepage = () => {
       specialties: ['First Aid', 'Child Psychology'],
     },
     {
+      id: 3,
+      name: 'Alice',
+      experience: 5,
+      photo: '../assets/white1.jpg',
+      rating: 4.8,
+      location: 'Maputo',
+      availableFrom: '8AM',
+      availableTo: '6PM',
+      hourlyRate: 10,
+      languages: ['English', 'Portuguese'],
+      specialties: ['First Aid', 'Child Psychology'],
+    },
+    {
       id: 2,
       name: 'Maria',
       experience: 3,
@@ -101,9 +114,6 @@ const ExpressNanniesHomepage = () => {
             <NannyCard key={nanny.id} nanny={nanny} />
           ))}
         </div>
-
-        {/* Form Section */}
-        <NannyForm />
       </div>
     </div>
   );
