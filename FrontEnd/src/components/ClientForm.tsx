@@ -44,7 +44,7 @@ const NannyFinderForm = () => {
   return (
     <div className="max-w-3xl mx-auto bg-white rounded-2xl p-8 space-y-6">
       <div className="text-center">
-        <h2 className="text-3xl font-bold text-indigo-600 mb-4">Find the Perfect Nanny</h2>
+        <h2 className="text-3xl font-bold text-indigo-600 mb-4"> Customer registration form</h2>
         <p className="text-gray-500">Fill out the form to start your search</p>
       </div>
 
@@ -133,95 +133,14 @@ const NannyFinderForm = () => {
               </label>
             </div>
           </div>
-        </div>
-
-        {/* Dates and Times */}
-        <div className="bg-gray-50 p-6 rounded-xl">
-          <h3 className="text-xl font-semibold text-indigo-700 mb-4 flex items-center">
-            <Calendar className="mr-3 text-indigo-500" />
-            Dates and Times Needed
-          </h3>
-          <textarea
-            id="datesTimes"
-            value={client.datesTimes}
-            onChange={handleInputChange}
-            placeholder="Specify dates and times"
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500"
-            required
-          />
-        </div>
-
-        {/* Children Information */}
-        <div className="bg-gray-50 p-6 rounded-xl">
-          <h3 className="text-xl font-semibold text-indigo-700 mb-4 flex items-center">
-            <Baby className="mr-3 text-indigo-500" />
-            Children Information
-          </h3>
-          <div className="grid md:grid-cols-2 gap-4">
-            <div>
-              <label htmlFor="numChildren" className="block text-sm font-medium text-gray-700 mb-2">Number of Children</label>
-              <input
-                type="number"
-                id="numChildren"
-                value={client.numChildren}
-                onChange={handleInputChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500"
-                required
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Children's Age Groups</label>
-              <div className="flex flex-wrap gap-2">
-                {ageGroups.map((group) => (
-                  <button
-                    key={group}
-                    type="button"
-                    onClick={() => handleAgeGroupChange(group)}
-                    className={`px-3 py-1 rounded-full text-sm transition-all ${
-                      client.childrenAgeGroups.includes(group)
-                        ? 'bg-indigo-500 text-white'
-                        : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                    }`}
-                  >
-                    {group}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-          <div className="mt-4">
-            <label htmlFor="specialNeeds" className="block text-sm font-medium text-gray-700 mb-2">Children with Special Needs</label>
-            <select
-              id="specialNeeds"
-              value={client.specialNeeds}
-              onChange={handleInputChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500"
-              required
-            >
-              <option value="no">No</option>
-              <option value="yes">Yes</option>
-            </select>
-          </div>
-        </div>
-
-        {/* Special Requests */}
-        <div className="bg-gray-50 p-6 rounded-xl">
-          <h3 className="text-xl font-semibold text-indigo-700 mb-4">Special Requests/Preferences</h3>
-          <textarea
-            id="preferences"
-            value={client.preferences}
-            onChange={handleInputChange}
-            placeholder="Specify any special preferences (language, qualifications, allergies, routines, etc.)"
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500"
-          />
-        </div>
+        </div>   
 
         <div className="text-center">
           <button
             type="submit"
             className="px-8 py-3 bg-indigo-600 text-white rounded-full hover:bg-indigo-700 transition-colors text-lg font-semibold"
           >
-            Submit Request
+            Register
           </button>
         </div>
       </form>
