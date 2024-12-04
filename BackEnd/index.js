@@ -1,14 +1,14 @@
 import express from 'express';
 import cors from 'cors';
-import fetch from 'node-fetch'; // Certifique-se de instalar o node-fetch
+import axios from 'axios';
 
 const app = express();
 
-// Opções de CORS
+// CORS options
 const corsOptions = {
-    origin: '*', // Permite requisições de qualquer origem
-    methods: ['GET', 'POST', 'PUT', 'DELETE'], // Métodos permitidos
-    allowedHeaders: ['Content-Type', 'Authorization'], // Cabeçalhos permitidos
+    origin: '*',
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization']
 };
 
 // Middleware
@@ -16,27 +16,53 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Rota para retornar os nomes dos países
+// Route to fetch countries
 app.get('/countries', async (req, res) => {
     try {
-        const response = await fetch('https://countriesnow.space/api/v0.1/countries/population');
-        const data = await response.json();
+        const response = await axios.get('https://countriesnow.space/api/v0.1/countries/info?returns=name');
 
-        // Extrair nomes dos países
-        const countries = data.data.map(country => country.country);
+        // Extract country names
+        const countries = response.data.data.map(country => country.name);
 
-        res.json(countries); // Enviar os nomes dos países como resposta
+        res.json(countries);
     } catch (error) {
-        console.error('Erro ao buscar países:', error);
-        res.status(500).json({ error: 'Erro ao buscar países' });
+        console.error('Detailed error:', error.message);
+        console.error('Error details:', error.response ? error.response.data : 'No response data');
+        
+        res.status(500).json({ 
+            error: 'Error fetching countries', 
+            details: error.message 
+        });
     }
 });
 
-// Rota de teste
-app.get('/', (req, res) => {
-    res.json('API BABAS');
+// Route to fetch provinces/states for a specific country
+app.get('/provinces/:country', async (req, res) => {
+    try {
+        const response = await axios.post('https://countriesnow.space/api/v0.1/countries/states', {
+            country: req.params.country
+        });
+
+        // Extract province/state names
+        const provinces = response.data.data.states.map(state => state.name);
+
+        res.json(provinces);
+    } catch (error) {
+        console.error('Detailed error:', error.message);
+        console.error('Error details:', error.response ? error.response.data : 'No response data');
+        
+        res.status(500).json({ 
+            error: 'Error fetching provinces', 
+            details: error.message 
+        });
+    }
 });
 
-// Porta do servidor
+// Test route
+app.get('/', (req, res) => {
+    res.json('Countries API');
+});
+
+// Server port
 const PORT = process.env.PORT || 3005;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
