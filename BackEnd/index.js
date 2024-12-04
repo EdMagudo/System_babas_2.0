@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import axios from 'axios';
+import { initializeDatabase } from '../BackEnd/Models/index.js'; // Adjust the path as needed
 
 const app = express();
 
@@ -16,6 +17,12 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+
+
+//Rotas
+import routerAdmin from './Routes/adminRoutes.js';
+
+app.use('/admin', routerAdmin);
 // Route to fetch countries
 app.get('/countries', async (req, res) => {
     try {
@@ -63,6 +70,20 @@ app.get('/', (req, res) => {
     res.json('Countries API');
 });
 
-// Server port
-const PORT = process.env.PORT || 3005;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+// Initialize database before starting the server
+const startServer = async () => {
+    try {
+        // Initialize the database
+        await initializeDatabase();
+
+        // Start the server
+        const PORT = process.env.PORT || 3005;
+        app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+    } catch (error) {
+        console.error('Failed to start server:', error);
+        process.exit(1);
+    }
+};
+
+// Call the function to start the server
+startServer();

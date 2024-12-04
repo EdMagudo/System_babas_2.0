@@ -1,32 +1,25 @@
--- Criando a tabela Countries
-CREATE TABLE Countries (
-    country_id INT AUTO_INCREMENT PRIMARY KEY,
-    country_name VARCHAR(100) NOT NULL UNIQUE
+-- Criando a tabela Admin
+CREATE TABLE Admin (
+    admin_id INT AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    password_hash VARCHAR(255) NOT NULL
 ) ENGINE=InnoDB;
 
--- Criando a tabela Provinces
-CREATE TABLE Provinces (
-    province_id INT AUTO_INCREMENT PRIMARY KEY,
-    province_name VARCHAR(100) NOT NULL,
-    country_id INT NOT NULL,
-    FOREIGN KEY (country_id) REFERENCES Countries(country_id)
-) ENGINE=InnoDB;
-
--- Criando a tabela Users (Agora refere-se a province_id)
+-- Criando a tabela Users
 CREATE TABLE Users (
     user_id INT AUTO_INCREMENT PRIMARY KEY,
     email VARCHAR(255) UNIQUE NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
-    role ENUM('client', 'nanny', 'admin') NOT NULL,
+    role ENUM('client', 'nanny') NOT NULL,
     first_name VARCHAR(100) NOT NULL,
     last_name VARCHAR(100) NOT NULL,
     contact_phone VARCHAR(20),
-    province_id INT,
     id_number VARCHAR(50),
     id_copy_file_path VARCHAR(255),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     last_login TIMESTAMP NULL,
-    FOREIGN KEY (province_id) REFERENCES Provinces(province_id),
+    country_name VARCHAR(100) NOT NULL,
+    province_name VARCHAR(100) NOT NULL,
     UNIQUE KEY email_idx (email(191))
 ) ENGINE=InnoDB;
 
@@ -40,10 +33,23 @@ CREATE TABLE Nanny_Profiles (
     has_criminal_record BOOLEAN NOT NULL,
     special_needs_experience BOOLEAN NOT NULL,
     background_check_status ENUM('pending', 'approved', 'rejected') DEFAULT 'pending',
-    languages_spoken JSON,
-    additional_languages TEXT,
     additional_info TEXT,
     FOREIGN KEY (user_id) REFERENCES Users(user_id)
+) ENGINE=InnoDB;
+
+-- Criando a tabela Languages
+CREATE TABLE Languages (
+    language_id INT AUTO_INCREMENT PRIMARY KEY,
+    language_name VARCHAR(100) NOT NULL UNIQUE
+) ENGINE=InnoDB;
+
+-- Criando a tabela associativa User_Language
+CREATE TABLE User_Language (
+    user_id INT NOT NULL,
+    language_id INT NOT NULL,
+    PRIMARY KEY (user_id, language_id),
+    FOREIGN KEY (user_id) REFERENCES Users(user_id),
+    FOREIGN KEY (language_id) REFERENCES Languages(language_id)
 ) ENGINE=InnoDB;
 
 -- Criando a tabela Nanny_Child_Age_Experience
@@ -127,4 +133,4 @@ CREATE TABLE Files (
     file_type VARCHAR(50),
     upload_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES Users(user_id)
-) ENGINE=InnoDB; 
+) ENGINE=InnoDB;
