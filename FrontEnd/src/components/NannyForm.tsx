@@ -15,31 +15,31 @@ const NannyRegistrationForm = () => {
 
   const steps = [
     {
-      title: 'Informações Pessoais',
+      title: 'Personal Information',
       component: PersonalInfoStep
     },
     {
-      title: 'Formação & Qualificações',
+      title: 'Education & Qualifications',
       component: QualificationsStep
     },
     {
-      title: 'Disponibilidade & Experiência',
+      title: 'Availability & Experience',
       component: AvailabilityStep
     },
     {
-      title: 'Verificação de Antecedentes',
+      title: 'Background Check',
       component: BackgroundCheckStep
     },
     {
-      title: 'Preferências de Trabalho',
+      title: 'Work Preferences',
       component: WorkPreferencesStep
     },
     {
-      title: 'Idiomas & Informações Adicionais',
+      title: 'Languages & Additional Information',
       component: LanguagesStep
     },
     {
-      title: 'Revisar & Enviar',
+      title: 'Review & Submit',
       component: ReviewStep
     }
   ];
@@ -62,7 +62,7 @@ const NannyRegistrationForm = () => {
     <div className="max-w-2xl mx-auto p-6 bg-white shadow-2xl rounded-2xl mt-16 mb-8" >
       <div className="mb-6">
         <h1 className="text-3xl font-bold text-center text-blue-600 mb-4">
-          Junte-se à Nossa Equipe de Babás Confiáveis
+          Join Our Trusted Nanny Team
         </h1>
         <div className="w-full bg-gray-200 rounded-full h-2.5">
           <div 
@@ -80,7 +80,7 @@ const NannyRegistrationForm = () => {
             onClick={prevStep} 
             className="px-4 py-2 border border-blue-500 text-blue-500 rounded hover:bg-blue-50"
           >
-            Anterior
+            Previous
           </button>
         )}
 
@@ -89,13 +89,13 @@ const NannyRegistrationForm = () => {
             onClick={nextStep} 
             className="ml-auto px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
           >
-            Próximo
+            Next
           </button>
         ) : (
           <button 
             className="ml-auto px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
           >
-            Enviar Inscrição
+            Submit Application
           </button>
         )}
       </div>
@@ -105,22 +105,22 @@ const NannyRegistrationForm = () => {
 
 const PersonalInfoStep = () => (
   <div className="space-y-4">
-    <h2 className="text-xl font-semibold text-blue-700">Informações Pessoais</h2>
+    <h2 className="text-xl font-semibold text-blue-700">Personal Information</h2>
     <div className="grid grid-cols-2 gap-4">
       <div>
-        <label className="block mb-2">Nome</label>
+        <label className="block mb-2">First Name</label>
         <input 
           type="text"
-          placeholder="Primeiro Nome" 
+          placeholder="First Name" 
           className="w-full px-3 py-2 border rounded"
           required 
         />
       </div>
       <div>
-        <label className="block mb-2">Sobrenome</label>
+        <label className="block mb-2">Last Name</label>
         <input 
           type="text"
-          placeholder="Último Nome" 
+          placeholder="Last Name" 
           className="w-full px-3 py-2 border rounded"
           required 
         />
@@ -128,7 +128,7 @@ const PersonalInfoStep = () => (
     </div>
     <div className="grid grid-cols-2 gap-4">
       <div>
-        <label className="block mb-2">Data de Nascimento</label>
+        <label className="block mb-2">Date of Birth</label>
         <input 
           type="date" 
           className="w-full px-3 py-2 border rounded"
@@ -136,10 +136,49 @@ const PersonalInfoStep = () => (
         />
       </div>
       <div>
-        <label className="block mb-2">Número de Contato</label>
+        <label className="block mb-2">Contact Number</label>
         <input 
           type="tel" 
           placeholder="+55 123 456 7890" 
+          className="w-full px-3 py-2 border rounded"
+          required 
+        />
+      </div>
+    </div>
+    <div className="grid grid-cols-2 gap-4">
+      <div>
+        <label className="block mb-2">Country</label>
+        <input 
+          type="text"
+          placeholder="Country of Origin" 
+          className="w-full px-3 py-2 border rounded"
+          required 
+        />
+      </div>
+      <div>
+        <label className="block mb-2">Province</label>
+        <input 
+          type="text" 
+          placeholder="Province" 
+          className="w-full px-3 py-2 border rounded"
+          required 
+        />
+      </div>
+    </div>
+    <div className="grid grid-cols-2 gap-4">
+      <div>
+        <label className="block mb-2">ID/Passport</label>
+        <input 
+          type="text" 
+          placeholder="ID or Passport Number" 
+          className="w-full px-3 py-2 border rounded"
+          required 
+        />
+      </div>
+      <div>
+        <label className="block mb-2">ID Copy</label>
+        <input 
+          type="file" 
           className="w-full px-3 py-2 border rounded"
           required 
         />
@@ -150,20 +189,20 @@ const PersonalInfoStep = () => (
 
 const QualificationsStep = () => (
   <div className="space-y-4">
-    <h2 className="text-xl font-semibold text-blue-700">Formação & Qualificações</h2>
+    <h2 className="text-xl font-semibold text-blue-700">Education & Qualifications</h2>
     <div>
-      <label className="block mb-2">Nível de Educação</label>
+      <label className="block mb-2">Education Level</label>
       <select 
         className="w-full px-3 py-2 border rounded"
       >
-        <option value="">Selecione o Nível de Educação</option>
-        <option value="none">Nenhum</option>
-        <option value="secondary">Estudante (Ensino Médio)</option>
-        <option value="grade10">Ensino Médio Incompleto</option>
-        <option value="grade12">Ensino Médio Completo</option>
-        <option value="tvet-student">Estudante (Técnico ou Universidade)</option>
-        <option value="tvet-graduate">Técnico Graduado</option>
-        <option value="university-graduate">Graduado Universitário</option>
+        <option value="">Select Education Level</option>
+        <option value="none">None</option>
+        <option value="secondary">High School Student</option>
+        <option value="grade10">High School Incomplete</option>
+        <option value="grade12">High School Graduate</option>
+        <option value="tvet-student">Technical or University Student</option>
+        <option value="tvet-graduate">Technical Graduate</option>
+        <option value="university-graduate">University Graduate</option>
       </select>
     </div>
   </div>
@@ -171,10 +210,10 @@ const QualificationsStep = () => (
 
 const AvailabilityStep = () => (
   <div className="space-y-4">
-    <h2 className="text-xl font-semibold text-blue-700">Disponibilidade & Experiência</h2>
+    <h2 className="text-xl font-semibold text-blue-700">Availability & Experience</h2>
     
     <div className="space-y-2">
-      <label className="block mb-2">Tipo de Trabalho</label>
+      <label className="block mb-2">Job Type</label>
       <div className="flex space-x-4">
         <label className="inline-flex items-center">
           <input 
@@ -183,7 +222,7 @@ const AvailabilityStep = () => (
             className="form-radio" 
             value="full-time" 
           />
-          <span className="ml-2">Tempo Integral</span>
+          <span className="ml-2">Full Time</span>
         </label>
         <label className="inline-flex items-center">
           <input 
@@ -192,28 +231,28 @@ const AvailabilityStep = () => (
             className="form-radio" 
             value="temporary" 
           />
-          <span className="ml-2">Temporário</span>
+          <span className="ml-2">Temporary</span>
         </label>
       </div>
     </div>
 
     <div className="space-y-2">
-      <label className="block mb-2">Experiência</label>
+      <label className="block mb-2">Experience</label>
       <select className="w-full px-3 py-2 border rounded">
-        <option value="">Anos de Experiência</option>
-        <option value="none">Nenhum</option>
-        <option value="1-2">1 - 2 anos</option>
-        <option value="3-5">3 - 5 anos</option>
-        <option value="5+">Mais de 5 anos</option>
+        <option value="">Years of Experience</option>
+        <option value="none">None</option>
+        <option value="1-2">1 - 2 years</option>
+        <option value="3-5">3 - 5 years</option>
+        <option value="5+">More than 5 years</option>
       </select>
     </div>
 
     <div className="space-y-2">
-      <label className="block mb-2">Grupos Etários com Experiência</label>
+      <label className="block mb-2">Age Groups with Experience</label>
       <div className="grid grid-cols-2 gap-2">
-        {['Bebês (0-12 meses)', 'Crianças pequenas (1-3 anos)', 
-          'Pré-escolares (4-5 anos)', 'Idade escolar (6-12 anos)', 
-          'Adolescentes (13+ anos)'].map((group, index) => (
+        {['Babies (0-12 months)', 'Toddlers (1-3 years)', 
+          'Preschoolers (4-5 years)', 'School Age (6-12 years)', 
+          'Teenagers (13+ years)'].map((group, index) => (
           <label key={index} className="inline-flex items-center">
             <input 
               type="checkbox" 
@@ -230,30 +269,37 @@ const AvailabilityStep = () => (
 
 const BackgroundCheckStep = () => (
   <div className="space-y-4">
-    <h2 className="text-xl font-semibold text-blue-700">Verificação de Antecedentes</h2>
+    <h2 className="text-xl font-semibold text-blue-700">Background Check</h2>
     <div className="space-y-2">
       <div>
-        <label className="block mb-2">Possui Antecedentes Criminais?</label>
+        <label className="block mb-2">Do you have a police clearance?</label>
         <div className="flex space-x-4">
           <label className="inline-flex items-center">
             <input 
               type="radio" 
-              name="criminal-record" 
+              name="police-clearance" 
               className="form-radio" 
               value="yes" 
             />
-            <span className="ml-2">Sim</span>
+            <span className="ml-2">Yes</span>
           </label>
           <label className="inline-flex items-center">
             <input 
               type="radio" 
-              name="criminal-record" 
+              name="police-clearance" 
               className="form-radio" 
               value="no" 
             />
-            <span className="ml-2">Não</span>
+            <span className="ml-2">No</span>
           </label>
         </div>
+      </div>
+      <div>
+        <label className="block mb-2">Please upload a copy of your police clearance:</label>
+        <input 
+          type="file" 
+          className="w-full px-3 py-2 border rounded"
+        />
       </div>
     </div>
   </div>
@@ -261,30 +307,64 @@ const BackgroundCheckStep = () => (
 
 const WorkPreferencesStep = () => (
   <div className="space-y-4">
-    <h2 className="text-xl font-semibold text-blue-700">Preferências de Trabalho</h2>
+    <h2 className="text-xl font-semibold text-blue-700">Work Preferences</h2>
     <div className="space-y-2">
-      <div>
-        <label className="block mb-2">Disponível para Crianças com Necessidades Especiais?</label>
-        <div className="flex space-x-4">
-          <label className="inline-flex items-center">
-            <input 
-              type="radio" 
-              name="special-needs" 
-              className="form-radio" 
-              value="yes" 
-            />
-            <span className="ml-2">Sim</span>
-          </label>
-          <label className="inline-flex items-center">
-            <input 
-              type="radio" 
-              name="special-needs" 
-              className="form-radio" 
-              value="no" 
-            />
-            <span className="ml-2">Não</span>
-          </label>
-        </div>
+      <label className="block mb-2">Preferred Working Hours</label>
+      <div className="grid grid-cols-2 gap-2">
+        <label className="inline-flex items-center">
+          <input 
+            type="checkbox" 
+            className="form-checkbox" 
+            value="morning" 
+          />
+          <span className="ml-2">Morning</span>
+        </label>
+        <label className="inline-flex items-center">
+          <input 
+            type="checkbox" 
+            className="form-checkbox" 
+            value="afternoon" 
+          />
+          <span className="ml-2">Afternoon</span>
+        </label>
+        <label className="inline-flex items-center">
+          <input 
+            type="checkbox" 
+            className="form-checkbox" 
+            value="evening" 
+          />
+          <span className="ml-2">Evening</span>
+        </label>
+        <label className="inline-flex items-center">
+          <input 
+            type="checkbox" 
+            className="form-checkbox" 
+            value="overnight" 
+          />
+          <span className="ml-2">Overnight</span>
+        </label>
+      </div>
+    </div>
+
+    <div className="space-y-2">
+      <label className="block mb-2">Preferred Age Group</label>
+      <div className="grid grid-cols-2 gap-2">
+        <label className="inline-flex items-center">
+          <input 
+            type="checkbox" 
+            className="form-checkbox" 
+            value="babies" 
+          />
+          <span className="ml-2">Babies</span>
+        </label>
+        <label className="inline-flex items-center">
+          <input 
+            type="checkbox" 
+            className="form-checkbox" 
+            value="toddlers" 
+          />
+          <span className="ml-2">Toddlers</span>
+        </label>
       </div>
     </div>
   </div>
@@ -292,35 +372,21 @@ const WorkPreferencesStep = () => (
 
 const LanguagesStep = () => (
   <div className="space-y-4">
-    <h2 className="text-xl font-semibold text-blue-700">Idiomas & Informações Adicionais</h2>
+    <h2 className="text-xl font-semibold text-blue-700">Languages & Additional Information</h2>
     <div className="space-y-2">
-      <label className="block mb-2">Idiomas</label>
-      <div className="grid grid-cols-2 gap-2">
-        {['Português', 'Inglês', 'Línguas Locais'].map((lang, index) => (
-          <label key={index} className="inline-flex items-center">
-            <input 
-              type="checkbox" 
-              className="form-checkbox" 
-              value={lang} 
-            />
-            <span className="ml-2">{lang}</span>
-          </label>
-        ))}
-      </div>
-      <div className="mt-2">
-        <label className="block mb-2">Outros Idiomas</label>
-        <input 
-          type="text"
-          placeholder="Especifique outros idiomas" 
-          className="w-full px-3 py-2 border rounded"
-        />
-      </div>
+      <label className="block mb-2">Languages Spoken</label>
+      <input 
+        type="text" 
+        placeholder="Languages Spoken" 
+        className="w-full px-3 py-2 border rounded"
+      />
     </div>
-    <div className="space-y-2 mt-4">
-      <label className="block mb-2">Informações Adicionais</label>
+
+    <div className="space-y-2">
+      <label className="block mb-2">Additional Information</label>
       <textarea 
-        placeholder="Outras informações que gostaria de compartilhar" 
-        className="w-full px-3 py-2 border rounded h-24"
+        placeholder="Please share any other relevant information" 
+        className="w-full px-3 py-2 border rounded"
       />
     </div>
   </div>
@@ -328,13 +394,9 @@ const LanguagesStep = () => (
 
 const ReviewStep = () => (
   <div className="space-y-4">
-    <h2 className="text-xl font-semibold text-blue-700">Revisar Inscrição</h2>
-    <div className="bg-blue-50 p-4 rounded-lg">
-      <p>Por favor, revise cuidadosamente todas as suas informações antes de enviar.</p>
-      <p className="mt-2 text-sm text-gray-600">
-        Após clicar em 'Enviar Inscrição', processaremos seu registro 
-        e entraremos em contato com mais instruções.
-      </p>
+    <h2 className="text-xl font-semibold text-blue-700">Review & Submit</h2>
+    <div className="space-y-2">
+      <p>Review your application details here...</p>
     </div>
   </div>
 );
