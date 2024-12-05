@@ -52,7 +52,7 @@ const createClientWithFile = async (req, res) => {
         role: "client" // Garantir que o papel seja sempre "client"
       };
 
-      const client = await db.User.create(clientData);
+      const client = await db.Users.create(clientData);
 
       // Salvar o arquivo na tabela Files
       const fileData = {
@@ -102,7 +102,7 @@ const updateClient = async (req, res) => {
     });
 
     if (updated) {
-      const updatedClient = await db.User.findOne({ where: { user_id: req.params.id } });
+      const updatedClient = await db.Users.findOne({ where: { user_id: req.params.id } });
       res.status(200).json(updatedClient);
     } else {
       res.status(404).json({ message: "Cliente não encontrado." });
