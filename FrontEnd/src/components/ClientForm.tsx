@@ -4,17 +4,14 @@ import axios from 'axios';
 
 const NannyFinderForm = () => {
   const [client, setClient] = useState({
-    name: '',
-    surname: '',
-    contactPhone: '',
-    contactEmail: '',
-    country: '',
-    idNumber: '',
-    datesTimes: '',
-    numChildren: '',
-    childrenAgeGroups: [],
-    specialNeeds: 'no',
-    preferences: '',
+    email: '',
+    password_hash: '',
+    role: 'client', // Valor fixo ou modificado conforme o caso
+    first_name: '',
+    last_name: '',
+    id_number: '',
+    country_name: '',
+    province_name: '',
   });
 
   const [file, setFile] = useState(null); // Estado para armazenar o arquivo
@@ -27,7 +24,7 @@ const NannyFinderForm = () => {
   useEffect(() => {
     const fetchCountries = async () => {
       try {
-        const response = await axios.get('http://localhost:3005/countries'); // Ajuste para a URL correta do seu backend
+        const response = await axios.get('http://localhost:3005/countries');
         setCountries(response.data);
         setLoading(false); // Alterar o estado de carregamento após os países serem carregados
       } catch (error) {
@@ -59,25 +56,20 @@ const NannyFinderForm = () => {
     }
 
     const formData = new FormData();
-    formData.append('name', client.name);
-    formData.append('surname', client.surname);
-    formData.append('contactPhone', client.contactPhone);
-    formData.append('contactEmail', client.contactEmail);
-    formData.append('country', client.country);
-    formData.append('idNumber', client.idNumber);
+    formData.append('email', client.email);
+    formData.append('password_hash', client.password_hash);
+    formData.append('role', client.role);
+    formData.append('first_name', client.first_name);
+    formData.append('last_name', client.last_name);
+    formData.append('id_number', client.id_number);
+    formData.append('country_name', client.country_name);
+    formData.append('province_name', client.province_name);
     formData.append('file', file); // Enviar o arquivo
 
-    
     try {
-      if (formData && formData.entries && [...formData.entries()].length === 0) {
-        console.log("FormData está vazio");
-    } else {
-        console.log("FormData não está vazio");
-    }
-    
-      const response = await axios.post('http://localhost:3005/registerClient', formData, {
+      const response = await axios.post('http://localhost:3005/user', formData, {
         headers: {
-          'Content-Type': 'multipart/form-data', // Indica que estamos enviando um formulário com arquivo
+          'Content-Type': 'multipart/form-data',
         },
       });
 
@@ -86,7 +78,7 @@ const NannyFinderForm = () => {
       console.log(response.data); // Você pode personalizar como deseja tratar a resposta
     } catch (err) {
       setSuccessMessage(""); // Limpar mensagens de sucesso
-      setError("Erro ao registrar cliente. Tente novamente mais tarde."+ err);
+      setError("Erro ao registrar cliente. Tente novamente mais tarde.");
       console.error(err);
     }
   };
@@ -107,76 +99,66 @@ const NannyFinderForm = () => {
           </h3>
           <div className="grid md:grid-cols-2 gap-4">
             <div>
-              <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">Name</label>
+              <label htmlFor="first_name" className="block text-sm font-medium text-gray-700 mb-2">First Name</label>
               <input
                 type="text"
-                id="name"
-                value={client.name}
+                id="first_name"
+                value={client.first_name}
                 onChange={handleInputChange}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500"
                 required
               />
             </div>
             <div>
-              <label htmlFor="surname" className="block text-sm font-medium text-gray-700 mb-2">Surname</label>
+              <label htmlFor="last_name" className="block text-sm font-medium text-gray-700 mb-2">Last Name</label>
               <input
                 type="text"
-                id="surname"
-                value={client.surname}
+                id="last_name"
+                value={client.last_name}
                 onChange={handleInputChange}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500"
                 required
               />
             </div>
             <div>
-              <label htmlFor="contactPhone" className="block text-sm font-medium text-gray-700 mb-2">Phone</label>
-              <input
-                type="tel"
-                id="contactPhone"
-                value={client.contactPhone}
-                onChange={handleInputChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500"
-                required
-              />
-            </div>
-            <div>
-              <label htmlFor="contactEmail" className="block text-sm font-medium text-gray-700 mb-2">Email</label>
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">Email</label>
               <input
                 type="email"
-                id="contactEmail"
-                value={client.contactEmail}
+                id="email"
+                value={client.email}
                 onChange={handleInputChange}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500"
                 required
               />
             </div>
             <div>
-              <label htmlFor="country" className="block text-sm font-medium text-gray-700 mb-2">Country</label>
-              {loading ? (
-                <p>Loading countries...</p> // Mensagem de carregamento enquanto os países não são carregados
-              ) : (
-                <select
-                  id="country"
-                  value={client.country}
-                  onChange={handleInputChange}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500"
-                  required
-                >
-                  <option value="" disabled>Select a country</option>
-                  {countries.map((country, index) => (
-                    <option key={index} value={country}>
-                      {country}
-                    </option>
-                  ))}
-                </select>
-              )}
-            </div>
-            <div>
-              <label htmlFor="idNumber" className="block text-sm font-medium text-gray-700 mb-2">ID / Passport Number</label>
+              <label htmlFor="id_number" className="block text-sm font-medium text-gray-700 mb-2">ID Number</label>
               <input
                 type="text"
-                id="idNumber"
-                value={client.idNumber}
+                id="id_number"
+                value={client.id_number}
+                onChange={handleInputChange}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500"
+                required
+              />
+            </div>
+            <div>
+              <label htmlFor="country_name" className="block text-sm font-medium text-gray-700 mb-2">Country</label>
+              <input
+                type="text"
+                id="country_name"
+                value={client.country_name}
+                onChange={handleInputChange}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500"
+                required
+              />
+            </div>
+            <div>
+              <label htmlFor="province_name" className="block text-sm font-medium text-gray-700 mb-2">Province</label>
+              <input
+                type="text"
+                id="province_name"
+                value={client.province_name}
                 onChange={handleInputChange}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500"
                 required

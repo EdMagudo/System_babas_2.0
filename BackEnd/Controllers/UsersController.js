@@ -1,6 +1,10 @@
 import db from "../Models/index.js";
 const User = db.Users;
 const Files = db.Files;
+import multer from 'multer';
+
+const upload = multer({ dest: 'uploads/' }); // Define o diretório de destino para o arquivo
+
 const createUser = async (req, res) => {
   try {
      // Verifica se o email ou ID já existe
@@ -24,12 +28,12 @@ const createUser = async (req, res) => {
      const user = await User.create(userData);
 
      // Salvar o arquivo na tabela Files se existir
-     if (req.body.file) {
+     if (req.file) {
         const fileData = {
            user_id: user.user_id,
-           file_name: req.body.file.name,
-           file_path: req.body.file.name, // Apenas o nome do arquivo
-           file_type: req.body.file.type
+           file_name: req.file.originalname, // Nome original do arquivo
+           file_path: req.file.path, // Caminho do arquivo salvo
+           file_type: req.file.mimetype // Tipo MIME do arquivo
         };
 
         await Files.create(fileData);
@@ -44,6 +48,7 @@ const createUser = async (req, res) => {
      res.status(500).json({ error: error.message });
   }
 };
+
 const getAllUsers = async (req, res) => {
   try {
     const users = await User.findAll();

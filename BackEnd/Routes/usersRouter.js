@@ -1,9 +1,12 @@
+import upload from '../Middlewares/upload.js'; // Caminho para o arquivo de configuração do multer
 import { Router } from "express";
-import usersController from "../Controllers/UsersController.js";
+import usersController from '../Controllers/UsersController.js';
 
 const router = Router();
 
-router.post("/", usersController.createUser); // Cria um novo usuário
+// Rota de criação de usuário com upload de arquivo
+router.post("/", upload.single('file'), usersController.createUser);
+
 router.get("/", usersController.getAllUsers); // Lista todos os usuários
 router.get("/:user_id", usersController.getUserById); // Obtém os detalhes de um usuário específico
 router.put("/:user_id", usersController.updateUser); // Atualiza um usuário existente
