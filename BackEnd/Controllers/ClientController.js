@@ -19,7 +19,7 @@ const upload = multer({
     if (!allowedTypes.includes(file.mimetype)) {
       return cb(new Error('Somente arquivos PDF são permitidos.'));
     }
-    if (file.size > 5 * 1024 * 1024) { // Limite de 5MB
+    if (file.size > 1 * 1024 * 1024) { // Limite de 1MB
       return cb(new Error('O arquivo deve ter no máximo 5MB.'));
     }
     cb(null, true);
@@ -28,6 +28,7 @@ const upload = multer({
 
 // Função para criar um cliente e fazer o upload do arquivo
 const createClientWithFile = async (req, res) => {
+  console.log(req.body)
   try {
     // Upload do arquivo
     upload.single('file')(req, res, async (err) => {

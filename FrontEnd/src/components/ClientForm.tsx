@@ -75,7 +75,8 @@ const NannyFinderForm = () => {
         console.log("FormData não está vazio");
     }
     
-      const response = await axios.post('http://localhost:3005/registerClient', formData, {
+    console.log(formData)
+      const response = await axios.post('http://localhost:3005/cli/registerClient', formData, {
         headers: {
           'Content-Type': 'multipart/form-data', // Indica que estamos enviando um formulário com arquivo
         },
