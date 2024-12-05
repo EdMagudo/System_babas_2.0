@@ -154,6 +154,9 @@ const NannyFinderForm = () => {
                 onChange={handleInputChange}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500"
                 required
+                  pattern="[A-Za-z]{3,}" // Aceita apenas letras com 3 ou mais caracteres
+                  title="O nome deve conter pelo menos 3 letras e apenas caracteres alfabéticos."
+                
               />
             </div>
             <div>
@@ -170,6 +173,8 @@ const NannyFinderForm = () => {
                 onChange={handleInputChange}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500"
                 required
+                  pattern="[A-Za-z]{3,}" // Aceita apenas letras com 3 ou mais caracteres
+            title="O nome deve conter pelo menos 3 letras e apenas caracteres alfabéticos."
               />
             </div>
             <div>
@@ -202,6 +207,8 @@ const NannyFinderForm = () => {
                 onChange={handleInputChange}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500"
                 required
+                  pattern="\d{12}[A-Za-z]|[A-Za-z]{2}\d{7}" // Aceita BI ou passaporte
+            title="O ID deve ter 12 dígitos seguidos de uma letra (BI) ou 2 letras seguidas de 7 números (Passaporte)."
               />
             </div>
             <div>
