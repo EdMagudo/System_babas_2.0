@@ -67,6 +67,26 @@ app.get('/provinces/:country', async (req, res) => {
     }
 });
 
+app.get('/languages', async (req, res) => {
+    try {
+        const response = await axios.get('https://restcountries.com/v3.1/all');
+
+        // Extrair idiomas de todos os países
+        const languages = new Set();
+        response.data.forEach(country => {
+            if (country.languages) {
+                Object.values(country.languages).forEach(lang => languages.add(lang));
+            }
+        });
+
+        res.json([...languages]); // Retornar os idiomas como uma lista única
+    } catch (error) {
+        console.error('Erro ao buscar idiomas:', error.message);
+        res.status(500).json({ error: 'Erro ao buscar idiomas', details: error.message });
+    }
+});
+
+
 // Test route
 app.get('/', (req, res) => {
     res.json('Countries API');
