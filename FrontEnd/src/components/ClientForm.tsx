@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { Upload, User, Calendar, Baby } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Upload, User } from 'lucide-react';
+import axios from 'axios';
 
 const NannyFinderForm = () => {
   const [client, setClient] = useState({
@@ -16,35 +17,84 @@ const NannyFinderForm = () => {
     preferences: '',
   });
 
-  const ageGroups = ['Babies (0 – 12 months)', 'Toddlers (1 – 3yrs)', 'Children (4 – 11yrs)', 'Teenagers (12 or above)'];
+  const [file, setFile] = useState(null); // Estado para armazenar o arquivo
+  const [countries, setCountries] = useState([]); // Estado para armazenar os países
+  const [loading, setLoading] = useState(true); // Estado de carregamento
+  const [error, setError] = useState(""); // Estado para mensagens de erro
+  const [successMessage, setSuccessMessage] = useState(""); // Estado para mensagens de sucesso
+
+  // Função para buscar os países da API
+  useEffect(() => {
+    const fetchCountries = async () => {
+      try {
+        const response = await axios.get('http://localhost:3005/countries'); // Ajuste para a URL correta do seu backend
+        setCountries(response.data);
+        setLoading(false); // Alterar o estado de carregamento após os países serem carregados
+      } catch (error) {
+        console.error('Erro ao buscar países:', error);
+        setLoading(false); // Alterar o estado de carregamento mesmo após erro
+      }
+    };
+
+    fetchCountries();
+  }, []);
 
   const handleInputChange = (e) => {
     const { id, value } = e.target;
     setClient((prev) => ({ ...prev, [id]: value }));
   };
 
-  const handleAgeGroupChange = (group) => {
-    setClient((prev) => ({
-      ...prev,
-      childrenAgeGroups: prev.childrenAgeGroups.includes(group)
-        ? prev.childrenAgeGroups.filter((g) => g !== group)
-        : [...prev.childrenAgeGroups, group],
-    }));
+  const handleFileChange = (e) => {
+    const uploadedFile = e.target.files[0];
+    setFile(uploadedFile); // Armazenar o arquivo no estado
   };
 
-  const handleFileUpload = (e) => {
-    console.log(e.target.files[0]);
-  };
-
-  const submitForm = (e) => {
+  const submitForm = async (e) => {
     e.preventDefault();
-    console.log('Form submitted', client);
+
+    // Verificar se um arquivo foi selecionado
+    if (!file) {
+      setError("Por favor, faça o upload de um arquivo.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('name', client.name);
+    formData.append('surname', client.surname);
+    formData.append('contactPhone', client.contactPhone);
+    formData.append('contactEmail', client.contactEmail);
+    formData.append('country', client.country);
+    formData.append('idNumber', client.idNumber);
+    formData.append('file', file); // Enviar o arquivo
+
+    
+    try {
+      if (formData && formData.entries && [...formData.entries()].length === 0) {
+        console.log("FormData está vazio");
+    } else {
+        console.log("FormData não está vazio");
+    }
+    
+      const response = await axios.post('http://localhost:3005/registerClient', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data', // Indica que estamos enviando um formulário com arquivo
+        },
+      });
+
+      setSuccessMessage("Cliente registrado com sucesso!");
+      setError(""); // Limpar mensagens de erro
+      console.log(response.data); // Você pode personalizar como deseja tratar a resposta
+    } catch (err) {
+      setSuccessMessage(""); // Limpar mensagens de sucesso
+      setError("Erro ao registrar cliente. Tente novamente mais tarde."+ err);
+      console.error(err);
+    }
   };
 
   return (
     <div className="max-w-3xl mx-auto bg-white rounded-2xl p-8 space-y-6">
       <div className="text-center">
-        <h2 className="text-3xl font-bold text-indigo-600 mb-4"> Customer registration form</h2>
+        <h2 className="text-3xl font-bold text-indigo-600 mb-4">Customer Registration Form</h2>
         <p className="text-gray-500">Fill out the form to start your search</p>
       </div>
 
@@ -102,14 +152,24 @@ const NannyFinderForm = () => {
             </div>
             <div>
               <label htmlFor="country" className="block text-sm font-medium text-gray-700 mb-2">Country</label>
-              <input
-                type="text"
-                id="country"
-                value={client.country}
-                onChange={handleInputChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500"
-                required
-              />
+              {loading ? (
+                <p>Loading countries...</p> // Mensagem de carregamento enquanto os países não são carregados
+              ) : (
+                <select
+                  id="country"
+                  value={client.country}
+                  onChange={handleInputChange}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500"
+                  required
+                >
+                  <option value="" disabled>Select a country</option>
+                  {countries.map((country, index) => (
+                    <option key={index} value={country}>
+                      {country}
+                    </option>
+                  ))}
+                </select>
+              )}
             </div>
             <div>
               <label htmlFor="idNumber" className="block text-sm font-medium text-gray-700 mb-2">ID / Passport Number</label>
@@ -123,17 +183,28 @@ const NannyFinderForm = () => {
               />
             </div>
           </div>
+
+          {/* Upload File */}
           <div className="mt-4">
             <label htmlFor="idCopy" className="block text-sm font-medium text-gray-700 mb-2">Upload ID Copy</label>
             <div className="flex items-center justify-center w-full">
               <label className="flex flex-col items-center px-4 py-6 bg-gray-50 text-blue-500 rounded-lg tracking-wide uppercase border border-blue cursor-pointer hover:bg-indigo-500 hover:text-white">
                 <Upload className="w-8 h-8" />
                 <span className="mt-2 text-base leading-normal">Select a file</span>
-                <input type="file" className="hidden" onChange={handleFileUpload} required />
+                <input
+                  type="file"
+                  className="hidden"
+                  onChange={handleFileChange} // Atualiza o estado do arquivo
+                  required
+                />
               </label>
             </div>
           </div>
-        </div>   
+        </div>
+
+        {/* Exibir mensagens de erro ou sucesso */}
+        {error && <div className="text-red-600">{error}</div>}
+        {successMessage && <div className="text-green-600">{successMessage}</div>}
 
         <div className="text-center">
           <button
