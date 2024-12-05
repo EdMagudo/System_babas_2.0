@@ -1,15 +1,49 @@
 import db from "../Models/index.js";
 const User = db.Users;
-
+const Files = db.Files;
 const createUser = async (req, res) => {
   try {
-    const user = await User.create(req.body);
-    res.status(201).json(user);
+     // Verifica se o email ou ID já existe
+     const existingUser = await User.findOne({ where: { email: req.body.email } });
+     const existingIdNumber = req.body.id_number
+        ? await User.findOne({ where: { id_number: req.body.id_number } })
+        : null;
+
+     if (existingUser) {
+        return res.status(400).json({ message: 'O email já está em uso.' });
+     }
+
+     if (existingIdNumber) {
+        return res.status(400).json({ message: 'O ID já está em uso.' });
+     }
+
+     // Criação do usuário
+     const userData = { ...req.body };
+     delete userData.file; // Remover o objeto file antes de criar o usuário
+
+     const user = await User.create(userData);
+
+     // Salvar o arquivo na tabela Files se existir
+     if (req.body.file) {
+        const fileData = {
+           user_id: user.user_id,
+           file_name: req.body.file.name,
+           file_path: req.body.file.name, // Apenas o nome do arquivo
+           file_type: req.body.file.type
+        };
+
+        await Files.create(fileData);
+     }
+
+     res.status(201).json({
+        message: 'Usuário criado com sucesso!',
+        user,
+     });
+
   } catch (error) {
-    res.status(500).json({ error: error.message });
+     res.status(500).json({ error: error.message });
   }
 };
-
 const getAllUsers = async (req, res) => {
   try {
     const users = await User.findAll();
