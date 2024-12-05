@@ -1,7 +1,7 @@
 import db from "../Models/index.js";
 import multer from "multer";
-const File = db.File;  // Supondo que você tenha definido o modelo `File` no Sequelize
-const User = db.User;  // Para garantir que o user_id seja válido
+const File = db.Files;  // Supondo que você tenha definido o modelo `File` no Sequelize
+const User = db.Users;  // Para garantir que o user_id seja válido
 
 // Configuração do Multer
 const storage = multer.diskStorage({

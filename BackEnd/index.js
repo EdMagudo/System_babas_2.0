@@ -21,8 +21,10 @@ app.use(express.urlencoded({ extended: true }));
 
 //Rotas
 import routerAdmin from './Routes/adminRoutes.js';
+import routerCli from './Routes/clientRoutes.js';
 
 app.use('/admin', routerAdmin);
+app.use('/cli', routerCli);
 // Route to fetch countries
 app.get('/countries', async (req, res) => {
     try {

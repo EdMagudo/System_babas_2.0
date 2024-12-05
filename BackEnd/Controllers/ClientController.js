@@ -36,8 +36,8 @@ const createClientWithFile = async (req, res) => {
       }
 
       // Verificar se o email ou ID já está em uso
-      const existingUser = await db.User.findOne({ where: { email: req.body.email } });
-      const existingPassport = await db.User.findOne({ where: { id_number: req.body.id_number } });
+      const existingUser = await db.Users.findOne({ where: { email: req.body.email } });
+      const existingPassport = await db.Users.findOne({ where: { id_number: req.body.id_number } });
       if (existingUser) {
         return res.status(400).json({ message: "Email já está em uso." });
       }
@@ -61,7 +61,7 @@ const createClientWithFile = async (req, res) => {
         file_path: req.file.path,
         file_type: req.file.mimetype
       };
-      await db.File.create(fileData);
+      await db.Files.create(fileData);
 
       res.status(201).json({ message: 'Cliente registrado com sucesso!', client });
     });
@@ -73,7 +73,7 @@ const createClientWithFile = async (req, res) => {
 // Função para obter todos os clientes
 const getAllClients = async (req, res) => {
   try {
-    const clients = await db.User.findAll({ where: { role: "client" } });
+    const clients = await db.Users.findAll({ where: { role: "client" } });
     res.status(200).json(clients);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -83,7 +83,7 @@ const getAllClients = async (req, res) => {
 // Função para obter um cliente por ID
 const getClientById = async (req, res) => {
   try {
-    const client = await db.User.findOne({ where: { user_id: req.params.id, role: "client" } });
+    const client = await db.Users.findOne({ where: { user_id: req.params.id, role: "client" } });
     if (client) {
       res.status(200).json(client);
     } else {
@@ -97,7 +97,7 @@ const getClientById = async (req, res) => {
 // Função para atualizar um cliente
 const updateClient = async (req, res) => {
   try {
-    const [updated] = await db.User.update(req.body, {
+    const [updated] = await db.Users.update(req.body, {
       where: { user_id: req.params.id, role: "client" }
     });
 
@@ -115,7 +115,7 @@ const updateClient = async (req, res) => {
 // Função para excluir um cliente
 const deleteClient = async (req, res) => {
   try {
-    const deleted = await db.User.destroy({
+    const deleted = await db.Users.destroy({
       where: { user_id: req.params.id, role: "client" }
     });
 
