@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
+// import Select from 'react-select';
 import axios from "axios"; 
+
+
 
 const NannyRegistrationForm = () => {
   const [currentStep, setCurrentStep] = useState(1);
@@ -14,10 +17,8 @@ const NannyRegistrationForm = () => {
     idCopy: null,
   });
 
-  
-
-
-
+  const [languages, setLanguages] = useState([]);
+  const [selectedLanguages, setSelectedLanguages] = useState([]);
   const [countries, setCountries] = useState([]);
   const [provinces, setProvinces] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -38,6 +39,7 @@ const NannyRegistrationForm = () => {
 
     fetchCountries();
   }, []);
+
 
   // Fetch provinces based on selected country
   useEffect(() => {
@@ -61,6 +63,35 @@ const NannyRegistrationForm = () => {
     const { id, value } = e.target;
     setClient((prev) => ({ ...prev, [id]: value }));
   };
+
+
+  useEffect(() => {
+    const fetchLanguages = async () => {
+      try {
+        const response = await axios.get('https://restcountries.com/v3.1/all');
+
+        // Extract unique languages
+        const uniqueLanguages = new Set();
+        response.data.forEach((country) => {
+          if (country.languages) {
+            Object.values(country.languages).forEach((lang) => uniqueLanguages.add(lang));
+          }
+        });
+
+        // Transform languages into React-Select compatible format
+        const options = [...uniqueLanguages].map((lang) => ({
+          value: lang,
+          label: lang,
+        }));
+        setLanguages(options);
+      } catch (error) {
+        console.error('Error fetching languages:', error.message);
+      }
+    };
+
+    fetchLanguages();
+  }, []);
+
 
   const handleFileUpload = (e) => {
     setClient((prev) => ({ ...prev, idCopy: e.target.files[0] }));
@@ -476,17 +507,20 @@ const WorkPreferencesStep = () => (
   </div>
 );
 
-const LanguagesStep = () => (
+const LanguagesStep = ({ languages, selectedLanguages, handleLanguageChange }) => (
   <div className="space-y-4">
     <h2 className="text-xl font-semibold text-blue-700">
       Languages & Additional Information
     </h2>
     <div className="space-y-2">
       <label className="block mb-2">Languages Spoken</label>
-      <input
-        type="text"
-        placeholder="Languages Spoken"
-        className="w-full px-3 py-2 border rounded"
+      <Select
+        isMulti
+        options={languages}
+        value={selectedLanguages}
+        onChange={handleLanguageChange}
+        placeholder="Select languages..."
+        className="w-full"
       />
     </div>
 
