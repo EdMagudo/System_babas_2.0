@@ -2,22 +2,22 @@ export default (sequelize, DataTypes) => {
     return sequelize.define('User_Language', {
         user_id: {
             type: DataTypes.INTEGER,
+            allowNull: false,
             primaryKey: true,
-            references: {
-                model: 'Users',
-                key: 'user_id'
-            }
         },
-        language_id: {
-            type: DataTypes.INTEGER,
+        language: {
+            type: DataTypes.STRING,
+            allowNull: false,
             primaryKey: true,
-            references: {
-                model: 'Languages',
-                key: 'language_id'
-            }
         }
     }, {
         tableName: 'User_Language',
-        timestamps: false
+        timestamps: false,
+        indexes: [
+            {
+                unique: true,
+                fields: ['user_id', 'language']
+            }
+        ]
     });
 };
