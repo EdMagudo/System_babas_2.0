@@ -5,7 +5,6 @@ import dbConfig from '../config/db.js';
 import AdminModel from './AdminModel.js';
 import UsersModel from './UsersModel.js';
 import NannyProfilesModel from './NannyProfilesModel.js';
-import LanguagesModel from './LanguagesModel.js';
 import UserLanguageModel from './UserLanguageModel.js';
 import NannyChildAgeExperienceModel from './NannyChildAgeExperienceModel.js';
 import ServiceRequestsModel from './ServiceRequestsModel.js';
@@ -30,7 +29,6 @@ const db = {
   Admin: AdminModel(sequelize, DataTypes),
   Users: UsersModel(sequelize, DataTypes),
   Nanny_Profiles: NannyProfilesModel(sequelize, DataTypes),
-  Languages: LanguagesModel(sequelize, DataTypes),
   User_Language: UserLanguageModel(sequelize, DataTypes),
   Nanny_Child_Age_Experience: NannyChildAgeExperienceModel(sequelize, DataTypes),
   Service_Requests: ServiceRequestsModel(sequelize, DataTypes),
@@ -59,12 +57,7 @@ db.Users.belongsToMany(db.Languages, {
   otherKey: 'language_id',
   as: 'languages'
 });
-db.Languages.belongsToMany(db.Users, {
-  through: db.User_Language,
-  foreignKey: 'language_id',
-  otherKey: 'user_id',
-  as: 'users'
-});
+
 
 // Nanny Profiles and Child Age Experience
 db.Nanny_Profiles.belongsToMany(db.Nanny_Child_Age_Experience, {

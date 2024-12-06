@@ -19,15 +19,42 @@ const getAllUserLanguages = async (req, res) => {
   }
 };
 
-const getUserLanguagesByUserId = async (req, res) => {
+const getUserLanguageById = async (req, res) => {
   try {
-    const userLanguages = await UserLanguage.findAll({
-      where: { user_id: req.params.user_id },
+    const userLanguage = await UserLanguage.findOne({
+      where: {
+        user_id: req.params.user_id,
+        language: req.params.language,
+      },
     });
-    if (userLanguages.length > 0) {
-      res.status(200).json(userLanguages);
+    if (userLanguage) {
+      res.status(200).json(userLanguage);
     } else {
-      res.status(404).json({ message: "No languages found for this user" });
+      res.status(404).json({ message: "UserLanguage not found" });
+    }
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+const updateUserLanguage = async (req, res) => {
+  try {
+    const [updated] = await UserLanguage.update(req.body, {
+      where: {
+        user_id: req.params.user_id,
+        language: req.params.language,
+      },
+    });
+    if (updated) {
+      const updatedUserLanguage = await UserLanguage.findOne({
+        where: {
+          user_id: req.params.user_id,
+          language: req.params.language,
+        },
+      });
+      res.status(200).json(updatedUserLanguage);
+    } else {
+      res.status(404).json({ message: "UserLanguage not found" });
     }
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -39,13 +66,13 @@ const deleteUserLanguage = async (req, res) => {
     const deleted = await UserLanguage.destroy({
       where: {
         user_id: req.params.user_id,
-        language_id: req.params.language_id,
+        language: req.params.language,
       },
     });
     if (deleted) {
-      res.status(204).json({ message: "User language association deleted" });
+      res.status(204).json({ message: "UserLanguage deleted" });
     } else {
-      res.status(404).json({ message: "User language association not found" });
+      res.status(404).json({ message: "UserLanguage not found" });
     }
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -55,6 +82,7 @@ const deleteUserLanguage = async (req, res) => {
 export default {
   createUserLanguage,
   getAllUserLanguages,
-  getUserLanguagesByUserId,
+  getUserLanguageById,
+  updateUserLanguage,
   deleteUserLanguage,
 };

@@ -4,20 +4,17 @@ export default (sequelize, DataTypes) => {
             type: DataTypes.INTEGER,
             primaryKey: true,
             references: {
-                model: 'Users',
-                key: 'user_id'
+                model: 'Users',  
+                key: 'user_id'   
             }
         },
-        language_id: {
-            type: DataTypes.INTEGER,
-            primaryKey: true,
-            references: {
-                model: 'Languages',
-                key: 'language_id'
-            }
+        language: {
+            type: DataTypes.STRING(255),
+            primaryKey: true,  
         }
     }, {
-        tableName: 'User_Language',
-        timestamps: false
+        tableName: 'User_Language',  
+        timestamps: false,           
+        freezeTableName: true        
     });
 };

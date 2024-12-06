@@ -6,7 +6,7 @@ const router = Router();
 
 // Rota de criação de usuário com upload de arquivo
 router.post("/", upload.single('file'), usersController.createUser);
-
+router.post("/nanny", upload.single('file'), usersController.createNannyUser);
 router.get("/", usersController.getAllUsers); // Lista todos os usuários
 router.get("/:user_id", usersController.getUserById); // Obtém os detalhes de um usuário específico
 router.put("/:user_id", usersController.updateUser); // Atualiza um usuário existente
