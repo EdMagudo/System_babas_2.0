@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from "react";
-// import Select from 'react-select';
 import axios from "axios"; 
-
-
 
 const NannyRegistrationForm = () => {
   const [currentStep, setCurrentStep] = useState(1);
@@ -40,7 +37,6 @@ const NannyRegistrationForm = () => {
     fetchCountries();
   }, []);
 
-
   // Fetch provinces based on selected country
   useEffect(() => {
     if (client.country) {
@@ -63,7 +59,6 @@ const NannyRegistrationForm = () => {
     const { id, value } = e.target;
     setClient((prev) => ({ ...prev, [id]: value }));
   };
-
 
   useEffect(() => {
     const fetchLanguages = async () => {
@@ -92,9 +87,12 @@ const NannyRegistrationForm = () => {
     fetchLanguages();
   }, []);
 
-
   const handleFileUpload = (e) => {
     setClient((prev) => ({ ...prev, idCopy: e.target.files[0] }));
+  };
+
+  const handleLanguageChange = (selectedOptions) => {
+    setSelectedLanguages(selectedOptions);
   };
 
   const steps = [
@@ -128,7 +126,11 @@ const NannyRegistrationForm = () => {
     },
     {
       title: "Languages & Additional Information",
-      component: LanguagesStep,
+      component: () => LanguagesStep({
+        languages, 
+        selectedLanguages, 
+        handleLanguageChange
+      }),
     },
     {
       title: "Review & Submit",
@@ -148,9 +150,78 @@ const NannyRegistrationForm = () => {
     }
   };
 
-  const handleSubmit = () => {
-    // Implement form submission logic
-    console.log("Submitting form", client);
+  const handleSubmit = async () => {
+    try {
+      // Create FormData to handle file upload
+      const formData = new FormData();
+      
+      // Append personal information
+      formData.append('firstName', client.firstName);
+      formData.append('lastName', client.lastName);
+      formData.append("role", client.role);
+      formData.append('contactNumber', client.contactNumber);
+      formData.append('country', client.country);
+      formData.append('province', client.province);
+      formData.append('idNumber', client.idNumber);
+      
+      // Append ID copy file
+      if (client.idCopy) {
+        formData.append('idCopy', client.idCopy);
+      }
+  
+      // Append languages
+      formData.append('languages', JSON.stringify(selectedLanguages.map(lang => lang.value)));
+  
+      // Append additional form step data
+      const educationLevel = document.querySelector('select[name="education-level"]')?.value;
+      formData.append('educationLevel', educationLevel || '');
+  
+      const jobType = document.querySelector('input[name="job-type"]:checked')?.value;
+      formData.append('jobType', jobType || '');
+  
+      const experience = document.querySelector('select[name="experience"]')?.value;
+      formData.append('experience', experience || '');
+  
+      // Collect age groups with experience
+      const ageGroups = Array.from(
+        document.querySelectorAll('input[name="age-groups"]:checked')
+      ).map(input => input.value);
+      formData.append('ageGroups', JSON.stringify(ageGroups));
+  
+      // Police clearance
+      const policeClearance = document.querySelector('input[name="police-clearance"]:checked')?.value;
+      formData.append('policeClearance', policeClearance || '');
+  
+      // Work preferences
+      const workHours = Array.from(
+        document.querySelectorAll('input[name="work-hours"]:checked')
+      ).map(input => input.value);
+      formData.append('workHours', JSON.stringify(workHours));
+  
+      const preferredAgeGroups = Array.from(
+        document.querySelectorAll('input[name="preferred-age-groups"]:checked')
+      ).map(input => input.value);
+      formData.append('preferredAgeGroups', JSON.stringify(preferredAgeGroups));
+  
+      // Additional information
+      const additionalInfo = document.querySelector('textarea[name="additional-info"]')?.value;
+      formData.append('additionalInfo', additionalInfo || '');
+  
+      // Send data to backend
+      const response = await axios.post('http://localhost:3005/register-nanny', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+  
+      // Handle successful submission
+      console.log('Submission successful:', response.data);
+      alert('Registration submitted successfully!');
+    } catch (error) {
+      // Handle submission error
+      console.error('Error submitting registration:', error);
+      alert('Failed to submit registration. Please try again.');
+    }
   };
 
   const CurrentStepComponent = steps[currentStep - 1].component;
@@ -463,7 +534,7 @@ const BackgroundCheckStep = () => (
             <span className="ml-2">No</span>
           </label>
         </div>
-      </div>
+        </div>
       <div>
         <label className="block mb-2">
           Please upload a copy of your police clearance:
@@ -507,41 +578,107 @@ const WorkPreferencesStep = () => (
   </div>
 );
 
-const LanguagesStep = ({ languages, selectedLanguages, handleLanguageChange }) => (
-  <div className="space-y-4">
-    <h2 className="text-xl font-semibold text-blue-700">
-      Languages & Additional Information
-    </h2>
-    <div className="space-y-2">
-      <label className="block mb-2">Languages Spoken</label>
-      <Select
-        isMulti
-        options={languages}
-        value={selectedLanguages}
-        onChange={handleLanguageChange}
-        placeholder="Select languages..."
-        className="w-full"
-      />
-    </div>
+const LanguagesStep = ({ languages, selectedLanguages, handleLanguageChange }) => {
+  const [isOpen, setIsOpen] = useState(false);
 
-    <div className="space-y-2">
-      <label className="block mb-2">Additional Information</label>
-      <textarea
-        placeholder="Please share any other relevant information"
-        className="w-full px-3 py-2 border rounded"
-      />
+  return (
+    <div className="space-y-4">
+      <h2 className="text-xl font-semibold text-blue-700">
+        Languages & Additional Information
+      </h2>
+      
+      <div className="space-y-2">
+        <label className="block mb-2">Languages Spoken</label>
+        <div className="relative">
+          {/* Combobox trigger */}
+          <div 
+            onClick={() => setIsOpen(!isOpen)}
+            className="w-full px-3 py-2 border rounded flex items-center justify-between cursor-pointer"
+          >
+            <span>
+              {selectedLanguages.length > 0 
+                ? selectedLanguages.map(lang => lang.label).join(', ') 
+                : 'Select languages...'}
+            </span>
+            <svg 
+              className="w-5 h-5 text-gray-400" 
+              fill="none" 
+              stroke="currentColor" 
+              viewBox="0 0 24 24" 
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path 
+                strokeLinecap="round" 
+                strokeLinejoin="round" 
+                strokeWidth="2" 
+                d="M19 9l-7 7-7-7"
+              ></path>
+            </svg>
+          </div>
+
+          {/* Dropdown list */}
+          {isOpen && (
+            <div className="absolute z-10 w-full mt-1 bg-white border rounded shadow-lg max-h-60 overflow-y-auto">
+              {languages.map((lang, index) => (
+                <div 
+                  key={index} 
+                  className="px-3 py-2 hover:bg-gray-100 flex items-center"
+                  onClick={() => {
+                    const isSelected = selectedLanguages.some(
+                      (selected) => selected.value === lang.value
+                    );
+                    
+                    if (isSelected) {
+                      // Remove language if already selected
+                      handleLanguageChange(
+                        selectedLanguages.filter(
+                          (selected) => selected.value !== lang.value
+                        )
+                      );
+                    } else {
+                      // Add language if not selected
+                      handleLanguageChange([
+                        ...selectedLanguages,
+                        { value: lang.value, label: lang.label }
+                      ]);
+                    }
+                  }}
+                >
+                  <input 
+                    type="checkbox"
+                    className="mr-2"
+                    checked={selectedLanguages.some(
+                      (selected) => selected.value === lang.value
+                    )}
+                    readOnly
+                  />
+                  <span>{lang.label}</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div className="space-y-2">
+        <label className="block mb-2">Additional Information</label>
+        <textarea
+          placeholder="Please share any other relevant information"
+          className="w-full px-3 py-2 border rounded"
+        />
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 const ReviewStep = () => (
   <div className="space-y-4">
-    <h2 className="text-xl font-semibold text-blue-700">Revisar Inscrição</h2>
+    <h2 className="text-xl font-semibold text-blue-700">Review Registration</h2>
     <div className="bg-blue-50 p-4 rounded-lg">
-      <p>Por favor, revise cuidadosamente todas as suas informações antes de enviar.</p>
+      <p>Please carefully review all of your information before submitting.</p>
       <p className="mt-2 text-sm text-gray-600">
-        Após clicar em 'Enviar Inscrição', processaremos seu registro 
-        e entraremos em contato com mais instruções.
+        After clicking 'Submit Application', we will process your registration 
+        and contact you with further instructions.
       </p>
     </div>
   </div>
