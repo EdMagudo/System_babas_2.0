@@ -7,6 +7,7 @@ import ClientForm from './components/ClientForm';
 import NannyForm from './components/NannyForm';
 import ContactUs from './components/contactUs';
 import FindNanny from './components/FindNanny';
+import LoginPage from './Pages/LoginPage';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
             <Route path="/register-nanny" element={<NannyForm />} />
             <Route path="/contact-us" element={<ContactUs />} />     
             <Route path="/search" element={<FindNanny />} />
+            <Route path="/sign-in" element={<LoginPage />} />
 
 
             <Route path="*" element={<h1>404 - Page Not Found</h1>} />
