@@ -1,7 +1,7 @@
 import db from "../Models/index.js";
 const User = db.Users;
 const Files = db.Files;
-const Nanny_Profiles = db.Nanny_Profiles;
+const NannyProfiles = db.Nanny_Profiles;
 
 
 import multer from 'multer';
