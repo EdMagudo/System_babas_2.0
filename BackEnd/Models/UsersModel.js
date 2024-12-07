@@ -12,7 +12,7 @@ export default (sequelize, DataTypes) => {
         },
         password_hash: {
             type: DataTypes.STRING(255),
-            allowNull: false
+            allowNull: true
         },
         role: {
             type: DataTypes.ENUM('client', 'nanny'),
@@ -48,11 +48,11 @@ export default (sequelize, DataTypes) => {
         },
         country_name: {
             type: DataTypes.STRING(100),
-            allowNull: false
+            allowNull: true
         },
         province_name: {
             type: DataTypes.STRING(100),
-            allowNull: false
+            allowNull: true
         }
     }, {
         tableName: 'Users',

@@ -105,280 +105,71 @@ const deleteUser = async (req, res) => {
   }
 };
 
-
-
-
-
-/*
 const createNannyUser = async (req, res) => {
-  const transaction = await sequelize.transaction();
-
-  try {
+    try {
       // Verifica se o email ou ID já existe
-      const existingUser = await User.findOne({ 
-          where: { email: req.body.email },
-          transaction 
-      });
-
-      const existingIdNumber = req.body.id_number
-          ? await User.findOne({ 
-              where: { id_number: req.body.id_number },
-              transaction 
-          })
-          : null;
-
+      const existingUser = await User.findOne({ where: { email: req.body.email } });
+      const existingIdNumber = req.body.idNumber
+        ? await User.findOne({ where: { id_number: req.body.idNumber } })
+        : null;
+  
       if (existingUser) {
-          await transaction.rollback();
-          return res.status(400).json({ message: 'O email já está em uso.' });
+        return res.status(400).json({ message: 'O email já está em uso.' });
       }
-
+  
       if (existingIdNumber) {
-          await transaction.rollback();
-          return res.status(400).json({ message: 'O ID já está em uso.' });
+        return res.status(400).json({ message: 'O ID já está em uso.' });
       }
-
-      // Adicionar role de nanny
+      const rolee = "nanny";
+      // Criação do usuário
       const userData = {
-          ...req.body,
-          role: 'nanny' // Garante que o usuário seja criado com role de nanny
+        first_name: req.body.firstName,
+        last_name: req.body.lastName,
+        email: req.body.email,
+        country_name: req.body.country,
+        province_name: req.body.province,
+        id_number: req.body.idNumber,
+        role: rolee
       };
-      delete userData.file;
-
-      // Criar usuário
-      const user = await User.create(userData, { transaction });
-
-      // Criar perfil de nanny
-      const nannyProfileData = {
-          user_id: user.user_id,
-          education_level: req.body.education_level,
-          job_type: req.body.job_type,
-          experience_years: req.body.experience_years,
-          has_criminal_record: req.body.has_criminal_record,
-          special_needs_experience: req.body.special_needs_experience,
-          additional_info: req.body.additional_info
-      };
-
-      const nannyProfile = await Nanny_Profiles.create(nannyProfileData, { transaction });
-
-      // Salvar arquivo se existir
+  
+      const user = await User.create(userData);
+  
+      // Salvar o arquivo na tabela Files se existir
       if (req.file) {
-          const fileData = {
-              user_id: user.user_id,
-              file_name: req.file.originalname,
-              file_path: req.file.path,
-              file_type: req.file.mimetype
-          };
-
-          await Files.create(fileData, { transaction });
-      }
-
-      // Commit da transação
-      await transaction.commit();
-
-      res.status(201).json({
-          message: 'Usuário Nanny criado com sucesso!',
-          user,
-          nannyProfile
-      });
-
-  } catch (error) {
-      // Rollback da transação em caso de erro
-      await transaction.rollback();
-      res.status(500).json({ error: error.message });
-  }
-};*/
-/*
-const createNannyUser = async (req, res) => {
-  const transaction = await sequelize.transaction();
-
-  try {
-      // Verifica se o email ou ID já existe
-      const existingUser = await User.findOne({ 
-          where: { email: req.body.email },
-          transaction 
-      });
-
-      const existingIdNumber = req.body.id_number
-          ? await User.findOne({ 
-              where: { id_number: req.body.id_number },
-              transaction 
-          })
-          : null;
-
-      if (existingUser) {
-          await transaction.rollback();
-          return res.status(400).json({ message: 'O email já está em uso.' });
-      }
-
-      if (existingIdNumber) {
-          await transaction.rollback();
-          return res.status(400).json({ message: 'O ID já está em uso.' });
-      }
-
-      // Preparar dados do usuário
-      const userData = {
-          ...req.body,
-          role: 'nanny' // Garante que o usuário seja criado com role de nanny
-      };
-      
-      // Remover arquivos dos dados do usuário
-      const files = req.body.files || {};
-      delete userData.files;
-
-      // Criar usuário
-      const user = await User.create(userData, { transaction });
-
-      // Criar perfil de nanny
-      const nannyProfileData = {
+        const fileData = {
           user_id: user.user_id,
-          education_level: req.body.education_level,
-          job_type: req.body.job_type,
-          experience_years: req.body.experience_years,
-          has_criminal_record: req.body.has_criminal_record,
-          special_needs_experience: req.body.special_needs_experience,
-          additional_info: req.body.additional_info,
-          
-          // Campos adicionais do NannyCard
-          rating: req.body.rating || 0,
-          location: req.body.location,
-          available_from: req.body.availableFrom,
-          available_to: req.body.availableTo,
-          hourly_rate: req.body.hourlyRate,
-          languages: JSON.stringify(req.body.languages || []),
-          specialties: JSON.stringify(req.body.specialties || [])
-      };
-
-      const nannyProfile = await Nanny_Profiles.create(nannyProfileData, { transaction });
-
-      // Salvar múltiplos arquivos
-      const filePromises = Object.entries(files).map(async ([fileType, fileData]) => {
-          if (fileData) {
-              const completeFileData = {
-                  user_id: user.user_id,
-                  file_name: fileData.name,
-                  file_path: `/uploads/nanny/${user.user_id}_${fileType}_${fileData.name}`,
-                  file_type: fileData.type,
-                  file_category: fileType // Categoria do arquivo (photo, document, etc.)
-              };
-
-              return Files.create(completeFileData, { transaction });
-          }
-      });
-
-      // Aguardar todos os uploads de arquivo
-      await Promise.all(filePromises.filter(Boolean));
-
-      // Commit da transação
-      await transaction.commit();
-
-      res.status(201).json({
-          message: 'Usuário Nanny criado com sucesso!',
-          user,
-          nannyProfile
-      });
-
-  } catch (error) {
-      // Rollback da transação em caso de erro
-      await transaction.rollback();
-      res.status(500).json({ error: error.message });
-  }
-};*/
-
-const createNannyUser = async (req, res) => {
-  const transaction = await db.sequelize.transaction();
-
-  try {
-      // Verifica se o email ou ID já existe
-      const existingUser = await User.findOne({ 
-          where: { email: req.body.email },
-          transaction 
-      });
-
-      const existingIdNumber = req.body.id_number
-          ? await User.findOne({ 
-              where: { id_number: req.body.id_number },
-              transaction 
-          })
-          : null;
-
-      if (existingUser) {
-          await transaction.rollback();
-          return res.status(400).json({ message: 'O email já está em uso.' });
+          file_name: req.file.originalname, // Nome original do arquivo
+          file_path: req.file.path, // Caminho do arquivo salvo
+          file_type: req.file.mimetype, // Tipo MIME do arquivo
+        };
+  
+        await Files.create(fileData);
       }
-
-      if (existingIdNumber) {
-          await transaction.rollback();
-          return res.status(400).json({ message: 'O ID já está em uso.' });
-      }
-
-      // Preparar dados do usuário
-      const userData = {
-          ...req.body,
-          role: 'nanny' // Garante que o usuário seja criado com role de nanny
-      };
-      
-      // Remover arquivos dos dados do usuário
-      const files = req.body.files || {};
-      delete userData.files;
-
-      // Criar usuário
-      const user = await User.create(userData, { transaction });
-
-      // Criar perfil de nanny
+  
+      // Criar o perfil de nanny associado ao usuário
       const nannyProfileData = {
-          user_id: user.user_id,
-          education_level: req.body.education_level,
-          job_type: req.body.job_type,
-          experience_years: req.body.experience_years,
-          has_criminal_record: req.body.has_criminal_record,
-          special_needs_experience: req.body.special_needs_experience,
-          additional_info: req.body.additional_info,
-          
-          // Campos adicionais do NannyCard
-          rating: req.body.rating || 0,
-          location: req.body.location,
-          available_from: req.body.availableFrom,
-          available_to: req.body.availableTo,
-          hourly_rate: req.body.hourlyRate,
-          languages: JSON.stringify(req.body.languages || []),
-          specialties: JSON.stringify(req.body.specialties || [])
+        user_id: user.user_id,
+        education_level: req.body.educationLevel,
+        date_of_birth: req.body.date_of_birth,
+        job_type: req.body.jobType || null, // Se passado no JSON, use, senão null
+        experience_years: req.body.experienceYears || null, // Se passado no JSON, use, senão null
+        has_criminal_record: req.body.hasCriminalRecord || false, // Default para falso
+        special_needs_experience: req.body.specialNeedsExperience || false, // Default para falso
+        additional_info: req.body.additionalInfo || null, // Informações adicionais opcionais
       };
-
-      const nannyProfile = await Nanny_Profiles.create(nannyProfileData, { transaction });
-
-      // Salvar múltiplos arquivos
-      const filePromises = Object.entries(files).map(async ([fileType, fileData]) => {
-          if (fileData) {
-              const completeFileData = {
-                  user_id: user.user_id,
-                  file_name: fileData.name,
-                  file_path: `/uploads/nanny/${user.user_id}_${fileType}_${fileData.name}`,
-                  file_type: fileData.type,
-                  file_category: fileType // Categoria do arquivo (photo, document, etc.)
-              };
-
-              return Files.create(completeFileData, { transaction });
-          }
-      });
-
-      // Aguardar todos os uploads de arquivo
-      await Promise.all(filePromises.filter(Boolean));
-
-      // Commit da transação
-      await transaction.commit();
-
+  
+      await NannyProfiles.create(nannyProfileData);
+  
       res.status(201).json({
-          message: 'Usuário Nanny criado com sucesso!',
-          user,
-          nannyProfile
+        message: 'Usuário e perfil de nanny criados com sucesso!',
+        user,
       });
-
-  } catch (error) {
-      // Rollback da transação em caso de erro
-      await transaction.rollback();
+    } catch (error) {
+      console.error(error);
       res.status(500).json({ error: error.message });
-  }
-};
+    }
+  };
+  
 export default {
   createUser,
   getAllUsers,
