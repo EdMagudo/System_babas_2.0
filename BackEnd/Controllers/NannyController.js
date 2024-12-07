@@ -1,8 +1,14 @@
 import db from "../Models/index.js";
 import multer from "multer";
 import bcrypt from "bcrypt";
+const User = db.Users;
+const NannyProfile = db.Nanny_Profiles;
+const  Language = db.languages;
+const File = db.Files;
 
-const { User, NannyProfile, File, Language } = db;
+\
+
+//const { User, NannyProfile, File, Language } = db;
 const upload = multer({ dest: "uploads" }); // Configuração do Multer para upload de arquivos
 
 // Função para registrar uma babá (nanny)
@@ -17,7 +23,6 @@ const registerNanny = async (req, res) => {
       "email",
       "firstName",
       "lastName",
-      "contactNumber",
       "idNumber",
     ];
     for (const field of requiredFields) {

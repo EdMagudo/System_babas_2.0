@@ -101,6 +101,19 @@ const deleteUser = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+const getUserByEmail = async (req, res) => {
+  try {
+    const { email } = req.params; // Obtém o email da URL
+    const user = await User.findOne({ where: { email } });
+    if (user) {
+      res.status(200).json(user);
+    } else {
+      res.status(404).json({ message: "User not found" });
+    }
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
 
 export default {
   createUser,
@@ -108,4 +121,5 @@ export default {
   getUserById,
   updateUser,
   deleteUser,
+  getUserByEmail
 };
