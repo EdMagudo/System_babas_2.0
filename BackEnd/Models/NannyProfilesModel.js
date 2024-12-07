@@ -19,23 +19,27 @@ export default (sequelize, DataTypes) => {
                 'technical_graduate', 
                 'university_graduate'
             ),
-            allowNull: false
+            allowNull: true
         },
+        date_of_birth: {
+            type: DataTypes.DATEONLY,
+            allowNull: true
+        }
+        ,
         job_type: {
             type: DataTypes.ENUM('full_time', 'temporary'),
-            allowNull: false
+            allowNull: true
         },
         experience_years: {
             type: DataTypes.ENUM('none', '1-2', '3-5', '5+'),
-            allowNull: false
+            allowNull: true
         },
         has_criminal_record: {
             type: DataTypes.BOOLEAN,
-            allowNull: false
+            allowNull: true
         },
         special_needs_experience: {
             type: DataTypes.BOOLEAN,
-            allowNull: false
         },
         background_check_status: {
             type: DataTypes.ENUM('pending', 'approved', 'rejected'),
@@ -47,6 +51,6 @@ export default (sequelize, DataTypes) => {
         }
     }, {
         tableName: 'Nanny_Profiles',
-        timestamps: false
+        timestamps: true
     });
 };
