@@ -1,22 +1,29 @@
-import React, { useState } from 'react';
-import { Home, User, Briefcase, Calendar, MessageCircle } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Home, User, Briefcase } from 'lucide-react';
+import axios from 'axios';
 
 const NannyDashboard = () => {
   const [activeSection, setActiveSection] = useState('overview');
+  const [nannyProfile, setNannyProfile] = useState(null);  // Estado para armazenar os dados reais da babá
 
-  // Mock data - in a real application, this would come from backend/context
-  const nannyProfile = {
-    firstName: "Maria",
-    lastName: "Silva",
-    email: "maria.silva@email.com",
-    country: "Brazil",
-    province: "São Paulo",
-    educationLevel: "University Graduate",
-    profilePicture: "/api/placeholder/200/200",
-    availabilityStatus: "Available",
-    completedJobs: 12,
-    rating: 4.7
+  // Função para buscar os dados reais da babá da API
+  const fetchNannyProfile = async () => {
+    try {
+      const response = await axios.get('http://localhost:3005/user/');  // Rota para buscar o perfil de usuário
+      setNannyProfile(response.data);  // Atualiza o estado com os dados recebidos
+    } catch (error) {
+      console.error('Erro ao buscar o perfil:', error);
+    }
   };
+
+  useEffect(() => {
+    fetchNannyProfile();  // Chama a função para buscar os dados quando o componente for montado
+  }, []);
+
+  // Verifique se os dados da babá já foram carregados
+  if (!nannyProfile) {
+    return <div>Loading...</div>;  // Exibe uma mensagem enquanto os dados não são carregados
+  }
 
   const renderSection = () => {
     switch(activeSection) {
@@ -33,7 +40,7 @@ const NannyDashboard = () => {
             </div>
             <div className="bg-white p-6 rounded-lg shadow-md">
               <h3 className="text-xl font-semibold mb-4 text-blue-700">Professional Summary</h3>
-              <p>Dedicated and experienced nanny with a background in early childhood education. Passionate about providing high-quality childcare and creating nurturing environments.</p>
+              <p>{nannyProfile.professionalSummary}</p>
             </div>
           </div>
         );
@@ -49,7 +56,7 @@ const NannyDashboard = () => {
               </div>
               <div>
                 <p>Education: {nannyProfile.educationLevel}</p>
-                <p>Languages: Portuguese, English</p>
+                <p>Languages: {nannyProfile.languages.join(', ')}</p>
               </div>
             </div>
           </div>
@@ -59,16 +66,13 @@ const NannyDashboard = () => {
           <div className="bg-white p-6 rounded-lg shadow-md">
             <h3 className="text-xl font-semibold mb-4 text-blue-700">Job Opportunities</h3>
             <div className="space-y-4">
-              <div className="border p-4 rounded-md">
-                <h4 className="font-semibold">Part-time Nanny - Family in São Paulo</h4>
-                <p>2 children, ages 3 and 6</p>
-                <p className="text-green-600">Application Open</p>
-              </div>
-              <div className="border p-4 rounded-md">
-                <h4 className="font-semibold">Full-time Nanny - Suburban Family</h4>
-                <p>1 infant, need experienced caregiver</p>
-                <p className="text-yellow-600">Interview Scheduled</p>
-              </div>
+              {nannyProfile.jobs.map((job, index) => (
+                <div key={index} className="border p-4 rounded-md">
+                  <h4 className="font-semibold">{job.title}</h4>
+                  <p>{job.description}</p>
+                  <p className={`text-${job.status === 'Open' ? 'green' : 'yellow'}-600`}>{job.status}</p>
+                </div>
+              ))}
             </div>
           </div>
         );

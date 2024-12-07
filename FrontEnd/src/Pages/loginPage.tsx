@@ -1,16 +1,52 @@
 import React, { useState } from 'react';
 import { Mail, Lock } from 'lucide-react';
-
+import { useNavigate } from 'react-router-dom';
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
   });
+  const [error, setError] = useState(null);
+  const navigate = useNavigate(); // Hook de navegação
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     console.log('Form submitted:', formData);
+
+    // Envia a requisição de login para o servidor
+    try {
+      const response = await fetch('http://localhost:3005/user/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        console.log('Login successful:', data);
+        // Armazenar o token no localStorage ou gerenciar de outra forma
+        localStorage.setItem('authToken', data.token);
+
+        // Navegar para o dashboard correto com base no role
+        if (data.user.role === 'client') {
+          navigate('/client-dashboard'); // Redireciona para ClientDashboard
+        } else if (data.user.role === 'nanny') {
+          navigate('/nanny-dashboard'); // Redireciona para NannyDashboard
+        }
+      } else {
+        setError(data.message);
+      }
+    } catch (err) {
+      setError('Erro ao tentar fazer login');
+      console.error('Login failed', err);
+    }
   };
 
   const handleChange = (e) => {
@@ -24,6 +60,7 @@ const LoginPage = () => {
     <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
       <div className="w-full max-w-md bg-white rounded-lg shadow-lg p-6">
         <h1 className="text-2xl font-bold text-center text-gray-900 mb-6">Login</h1>
+        {error && <div className="text-red-500 text-center mb-4">{error}</div>}
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
             <label htmlFor="email" className="block text-sm font-medium text-gray-700">
@@ -58,7 +95,7 @@ const LoginPage = () => {
                 id="password"
                 name="password"
                 type="password"
-                required
+                
                 className="w-full px-3 py-2 pl-10 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                 placeholder="********"
                 value={formData.password}

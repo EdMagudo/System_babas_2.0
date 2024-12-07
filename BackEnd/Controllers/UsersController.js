@@ -2,68 +2,44 @@ import db from "../Models/index.js";
 const User = db.Users;
 const Files = db.Files;
 const NannyProfiles = db.Nanny_Profiles;
-
-
+import bcrypt from 'bcrypt';
 import multer from 'multer';
+import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
+
+
 
 const upload = multer({ dest: 'uploads/' }); // Define o diretório de destino para o arquivo
 
 
-const loginUser = async (req, res) => {
-  const { email, id_number } = req.body;
+// const loginUser = async (req, res) => {
+//   const { email, id_number } = req.body;
 
-  try {
-    const user = await User.findOne({ where: { email, id_number } });
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' });
-    }
+//   try {
+//     const user = await User.findOne({ where: { email, id_number } });
+//     if (!user) {
+//       return res.status(404).json({ message: 'User not found' });
+//     }
 
-    const token = jwt.sign(
-      { id: user.id, email: user.email, role: user.role },
-      process.env.JWT_SECRET,
-      { expiresIn: process.env.JWT_EXPIRATION }
-    );
+//     const token = jwt.sign(
+//       { id: user.id, email: user.email, role: user.role },
+//       process.env.JWT_SECRET,
+//       { expiresIn: process.env.JWT_EXPIRATION }
+//     );
 
-    res.status(200).json({
-      message: 'Login successful',
-      token,
-      user: {
-        id: user.id,
-        email: user.email,
-        role: user.role
-      }
-    });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+//     res.status(200).json({
+//       message: 'Login successful',
+//       token,
+//       user: {
+//         id: user.id,
+//         email: user.email,
+//         role: user.role
+//       }
+//     });
+//   } catch (error) {
+//     res.status(500).json({ error: error.message });
+//   }
+// };
 
 const createUser = async (req, res) => {
   try {
@@ -178,6 +154,8 @@ const createNannyUser = async (req, res) => {
         return res.status(400).json({ message: 'O ID já está em uso.' });
       }
       const rolee = "nanny";
+
+      const hashedPassword = await bcrypt.hash(req.body.idNumber, 10);
       // Criação do usuário
       const userData = {
         first_name: req.body.firstName,
@@ -186,6 +164,7 @@ const createNannyUser = async (req, res) => {
         country_name: req.body.country,
         province_name: req.body.province,
         id_number: req.body.idNumber,
+        password_hash: hashedPassword,
         role: rolee
       };
   
@@ -226,6 +205,43 @@ const createNannyUser = async (req, res) => {
       res.status(500).json({ error: error.message });
     }
   };
+
+  const loginUser = async (req, res) => {
+    const { email, password } = req.body;
+  
+    try {
+      const user = await User.findOne({ where: { email } });
+      if (!user) {
+        return res.status(404).json({ message: 'Usuário não encontrado' });
+      }
+  
+      // Verifique se a senha fornecida corresponde ao password_hash armazenado
+      const isPasswordValid = await bcrypt.compare(password, user.password_hash);
+      if (!isPasswordValid) {
+        return res.status(401).json({ message: 'Senha incorreta' });
+      }
+      dotenv.config(); 
+      // Gerar um token JWT para o usuário
+      const token = jwt.sign(
+        { id: user.id, email: user.email, role: user.role },
+        process.env.JWT_SECRET,
+        { expiresIn: process.env.JWT_EXPIRATION }
+      );
+  
+      res.status(200).json({
+        message: 'Login bem-sucedido',
+        token,
+        user: {
+          id: user.id,
+          email: user.email,
+          role: user.role
+        }
+      });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  };
+  
   
 export default {
   createUser,
@@ -233,5 +249,6 @@ export default {
   getUserById,
   updateUser,
   deleteUser,
-  createNannyUser,  // Adicionado para criação de usuário nanny
+  createNannyUser, 
+  loginUser,
 };
