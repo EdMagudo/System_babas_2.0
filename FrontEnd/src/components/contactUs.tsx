@@ -1,10 +1,55 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Mail, Phone, MapPin, Clock, MessageCircle } from 'lucide-react';
+import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 
 const ContactPage = () => {
-  const handleSubmit = (e) => {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    subject: '',
+    message: '',
+  });
+  const [successMessage, setSuccessMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+
+  const location = {
+    lat: -25.9659,  // Latitude da localização (exemplo de Maputo)
+    lng: 32.5892,  // Longitude da localização (exemplo de Maputo)
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle form submission
+
+    // Limpar mensagens anteriores
+    setSuccessMessage('');
+    setErrorMessage('');
+
+    try {
+      const response = await fetch('http://localhost:3005/send-email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setSuccessMessage('Email enviado com sucesso!');
+        setFormData({ name: '', email: '', subject: '', message: '' });
+      } else {
+        setErrorMessage('Erro ao enviar o email: ' + data.error);
+      }
+    } catch (error) {
+      console.error('Erro ao enviar o email:', error);
+      setErrorMessage('Erro ao enviar o email!');
+    }
   };
 
   return (
@@ -67,7 +112,19 @@ const ContactPage = () => {
           {/* Contact Form */}
           <div className="bg-white rounded-2xl shadow-lg p-8">
             <h2 className="text-2xl font-semibold text-gray-800 mb-6">Send Us a Message</h2>
-            
+
+            {/* Exibir mensagem de sucesso ou erro */}
+            {successMessage && (
+              <div className="text-green-600 mb-4">
+                <p>{successMessage}</p>
+              </div>
+            )}
+            {errorMessage && (
+              <div className="text-red-600 mb-4">
+                <p>{errorMessage}</p>
+              </div>
+            )}
+
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
                 <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
@@ -77,6 +134,8 @@ const ContactPage = () => {
                   type="text"
                   id="name"
                   name="name"
+                  value={formData.name}
+                  onChange={handleChange}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                   required
                 />
@@ -90,6 +149,8 @@ const ContactPage = () => {
                   type="email"
                   id="email"
                   name="email"
+                  value={formData.email}
+                  onChange={handleChange}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                   required
                 />
@@ -103,6 +164,8 @@ const ContactPage = () => {
                   type="text"
                   id="subject"
                   name="subject"
+                  value={formData.subject}
+                  onChange={handleChange}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                   required
                 />
@@ -116,6 +179,8 @@ const ContactPage = () => {
                   id="message"
                   name="message"
                   rows="4"
+                  value={formData.message}
+                  onChange={handleChange}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                   required
                 ></textarea>
@@ -134,12 +199,21 @@ const ContactPage = () => {
 
         {/* Map Section */}
         <div className="mt-16 bg-white rounded-2xl shadow-lg p-8">
-          <h2 className="text-2xl font-semibold text-gray-800 mb-6">Our Location</h2>
-          <div className="w-full h-96 bg-gray-200 rounded-lg flex items-center justify-center">
-            <span className="text-gray-500">Map would be embedded here</span>
+            <h2 className="text-2xl font-semibold text-gray-800 mb-6">Our Location</h2>
+            <div className="w-full h-96 bg-gray-200 rounded-lg flex items-center justify-center">
+              {/* Carregar o Google Maps */}
+              <LoadScript googleMapsApiKey="AIzaSyC-iWtYM5-YSJR-9WBwAUUttdhWvHp1XR-s"> 
+                <GoogleMap
+                  mapContainerStyle={{ width: '100%', height: '100%' }}
+                  center={location}
+                  zoom={14}
+                >
+                  <Marker position={location} />
+                </GoogleMap>
+              </LoadScript>
+            </div>
           </div>
         </div>
-      </div>
     </div>
   );
 };
