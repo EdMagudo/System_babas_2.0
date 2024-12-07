@@ -8,6 +8,63 @@ import multer from 'multer';
 
 const upload = multer({ dest: 'uploads/' }); // Define o diretório de destino para o arquivo
 
+
+const loginUser = async (req, res) => {
+  const { email, id_number } = req.body;
+
+  try {
+    const user = await User.findOne({ where: { email, id_number } });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    const token = jwt.sign(
+      { id: user.id, email: user.email, role: user.role },
+      process.env.JWT_SECRET,
+      { expiresIn: process.env.JWT_EXPIRATION }
+    );
+
+    res.status(200).json({
+      message: 'Login successful',
+      token,
+      user: {
+        id: user.id,
+        email: user.email,
+        role: user.role
+      }
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 const createUser = async (req, res) => {
   try {
      // Verifica se o email ou ID já existe
