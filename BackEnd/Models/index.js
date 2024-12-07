@@ -49,6 +49,15 @@ db.Nanny_Profiles.belongsTo(db.Users, {
   foreignKey: 'user_id',
   as: 'user'
 });
+/*
+// Users and Languages (Many-to-Many)
+db.Users.belongsToMany(db.Languages, {
+  through: db.User_Language,
+  foreignKey: 'user_id',
+  otherKey: 'language_id',
+  as: 'languages'
+});
+*/
 
 // Nanny Profiles and Child Age Experience
 db.Nanny_Profiles.belongsToMany(db.Nanny_Child_Age_Experience, {

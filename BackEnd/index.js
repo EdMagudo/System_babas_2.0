@@ -22,11 +22,11 @@ app.use(express.urlencoded({ extended: true }));
 //Rotas
 import routerAdmin from './Routes/adminRoutes.js';
 import routerUser from './Routes/usersRouter.js';
-import routerNanny from './Routes/nannyRoute.js'
+
 
 app.use('/admin', routerAdmin);
 app.use('/user', routerUser);
-app.use('/nanny', routerNanny);
+
 // Route to fetch countries
 app.get('/countries', async (req, res) => {
     try {
