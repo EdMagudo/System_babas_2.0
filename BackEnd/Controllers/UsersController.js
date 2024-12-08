@@ -240,6 +240,76 @@ const createNannyUser = async (req, res) => {
       res.status(500).json({ error: error.message });
     }
   };
+
+  const updatedProfile = async (req, res) => {
+    console.log(req.params.id_user)
+    console.log(req.body)
+    console.log(req.file)
+    try {
+      if (req.file) {
+        const fileData = {
+          user_id: req.params.id_user,
+          file_name: req.file.originalname,
+          file_path: req.file.path,
+          file_type: req.file.mimetype,
+        };
+    
+        await Files.create(fileData);
+      }
+  
+      const updatedProfileData = {
+        jobType: req.body.jobType,
+        experience: req.body.experience,
+      };
+  
+      const updated = await NannyProfiles.update(updatedProfileData, {
+        where: { nanny_id: req.params.id_user },
+      });
+  
+      if (updated[0] === 0) {
+        return res.status(404).json({ message: "Perfil não encontrado" });
+      }
+  
+      if (req.body.languages) {
+        const languages = JSON.parse(req.body.languages);
+        for (const language of languages) {
+          await UserLanguage.create({
+             user_id: req.params.id_user,
+              language 
+            });
+        }
+      }
+  
+      if (req.body.work_preference) {
+        const workPreferences = JSON.parse(req.body.work_preference);
+        for (const workPreference of workPreferences) {
+          await NannyChildWorkPreference.create({
+            work_preference: workPreference,
+            id_nanny: req.params.id_user
+          });
+        }
+      }
+  
+      if (req.body.preference_age) {
+        const agePreferences = JSON.parse(req.body.preference_age);
+        for (const age of agePreferences) {
+          await NannyChildAgeExperience.create({
+            nanny_id: req.params.id_user,
+            preference_age: age,
+          });
+        }
+      }
+  
+      res.status(200).json({ message: "Perfil e dados relacionados atualizados com sucesso" });
+  
+    } catch (error) {
+      console.error("Erro ao atualizar perfil:", error);
+      res.status(500).json({ error: error.message });
+    }
+  };
+  
+  
+  
   
   
 export default {
@@ -250,4 +320,5 @@ export default {
   deleteUser,
   createNannyUser, 
   loginUser,
+  updatedProfile
 };

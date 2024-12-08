@@ -13,6 +13,7 @@ import ReservationsModel from './ReservationsModel.js';
 import PaymentsModel from './PaymentsModel.js';
 import ReviewsModel from './ReviewsModel.js';
 import FilesModel from './FilesModel.js';
+import NannyChildWorkPreference from './NannyChildWorkPreference.js';
 
 // Create Sequelize instance
 const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
@@ -37,6 +38,7 @@ const db = {
   Payments: PaymentsModel(sequelize, DataTypes),
   Reviews: ReviewsModel(sequelize, DataTypes),
   Files: FilesModel(sequelize, DataTypes),
+  NannyChildWorkPreference: NannyChildWorkPreference(sequelize, DataTypes),
 };
 
 // Define Associations
@@ -66,6 +68,12 @@ db.Nanny_Profiles.belongsToMany(db.Nanny_Child_Age_Experience, {
   as: 'ageExperiences'
 });
 
+// Nanny Profiles and Child work preference
+db.Nanny_Profiles.hasMany(db.NannyChildWorkPreference, {
+  foreignKey: 'id_nanny',  // Chave estrangeira na tabela NannyChildWorkPreference
+  as: 'workPreferences'    // Alias para acessar as preferências de trabalho da babá
+});
+
 // Service Requests
 db.Users.hasMany(db.Service_Requests, {
   foreignKey: 'client_id',
@@ -82,6 +90,8 @@ db.Service_Requests.belongsToMany(db.Service_Request_Child_Ages, {
   foreignKey: 'request_id',
   as: 'childAges'
 });
+
+
 
 // Reservations
 db.Service_Requests.hasOne(db.Reservations, {
@@ -167,8 +177,8 @@ export const initializeDatabase = async () => {
 
     // Sync all models
     await sequelize.sync({ 
-      force: true, // Set to true to drop and recreate tables (careful with production data!)
-      alter: true   // Safely update table schemas
+      force: false, // Set to true to drop and recreate tables (careful with production data!)
+      alter: false   // Safely update table schemas
     });
     console.log('All models synchronized successfully.');
   } catch (error) {
