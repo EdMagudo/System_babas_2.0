@@ -11,6 +11,7 @@ const NannyRegistrationForm = () => {
     province: "",
     idNumber: "",
     idCopy: null,
+   education_level: null,
   });
 
   const [languages, setLanguages] = useState([]);
@@ -97,13 +98,16 @@ const NannyRegistrationForm = () => {
       formData.append('country', client.country || '');
       formData.append('province', client.province || '');
       formData.append('idNumber', client.idNumber || '');
+  
+      
+
 
       if (client.idCopy) {
         formData.append('idCopy', client.idCopy);
       }
 
-      const educationLevel = document.querySelector('select[name="education-level"]')?.value || '';
-      formData.append('educationLevel', educationLevel);
+      const  educationLevel= document.querySelector('select[name="education_level"]')?.value || '';
+      formData.append('education_level', educationLevel);
 
       // Envia ao backend
       const response = await axios.post('http://localhost:3005/user/register', formData, {
@@ -259,17 +263,21 @@ const NannyRegistrationForm = () => {
           <div>
             <label className="block mb-2">Education Level</label>
             <select 
-              name="education-level" 
+              name="education_level"
+              value={client.education_level} 
+              id="education-level"
+              onChange={handleInputChange}
               className="w-full px-3 py-2 border rounded"
+             
             >
               <option value="">Select Education Level</option>
               <option value="none">None</option>
-              <option value="secondary">High School Student</option>
-              <option value="grade10">High School Incomplete</option>
-              <option value="grade12">High School Graduate</option>
-              <option value="tvet-student">Technical or University Student</option>
-              <option value="tvet-graduate">Technical Graduate</option>
-              <option value="university-graduate">University Graduate</option>
+              <option value="high_school_student">High School Student</option>
+              <option value="high_school_incomplete">High School Incomplete</option>
+              <option value="high_school_complete">High School Graduate</option>
+              <option value="technical_student">Technical or University Student</option>
+              <option value="technical_graduate">Technical Graduate</option>
+              <option value="university_graduate">University Graduate</option>
             </select>
           </div>
         </div>

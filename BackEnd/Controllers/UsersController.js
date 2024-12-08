@@ -139,6 +139,9 @@ const deleteUser = async (req, res) => {
 };
 
 const createNannyUser = async (req, res) => {
+
+  console.log("Dados: ", req.body);
+
     try {
       // Verifica se o email ou ID já existe
       const existingUser = await User.findOne({ where: { email: req.body.email } });
@@ -185,13 +188,9 @@ const createNannyUser = async (req, res) => {
       // Criar o perfil de nanny associado ao usuário
       const nannyProfileData = {
         user_id: user.user_id,
-        education_level: req.body.educationLevel,
+        education_level: req.body.education_level,
         date_of_birth: req.body.date_of_birth,
-        job_type: req.body.jobType || null, // Se passado no JSON, use, senão null
-        experience_years: req.body.experienceYears || null, // Se passado no JSON, use, senão null
-        has_criminal_record: req.body.hasCriminalRecord || false, // Default para falso
-        special_needs_experience: req.body.specialNeedsExperience || false, // Default para falso
-        additional_info: req.body.additionalInfo || null, // Informações adicionais opcionais
+        
       };
   
       await NannyProfiles.create(nannyProfileData);
@@ -232,7 +231,7 @@ const createNannyUser = async (req, res) => {
         message: 'Login bem-sucedido',
         token,
         user: {
-          id: user.id,
+          id: user.user_id,
           email: user.email,
           role: user.role
         }
