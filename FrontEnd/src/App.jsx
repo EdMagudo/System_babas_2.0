@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
 import Footer from './components/Footer';
+import Logout from './components/Logout';
 import HomePage from './Pages/HomePage';
 import ClientForm from './components/ClientForm';
 import NannyForm from './components/NannyForm';
@@ -26,6 +27,7 @@ function App() {
             <Route path="/sign-in" element={<LoginPage />} />
             <Route path="/client-dashboard" element={<ClientDashboard />} />
             <Route path="/nanny-dashboard" element={<NannyDashboard />} />
+            <Route path="/logout" element={<Logout />} />
             <Route path="*" element={<h1>404 - Page Not Found</h1>} />
           </Routes>
         </main>

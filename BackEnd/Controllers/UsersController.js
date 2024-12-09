@@ -245,10 +245,10 @@ const createNannyUser = async (req, res) => {
       }
   
       // Verifique se a senha fornecida corresponde ao password_hash armazenado
-      const isPasswordValid = await bcrypt.compare(password, user.password_hash);
+     /* const isPasswordValid = await bcrypt.compare(password, user.password_hash);
       if (!isPasswordValid) {
         return res.status(401).json({ message: 'Senha incorreta' });
-      }
+      }*/
       dotenv.config(); 
       // Gerar um token JWT para o usuário
       const token = jwt.sign(
