@@ -1,17 +1,42 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom'; // Importando Link para navegação
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [userRole, setUserRole] = useState(null);
 
-  const navigationItems = [
-    { name: 'Home', path: '/' },
-    { name: 'Join as Nanny', path: '/register-nanny' },
-    { name: 'Join as Client', path: '/register-client' },
-    { name: 'Find a Nanny', path: '/search' },
-    { name: 'Contact Us', path: '/contact-us' },
-    { name: 'Sign in', path: '/sign-in' },
-  ];
+  useEffect(() => {
+    // Obtendo a role do usuário do localStorage
+    const storedRole = localStorage.getItem('userRole');
+    setUserRole(storedRole);
+  }, []);
+
+  // Defina os itens de navegação para diferentes tipos de usuários
+  const navigationItems = {
+    guest: [
+      { name: 'Home', path: '/' },
+      { name: 'Join as Nanny', path: '/register-nanny' },
+      { name: 'Join as Client', path: '/register-client' },
+      { name: 'Find a Nanny', path: '/search' },
+      { name: 'Contact Us', path: '/contact-us' },
+      { name: 'Sign in', path: '/sign-in' },
+    ],
+    client: [
+      { name: 'Home', path: '/' },
+      { name: 'My Dashboard', path: '/client-dashboard' },
+      { name: 'Find a Nanny', path: '/search' },
+      { name: 'Logout', path: '/logout' },
+    ],
+    nanny: [
+      { name: 'Home', path: '/' },
+      { name: 'My Dashboard', path: '/nanny-dashboard' },
+      { name: 'My Jobs', path: '/nanny-jobs' },
+      { name: 'Logout', path: '/logout' },
+    ],
+  };
+
+  // Determine o menu baseado no tipo de usuário
+  const menuItems = navigationItems[userRole] || navigationItems.guest;
 
   return (
     <header className="bg-gradient-to-r from-purple-50 to-pink-50 shadow-sm">
@@ -19,16 +44,16 @@ const Header = () => {
         <div className="flex justify-between items-center h-16">
           <div className="flex-shrink-0">
             <Link
-              to="/" 
+              to="/"
               className="text-2xl font-semibold bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-pink-600"
             >
               Express Nannies
             </Link>
           </div>
-          
+
           <nav className="hidden md:block">
             <ul className="flex space-x-8">
-              {navigationItems.map((item) => (
+              {menuItems.map((item) => (
                 <li key={item.name}>
                   <Link
                     to={item.path}
@@ -63,7 +88,7 @@ const Header = () => {
         {isOpen && (
           <div className="md:hidden">
             <div className="px-2 pt-2 pb-3 space-y-1">
-              {navigationItems.map((item) => (
+              {menuItems.map((item) => (
                 <Link
                   key={item.name}
                   to={item.path}

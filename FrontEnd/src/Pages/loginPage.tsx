@@ -34,14 +34,18 @@ const LoginPage = () => {
         // Armazenar o token no localStorage ou gerenciar de outra forma
         localStorage.setItem('authToken', data.token);
         localStorage.setItem('idUser', data.user.id);
-        console.log(data.user.id)
+        localStorage.setItem('userRole', data.user.role);
 
+        console.log(data.user.id)
+     
 
         // Navegar para o dashboard correto com base no role
         if (data.user.role === 'client') {
           navigate('/client-dashboard'); // Redireciona para ClientDashboard
+          window.location.reload();
         } else if (data.user.role === 'nanny') {
           navigate('/nanny-dashboard'); // Redireciona para NannyDashboard
+          window.location.reload();
         }
       } else {
         setError(data.message);
