@@ -99,17 +99,43 @@ const getAllUsers = async (req, res) => {
 };
 
 const getUserById = async (req, res) => {
+  console.log("Request params:", req.params);
+
   try {
-    const user = await User.findByPk(req.params.user_id);
-    if (user) {
-      res.status(200).json(user);
-    } else {
-      res.status(404).json({ message: "User not found" });
+    const userId = req.params.user_id;
+
+    if (!userId) {
+      console.error("User ID not provided.");
+      return res.status(400).json({ error: "Missing user_id parameter" });
     }
+
+    console.log("Fetching user with ID:", userId);
+
+    const user = await User.findByPk(userId, {
+      include: [
+        {
+          model: NannyProfiles,
+          as: "nannyProfile", // Alias definido na associação
+        },
+      ],
+    });
+
+    if (!user) {
+      console.warn("No user found for ID:", userId);
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    console.log("User fetched successfully:", JSON.stringify(user, null, 2));
+    return res.status(200).json(user);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error("Error fetching user and nanny profile:", error);
+    return res.status(500).json({
+      error: "An error occurred while fetching the user",
+      details: error.message,
+    });
   }
 };
+
 
 const updateUser = async (req, res) => {
   try {

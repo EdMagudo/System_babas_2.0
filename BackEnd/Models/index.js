@@ -51,6 +51,7 @@ db.Nanny_Profiles.belongsTo(db.Users, {
   foreignKey: 'user_id',
   as: 'user'
 });
+
 /*
 // Users and Languages (Many-to-Many)
 db.Users.belongsToMany(db.Languages, {
@@ -70,8 +71,8 @@ db.Nanny_Profiles.belongsToMany(db.Nanny_Child_Age_Experience, {
 
 // Nanny Profiles and Child work preference
 db.Nanny_Profiles.hasMany(db.NannyChildWorkPreference, {
-  foreignKey: 'id_nanny',  // Chave estrangeira na tabela NannyChildWorkPreference
-  as: 'workPreferences'    // Alias para acessar as preferências de trabalho da babá
+  foreignKey: 'id_nanny',  
+  as: 'workPreferences' 
 });
 
 // Service Requests
@@ -90,7 +91,6 @@ db.Service_Requests.belongsToMany(db.Service_Request_Child_Ages, {
   foreignKey: 'request_id',
   as: 'childAges'
 });
-
 
 
 // Reservations

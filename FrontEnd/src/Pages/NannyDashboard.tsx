@@ -173,7 +173,9 @@ const NannyDashboard = () => {
                 </p>
               </div>
               <div>
-                <p>Education: {nannyProfile.educationLevel}</p>
+                <p>Education: {nannyProfile.nannyProfile.education_level}</p>
+                <p>Date of Birth: {nannyProfile.nannyProfile.date_of_birth}</p>
+                <p>Job Type: {nannyProfile.nannyProfile.job_type}</p>
               </div>
             </div>
 
