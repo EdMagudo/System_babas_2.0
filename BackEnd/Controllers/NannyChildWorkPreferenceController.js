@@ -1,6 +1,6 @@
 import db from "../Models/index.js";
 
-const NannyChildWorkPreference = db.NannyChildAgeExperience;
+const NannyChildWorkPreference = db.NannyChildWorkPreference;
 
 const createExperience = async (req, res) => {
   try {

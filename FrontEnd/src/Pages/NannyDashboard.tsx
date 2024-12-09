@@ -185,7 +185,7 @@ const NannyDashboard = () => {
               <div className="space-y-2">
                 <label className="block mb-2">Job Type</label>
                 <div className="flex space-x-4">
-                  {["full-time", "temporary"].map((type) => (
+                  {["full_time", "temporary"].map((type) => (
                     <label key={type} className="inline-flex items-center">
                       <input
                         type="radio"
@@ -292,7 +292,7 @@ const NannyDashboard = () => {
             <div className="space-y-2">
               <h2 className="text-xl font-semibold text-blue-700">Preferred Age Group</h2>
               <div className="grid grid-cols-2 gap-2">
-                {["babies", "toddlers", "preschoolers", "school_age", "teenagers"].map(
+                {["babies", "toddlers", "children", "teenagers"].map(
                   (group, index) => (
                     <label key={index} className="inline-flex items-center">
                       <input 

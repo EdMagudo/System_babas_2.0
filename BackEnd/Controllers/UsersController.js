@@ -2,6 +2,10 @@ import db from "../Models/index.js";
 const User = db.Users;
 const Files = db.Files;
 const NannyProfiles = db.Nanny_Profiles;
+const user_language = db.User_Language;
+const NannyChildWorkPreference = db.NannyChildWorkPreference;
+const NannyChildAgeExperience = db.Nanny_Child_Age_Experience;
+
 import bcrypt from 'bcrypt';
 import multer from 'multer';
 import jwt from 'jsonwebtoken';
@@ -258,8 +262,10 @@ const createNannyUser = async (req, res) => {
       }
   
       const updatedProfileData = {
-        jobType: req.body.jobType,
-        experience: req.body.experience,
+        job_type: req.body.jobType,
+        experience_years: req.body.experience,
+        has_criminal_record: req.body.policeClearance,
+        additional_info: req.body.additionalInfo
       };
   
       const updated = await NannyProfiles.update(updatedProfileData, {
@@ -273,9 +279,9 @@ const createNannyUser = async (req, res) => {
       if (req.body.languages) {
         const languages = JSON.parse(req.body.languages);
         for (const language of languages) {
-          await UserLanguage.create({
+          await user_language.create({
              user_id: req.params.id_user,
-              language 
+            language: language 
             });
         }
       }
@@ -284,6 +290,7 @@ const createNannyUser = async (req, res) => {
         const workPreferences = JSON.parse(req.body.work_preference);
         for (const workPreference of workPreferences) {
           await NannyChildWorkPreference.create({
+            nanny_id: req.params.id_user,
             work_preference: workPreference,
             id_nanny: req.params.id_user
           });
@@ -295,7 +302,7 @@ const createNannyUser = async (req, res) => {
         for (const age of agePreferences) {
           await NannyChildAgeExperience.create({
             nanny_id: req.params.id_user,
-            preference_age: age,
+            age_group: age,
           });
         }
       }
