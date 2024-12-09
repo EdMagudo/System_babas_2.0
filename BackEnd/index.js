@@ -1,4 +1,5 @@
 import express from 'express';
+import nodemailer from 'nodemailer';
 import cors from 'cors';
 import axios from 'axios';
 import { initializeDatabase } from '../BackEnd/Models/index.js'; // Adjust the path as needed
@@ -85,6 +86,36 @@ app.get('/languages', async (req, res) => {
     } catch (error) {
         console.error('Erro ao buscar idiomas:', error.message);
         res.status(500).json({ error: 'Erro ao buscar idiomas', details: error.message });
+    }
+});
+
+app.post('/send-email', async (req, res) => {
+    const { name, email, subject, message } = req.body;
+
+    // Criação do transporte Nodemailer
+    const transporter = nodemailer.createTransport({
+        service: 'gmail', // Ou qualquer outro serviço de e-mail
+        auth: {
+            user: 'ediltonmagudo@gmail.com',  // Seu e-mail
+            pass: 'unom owtx nfvr faqj'     // Senha de aplicativo (não a senha do Gmail)
+        }
+    });
+
+    // Configuração do e-mail
+    const mailOptions = {
+        from: email, // E-mail do remetente
+        to: 'ediltonmagudo@gmail.com', // E-mail do destinatário
+        subject: subject,
+        text: `Mensagem de ${name} (${email}):\n\n${message}` // Corpo do e-mail
+    };
+
+    try {
+        // Enviar o e-mail
+        await transporter.sendMail(mailOptions);
+        res.status(200).json({ message: 'E-mail enviado com sucesso!' });
+    } catch (error) {
+        console.error('Erro ao enviar o e-mail:', error);
+        res.status(500).json({ error: 'Erro ao enviar o e-mail', details: error.message });
     }
 });
 
