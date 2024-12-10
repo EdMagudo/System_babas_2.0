@@ -12,9 +12,7 @@ type NannyProfiles = {
 };
 
 const UserQualifications: React.FC<UserQualificationsProps> = ({ idUser }) => {
-  const [nannyProfiles, setNannyProfiles] = useState<NannyProfiles | null>(
-    null
-  );
+  const [nannyProfiles, setNannyProfiles] = useState<NannyProfiles | null>(null);
   const [languagesList, setLanguagesList] = useState<string[]>([]);
   const [formData, setFormData] = useState({
     work_preference: [] as string[],
@@ -22,6 +20,8 @@ const UserQualifications: React.FC<UserQualificationsProps> = ({ idUser }) => {
     languages: [] as string[],
   });
   const [loading, setLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   // Função para buscar os dados do usuário
   const fetchNannyProfile = async () => {
@@ -29,24 +29,14 @@ const UserQualifications: React.FC<UserQualificationsProps> = ({ idUser }) => {
       const response = await axios.get(`http://localhost:3005/user/${idUser}`);
       const data = response.data;
       setNannyProfiles(data);
-      console.log("Work Preferences:", data.nannyProfile.workPreferences);
       setFormData({
-        work_preference:
-          data.nannyProfile &&
-          data.nannyProfile.workPreferences &&
-          Array.isArray(data.nannyProfile.workPreferences)
-            ? data.nannyProfile.workPreferences.map(
-                (pref) => pref.work_preference
-              ) // Mapeia 'work_preference'
-            : [],
-        preference_age:
-          data.ageExperiences && Array.isArray(data.ageExperiences)
-            ? data.ageExperiences.map((exp) => exp.age_group)
-            : [],
-        languages: Array.isArray(data.languages) ? data.languages : [],
+        work_preference: data.nannyProfile?.workPreferences || [],
+        preference_age: data.ageExperiences || [],
+        languages: data.languages || [],
       });
     } catch (error) {
       console.error("Erro ao buscar o perfil:", error);
+      setErrorMessage("Erro ao carregar o perfil. Tente novamente.");
     } finally {
       setLoading(false);
     }
@@ -59,21 +49,26 @@ const UserQualifications: React.FC<UserQualificationsProps> = ({ idUser }) => {
       setLanguagesList(response.data);
     } catch (error) {
       console.error("Erro ao buscar idiomas:", error);
+      setErrorMessage("Erro ao carregar os idiomas. Tente novamente.");
     }
   };
 
   // Função para adicionar idioma
   const addLanguage = async (language: string) => {
+    if (formData.languages.includes(language)) {
+      setErrorMessage("Este idioma já foi adicionado.");
+      return;
+    }
     try {
-      await axios.post(`http://localhost:3005/user/${idUser}/languages`, {
-        language,
-      });
+      await axios.post(`http://localhost:3005/lang/${idUser}`, { language });
       setFormData((prev) => ({
         ...prev,
         languages: [...prev.languages, language],
       }));
+      setSuccessMessage("Idioma adicionado com sucesso!");
     } catch (error) {
       console.error("Erro ao adicionar idioma:", error);
+      setErrorMessage("Erro ao adicionar idioma. Tente novamente.");
     }
   };
 
@@ -85,74 +80,78 @@ const UserQualifications: React.FC<UserQualificationsProps> = ({ idUser }) => {
         ...prev,
         languages: prev.languages.filter((lang) => lang !== language),
       }));
+      setSuccessMessage("Idioma removido com sucesso!");
     } catch (error) {
       console.error("Erro ao remover idioma:", error);
+      setErrorMessage("Erro ao remover idioma. Tente novamente.");
     }
   };
 
   // Função para adicionar preferência de trabalho
   const addWorkPreference = async (preference: string) => {
+    if (formData.work_preference.includes(preference)) {
+      setErrorMessage("Esta preferência de trabalho já foi adicionada.");
+      return;
+    }
     try {
-      await axios.post(
-        `http://localhost:3005/user/${idUser}/work-preferences`,
-        { preference }
-      );
+      await axios.post(`http://localhost:3005/ageExperienceWork/${idUser}`, { preference });
       setFormData((prev) => ({
         ...prev,
         work_preference: [...prev.work_preference, preference],
       }));
+      setSuccessMessage("Preferência de trabalho adicionada com sucesso!");
     } catch (error) {
       console.error("Erro ao adicionar preferência de trabalho:", error);
+      setErrorMessage("Erro ao adicionar preferência de trabalho. Tente novamente.");
     }
   };
 
   // Função para remover preferência de trabalho
   const removeWorkPreference = async (preference: string) => {
     try {
-      await axios.delete(
-        `http://localhost:3005/user/${idUser}/${preference}`);
-
+      await axios.delete(`http://localhost:3005/ageExperienceWork/${idUser}/${preference}`);
       setFormData((prev) => ({
         ...prev,
-        work_preference: prev.work_preference.filter(
-          (pref) => pref !== preference
-        ),
+        work_preference: prev.work_preference.filter((pref) => pref !== preference),
       }));
+      setSuccessMessage("Preferência de trabalho removida com sucesso!");
     } catch (error) {
       console.error("Erro ao remover preferência de trabalho:", error);
+      setErrorMessage("Erro ao remover preferência de trabalho. Tente novamente.");
     }
   };
 
   // Função para adicionar experiência de idade
   const addAgeExperience = async (ageExperience: string) => {
+    if (formData.preference_age.includes(ageExperience)) {
+      setErrorMessage("Esta experiência de idade já foi adicionada.");
+      return;
+    }
     try {
-      await axios.post(`http://localhost:3005/user/${idUser}/age-experience`, {
-        ageExperience,
-      });
+      await axios.post(`http://localhost:3005/ageExperienceAge/${idUser}`, { ageExperience });
       setFormData((prev) => ({
         ...prev,
         preference_age: [...prev.preference_age, ageExperience],
       }));
+      setSuccessMessage("Experiência de idade adicionada com sucesso!");
     } catch (error) {
       console.error("Erro ao adicionar experiência de idade:", error);
+      setErrorMessage("Erro ao adicionar experiência de idade. Tente novamente.");
     }
   };
 
   // Função para remover experiência de idade
   const removeAgeExperience = async (ageExperience: string) => {
     try {
-      await axios.delete(
-        `http://localhost:3005/user/${idUser}/age-experience`,
-        { data: { ageExperience } }
-      );
+      await axios.delete(`http://localhost:3005/ageExperienceAge/${idUser}/${ageExperience}`);
       setFormData((prev) => ({
         ...prev,
-        preference_age: prev.preference_age.filter(
-          (exp) => exp !== ageExperience
-        ),
+        preference_age: prev.preference_age.filter((exp) => exp !== ageExperience),
       }));
+      setSuccessMessage("Experiência de idade removida com sucesso!");
     } catch (error) {
       console.error("Erro ao remover experiência de idade:", error);
+      setErrorMessage("Erro ao remover experiência de idade. Tente novamente.");
     }
   };
 
@@ -171,6 +170,10 @@ const UserQualifications: React.FC<UserQualificationsProps> = ({ idUser }) => {
 
   return (
     <div className="mt-6">
+      {/* Mensagens de erro e sucesso */}
+      {errorMessage && <div className="text-red-500">{errorMessage}</div>}
+      {successMessage && <div className="text-green-500">{successMessage}</div>}
+
       {/* Work Preference */}
       <h2 className="text-xl font-semibold text-blue-700">Work Preferences</h2>
       <div className="grid grid-cols-2 gap-4">
@@ -179,14 +182,13 @@ const UserQualifications: React.FC<UserQualificationsProps> = ({ idUser }) => {
           <select
             value={formData.work_preference[0] || ""}
             onChange={(e) => {
-              removeAgeExperience(formData.work_preference[0]);
+              removeWorkPreference(formData.work_preference[0]);
             }}
             className="w-full px-3 py-2 border rounded"
           >
-            {nannyProfiles.nannyProfile.workPreferences.map((pref, index) => (
-              <option key={index} value={pref.work_preference}>
-                {pref.work_preference.charAt(0).toUpperCase() +
-                  pref.work_preference.slice(1)}
+            {nannyProfiles?.workPreferences.map((pref, index) => (
+              <option key={index} value={pref}>
+                {pref.charAt(0).toUpperCase() + pref.slice(1)}
               </option>
             ))}
           </select>
@@ -214,9 +216,7 @@ const UserQualifications: React.FC<UserQualificationsProps> = ({ idUser }) => {
               Select a work preference
             </option>
             {["morning", "afternoon", "evening", "overnight"]
-              .filter(
-                (preference) => !formData.work_preference.includes(preference)
-              )
+              .filter((preference) => !formData.work_preference.includes(preference))
               .map((preference, index) => (
                 <option key={index} value={preference}>
                   {preference.charAt(0).toUpperCase() + preference.slice(1)}
@@ -252,7 +252,7 @@ const UserQualifications: React.FC<UserQualificationsProps> = ({ idUser }) => {
             }}
             className="w-full px-3 py-2 border rounded"
           >
-            {nannyProfiles.ageExperiences.map((age, index) => (
+            {nannyProfiles?.ageExperiences.map((age, index) => (
               <option key={index} value={age}>
                 {age.charAt(0).toUpperCase() + age.slice(1)}
               </option>

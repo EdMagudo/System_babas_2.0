@@ -3,7 +3,12 @@ const UserLanguage = db.User_Language;
 
 const createUserLanguage = async (req, res) => {
   try {
-    const userLanguage = await UserLanguage.create(req.body);
+    const userLanguage = await UserLanguage.create(
+      {
+        user_id: req.params.user_id,
+        language: req.body.language,
+      }
+    );
     res.status(201).json(userLanguage);
   } catch (error) {
     res.status(500).json({ error: error.message });

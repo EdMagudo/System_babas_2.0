@@ -24,15 +24,15 @@ app.use(express.urlencoded({ extended: true }));
 import routerAdmin from './Routes/adminRoutes.js';
 import routerUser from './Routes/usersRouter.js';
 import UserLanguage from './Routes/userLanguageRouter.js';
-import NannyChildWorkPreference from './Routes/'; 
 import NannyChildAgeExperience from './Routes/nannyChildAgeExperienceRouter.js';
+import NannyChildWorkPreference from './Routes/nannyChildWorkPreferenceRouter.js';
 
 
 app.use('/admin', routerAdmin);
 app.use('/user', routerUser);
 app.use('/lang',UserLanguage);
-app.use('/experienceW',NannyChildWorkPreference);
-app.use('/experienceA',NannyChildAgeExperience);
+app.use('/experienceAge',NannyChildAgeExperience);
+app.use('/experienceWork', NannyChildWorkPreference);
 
 
 // Route to fetch countries
