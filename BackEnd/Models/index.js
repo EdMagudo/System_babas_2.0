@@ -62,6 +62,7 @@ db.Users.belongsToMany(db.Languages, {
 });
 */
 
+
 // Nanny Profiles and Child Age Experience
 db.Nanny_Profiles.belongsToMany(db.Nanny_Child_Age_Experience, {
   through: 'nanny_id',

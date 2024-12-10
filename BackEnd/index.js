@@ -23,10 +23,17 @@ app.use(express.urlencoded({ extended: true }));
 //Rotas
 import routerAdmin from './Routes/adminRoutes.js';
 import routerUser from './Routes/usersRouter.js';
+import UserLanguage from './Routes/userLanguageRouter.js';
+import NannyChildWorkPreference from './Routes/'; 
+import NannyChildAgeExperience from './Routes/nannyChildAgeExperienceRouter.js';
 
 
 app.use('/admin', routerAdmin);
 app.use('/user', routerUser);
+app.use('/lang',UserLanguage);
+app.use('/experienceW',NannyChildWorkPreference);
+app.use('/experienceA',NannyChildAgeExperience);
+
 
 // Route to fetch countries
 app.get('/countries', async (req, res) => {

@@ -15,36 +15,6 @@ import dotenv from 'dotenv';
 
 const upload = multer({ dest: 'uploads/' }); // Define o diretório de destino para o arquivo
 
-
-// const loginUser = async (req, res) => {
-//   const { email, id_number } = req.body;
-
-//   try {
-//     const user = await User.findOne({ where: { email, id_number } });
-//     if (!user) {
-//       return res.status(404).json({ message: 'User not found' });
-//     }
-
-//     const token = jwt.sign(
-//       { id: user.id, email: user.email, role: user.role },
-//       process.env.JWT_SECRET,
-//       { expiresIn: process.env.JWT_EXPIRATION }
-//     );
-
-//     res.status(200).json({
-//       message: 'Login successful',
-//       token,
-//       user: {
-//         id: user.id,
-//         email: user.email,
-//         role: user.role
-//       }
-//     });
-//   } catch (error) {
-//     res.status(500).json({ error: error.message });
-//   }
-// };
-
 const createUser = async (req, res) => {
   try {
      // Verifica se o email ou ID já existe
@@ -111,22 +81,53 @@ const getUserById = async (req, res) => {
 
     console.log("Fetching user with ID:", userId);
 
-    const user = await User.findByPk(userId, {
-      include: [
-        {
-          model: NannyProfiles,
-          as: "nannyProfile", // Alias definido na associação
-        },
-      ],
-    });
+    // Primeiro, buscar o usuário
+    const user = await User.findByPk(userId);
 
     if (!user) {
       console.warn("No user found for ID:", userId);
       return res.status(404).json({ error: "User not found" });
     }
 
-    console.log("User fetched successfully:", JSON.stringify(user, null, 2));
-    return res.status(200).json(user);
+    // Buscar o perfil de babá (nannyProfile)
+    const nannyProfile = await NannyProfiles.findOne({
+      where: { user_id: userId }, // Certifique-se de que a chave correta está sendo usada para a associação
+      include: [
+        {
+          model: NannyChildWorkPreference,
+          as: "workPreferences", // Preferências de trabalho
+          attributes: ["id_nanny", "work_preference"],
+        },
+      ],
+    });
+
+    if (!nannyProfile) {
+      console.warn("No nanny profile found for user ID:", userId);
+      return res.status(404).json({ error: "Nanny profile not found" });
+    }
+
+    // Agora, buscar as experiências de idade associadas ao mesmo user_id diretamente
+    const ageExperiences = await NannyChildAgeExperience.findAll({
+      where: { nanny_id: userId }, // Ajuste a chave estrangeira se necessário
+      attributes: ["nanny_id", "age_group"],
+    });
+
+    // Buscar as línguas associadas ao usuário na tabela User_Language
+    const languages = await db.User_Language.findAll({
+      where: { user_id: userId },
+      attributes: ["language"],
+    });
+
+    // Preparar a resposta com todos os dados
+    const userResponse = {
+      ...user.toJSON(),
+      nannyProfile: nannyProfile ? nannyProfile.toJSON() : {},
+      ageExperiences: ageExperiences.map(exp => exp.age_group), // Ajuste conforme o que você precisa retornar
+      languages: languages.map(lang => lang.language),
+    };
+
+    console.log("User fetched successfully:", JSON.stringify(userResponse, null, 2));
+    return res.status(200).json(userResponse);
   } catch (error) {
     console.error("Error fetching user and nanny profile:", error);
     return res.status(500).json({
@@ -135,6 +136,7 @@ const getUserById = async (req, res) => {
     });
   }
 };
+
 
 
 const updateUser = async (req, res) => {
@@ -244,11 +246,7 @@ const createNannyUser = async (req, res) => {
         return res.status(404).json({ message: 'Usuário não encontrado' });
       }
   
-      // Verifique se a senha fornecida corresponde ao password_hash armazenado
-     /* const isPasswordValid = await bcrypt.compare(password, user.password_hash);
-      if (!isPasswordValid) {
-        return res.status(401).json({ message: 'Senha incorreta' });
-      }*/
+    
       dotenv.config(); 
       // Gerar um token JWT para o usuário
       const token = jwt.sign(
