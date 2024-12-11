@@ -2,11 +2,13 @@ import db from "../Models/index.js";
 const UserLanguage = db.User_Language;
 
 const createUserLanguage = async (req, res) => {
+  console.log(req.params)
+  console.log(req.body)
   try {
     const userLanguage = await UserLanguage.create(
       {
         user_id: req.params.user_id,
-        language: req.body.language,
+        language: req.body.languages,
       }
     );
     res.status(201).json(userLanguage);

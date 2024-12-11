@@ -338,6 +338,18 @@ const createNannyUser = async (req, res) => {
       res.status(500).json({ error: error.message });
     }
   };
+
+  const changePassword = async (req, res) => {
+    
+   
+      
+      console.log(req.body)
+    
+  };
+  
+
+    
+
   
   
   
@@ -351,5 +363,6 @@ export default {
   deleteUser,
   createNannyUser, 
   loginUser,
-  updatedProfile
+  updatedProfile,
+  changePassword
 };

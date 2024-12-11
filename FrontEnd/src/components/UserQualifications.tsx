@@ -5,366 +5,353 @@ type UserQualificationsProps = {
   idUser: string;
 };
 
-type NannyProfiles = {
-  workPreferences: string[];
-  ageExperiences: string[];
-  languages: string[];
-};
-
 const UserQualifications: React.FC<UserQualificationsProps> = ({ idUser }) => {
-  const [nannyProfiles, setNannyProfiles] = useState<NannyProfiles | null>(null);
-  const [languagesList, setLanguagesList] = useState<string[]>([]);
   const [formData, setFormData] = useState({
     work_preference: [] as string[],
     preference_age: [] as string[],
     languages: [] as string[],
   });
+
+  const [languagesList, setLanguagesList] = useState<string[]>([]);
+  const [message, setMessage] = useState({ type: "", text: "" });
+  const [selectedWorkPreference, setSelectedWorkPreference] = useState("");
+  const [selectedAgeExperience, setSelectedAgeExperience] = useState("");
+  const [selectedLanguage, setSelectedLanguage] = useState("");
   const [loading, setLoading] = useState(true);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [selectedWorkPreferenceA, setSelectedWorkPreferenceA] =
+    useState<string>("");
 
-  // Função para buscar os dados do usuário
-  const fetchNannyProfile = async () => {
-    try {
-      const response = await axios.get(`http://localhost:3005/user/${idUser}`);
-      const data = response.data;
-      setNannyProfiles(data);
-      setFormData({
-        work_preference: data.nannyProfile?.workPreferences || [],
-        preference_age: data.ageExperiences || [],
-        languages: data.languages || [],
-      });
-    } catch (error) {
-      console.error("Erro ao buscar o perfil:", error);
-      setErrorMessage("Erro ao carregar o perfil. Tente novamente.");
-    } finally {
-      setLoading(false);
-    }
+  const showMessage = (type: "success" | "error", text: string) => {
+    setMessage({ type, text });
+    setTimeout(() => setMessage({ type: "", text: "" }), 3000);
   };
 
-  // Função para buscar os idiomas disponíveis
-  const fetchLanguages = async () => {
-    try {
-      const response = await axios.get("http://localhost:3005/languages");
-      setLanguagesList(response.data);
-    } catch (error) {
-      console.error("Erro ao buscar idiomas:", error);
-      setErrorMessage("Erro ao carregar os idiomas. Tente novamente.");
-    }
-  };
-
-  // Função para adicionar idioma
-  const addLanguage = async (language: string) => {
-    if (formData.languages.includes(language)) {
-      setErrorMessage("Este idioma já foi adicionado.");
-      return;
-    }
-    try {
-      await axios.post(`http://localhost:3005/lang/${idUser}`, { language });
-      setFormData((prev) => ({
-        ...prev,
-        languages: [...prev.languages, language],
-      }));
-      setSuccessMessage("Idioma adicionado com sucesso!");
-    } catch (error) {
-      console.error("Erro ao adicionar idioma:", error);
-      setErrorMessage("Erro ao adicionar idioma. Tente novamente.");
-    }
-  };
-
-  // Função para remover idioma
-  const removeLanguage = async (language: string) => {
-    try {
-      await axios.delete(`http://localhost:3005/lang/${idUser}/${language}`);
-      setFormData((prev) => ({
-        ...prev,
-        languages: prev.languages.filter((lang) => lang !== language),
-      }));
-      setSuccessMessage("Idioma removido com sucesso!");
-    } catch (error) {
-      console.error("Erro ao remover idioma:", error);
-      setErrorMessage("Erro ao remover idioma. Tente novamente.");
-    }
-  };
-
-  // Função para adicionar preferência de trabalho
-  const addWorkPreference = async (preference: string) => {
-    if (formData.work_preference.includes(preference)) {
-      setErrorMessage("Esta preferência de trabalho já foi adicionada.");
-      return;
-    }
-    try {
-      await axios.post(`http://localhost:3005/ageExperienceWork/${idUser}`, { preference });
-      setFormData((prev) => ({
-        ...prev,
-        work_preference: [...prev.work_preference, preference],
-      }));
-      setSuccessMessage("Preferência de trabalho adicionada com sucesso!");
-    } catch (error) {
-      console.error("Erro ao adicionar preferência de trabalho:", error);
-      setErrorMessage("Erro ao adicionar preferência de trabalho. Tente novamente.");
-    }
-  };
-
-  // Função para remover preferência de trabalho
-  const removeWorkPreference = async (preference: string) => {
-    try {
-      await axios.delete(`http://localhost:3005/ageExperienceWork/${idUser}/${preference}`);
-      setFormData((prev) => ({
-        ...prev,
-        work_preference: prev.work_preference.filter((pref) => pref !== preference),
-      }));
-      setSuccessMessage("Preferência de trabalho removida com sucesso!");
-    } catch (error) {
-      console.error("Erro ao remover preferência de trabalho:", error);
-      setErrorMessage("Erro ao remover preferência de trabalho. Tente novamente.");
-    }
-  };
-
-  // Função para adicionar experiência de idade
-  const addAgeExperience = async (ageExperience: string) => {
-    if (formData.preference_age.includes(ageExperience)) {
-      setErrorMessage("Esta experiência de idade já foi adicionada.");
-      return;
-    }
-    try {
-      await axios.post(`http://localhost:3005/ageExperienceAge/${idUser}`, { ageExperience });
-      setFormData((prev) => ({
-        ...prev,
-        preference_age: [...prev.preference_age, ageExperience],
-      }));
-      setSuccessMessage("Experiência de idade adicionada com sucesso!");
-    } catch (error) {
-      console.error("Erro ao adicionar experiência de idade:", error);
-      setErrorMessage("Erro ao adicionar experiência de idade. Tente novamente.");
-    }
-  };
-
-  // Função para remover experiência de idade
-  const removeAgeExperience = async (ageExperience: string) => {
-    try {
-      await axios.delete(`http://localhost:3005/ageExperienceAge/${idUser}/${ageExperience}`);
-      setFormData((prev) => ({
-        ...prev,
-        preference_age: prev.preference_age.filter((exp) => exp !== ageExperience),
-      }));
-      setSuccessMessage("Experiência de idade removida com sucesso!");
-    } catch (error) {
-      console.error("Erro ao remover experiência de idade:", error);
-      setErrorMessage("Erro ao remover experiência de idade. Tente novamente.");
-    }
-  };
-
+  // Fetch initial data
   useEffect(() => {
-    fetchNannyProfile();
-    fetchLanguages();
+    const fetchData = async () => {
+      try {
+        const [userRes, languagesRes] = await Promise.all([
+          axios.get(`http://localhost:3005/user/${idUser}`),
+          axios.get("http://localhost:3005/languages"),
+        ]);
+
+        setFormData({
+          work_preference:
+          userRes.data.nannyProfile?.workPreferences.map((wp) => wp.work_preference) || [],
+          preference_age: userRes.data.ageExperiences || [],
+          languages: userRes.data.languages || [],
+        });
+
+        setLanguagesList(languagesRes.data);
+      } catch (error) {
+        showMessage("error", "Failed to load data. Please try again later.");
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
   }, [idUser]);
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
+  const handleAdd = async (type: string, value: string) => {
+    try {
+      const endpoints = {
+        work_preference: `http://localhost:3005/experienceWork/${idUser}`,
+        preference_age: `http://localhost:3005/experienceAge/${idUser}`,
+        languages: `http://localhost:3005/lang/${idUser}`,
+      };
 
-  if (!nannyProfiles) {
-    return <div>No data found for the user.</div>;
-  }
+      await axios.post(endpoints[type], { [type]: value });
+      setFormData((prev) => ({
+        ...prev,
+        [type]: [...prev[type], value],
+      }));
+      showMessage("success", `${value} added successfully.`);
+    } catch (error) {
+      showMessage("error", `Failed to add ${value}.`);
+      console.error(error);
+    }
+  };
+
+  const handleRemove = async (type: string, value: string) => {
+    try {
+      const endpoints = {
+        work_preference: `http://localhost:3005/experienceWork/${idUser}/${value}`,
+        preference_age: `http://localhost:3005/experienceAge/${idUser}/${value}`,
+        languages: `http://localhost:3005/lang/${idUser}/${value}`,
+      };
+
+      await axios.delete(endpoints[type]);
+      setFormData((prev) => ({
+        ...prev,
+        [type]: prev[type].filter((item) => item !== value),
+      }));
+      showMessage("success", `${value} removed successfully.`);
+    } catch (error) {
+      showMessage("error", `Failed to remove ${value}.`);
+      console.error(error);
+    }
+  };
+
+  if (loading) return <div>Loading...</div>;
 
   return (
-    <div className="mt-6">
-      {/* Mensagens de erro e sucesso */}
-      {errorMessage && <div className="text-red-500">{errorMessage}</div>}
-      {successMessage && <div className="text-green-500">{successMessage}</div>}
-
-      {/* Work Preference */}
-      <h2 className="text-xl font-semibold text-blue-700">Work Preferences</h2>
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <label className="block mb-2">Assigned Work Preferences</label>
-          <select
-            value={formData.work_preference[0] || ""}
-            onChange={(e) => {
-              removeWorkPreference(formData.work_preference[0]);
-            }}
-            className="w-full px-3 py-2 border rounded"
-          >
-            {nannyProfiles?.workPreferences.map((pref, index) => (
-              <option key={index} value={pref}>
-                {pref.charAt(0).toUpperCase() + pref.slice(1)}
-              </option>
-            ))}
-          </select>
-          <button
-            className="mt-2 bg-red-500 text-white p-2 rounded"
-            onClick={() => removeWorkPreference(formData.work_preference[0])}
-          >
-            Remove Work Preference
-          </button>
-        </div>
-
-        <div>
-          <label className="block mb-2">Available Work Preferences</label>
-          <select
-            value=""
-            onChange={(e) => {
-              const selected = e.target.value;
-              if (selected) {
-                addWorkPreference(selected); // Add selected preference
-              }
-            }}
-            className="w-full px-3 py-2 border rounded"
-          >
-            <option value="" disabled>
-              Select a work preference
-            </option>
-            {["morning", "afternoon", "evening", "overnight"]
-              .filter((preference) => !formData.work_preference.includes(preference))
-              .map((preference, index) => (
-                <option key={index} value={preference}>
-                  {preference.charAt(0).toUpperCase() + preference.slice(1)}
-                </option>
-              ))}
-          </select>
-          <button
-            className="mt-2 bg-green-500 text-white p-2 rounded"
-            onClick={() => {
-              const selected =
-                formData.work_preference[formData.work_preference.length - 1];
-              if (selected) {
-                addWorkPreference(selected); // Add last selected preference
-              }
-            }}
-          >
-            Add Work Preference
-          </button>
-        </div>
+    <div>
+    {message.text && (
+      <div
+        className={`${
+          message.type === "success"
+            ? "bg-green-100 text-green-800 border border-green-500"
+            : "bg-red-100 text-red-800 border border-red-500"
+        } p-4 rounded-lg shadow-md mb-4`}
+      >
+        {message.text}
       </div>
+    )}
+  
+  
 
-      {/* Age Experience Preferences */}
-      <h2 className="text-xl font-semibold text-blue-700 mt-6">
-        Age Experience Preferences
-      </h2>
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <label className="block mb-2">Assigned Age Experiences</label>
-          <select
-            value={formData.preference_age[0] || ""}
-            onChange={(e) => {
-              removeAgeExperience(formData.preference_age[0]);
-            }}
-            className="w-full px-3 py-2 border rounded"
-          >
-            {nannyProfiles?.ageExperiences.map((age, index) => (
-              <option key={index} value={age}>
-                {age.charAt(0).toUpperCase() + age.slice(1)}
-              </option>
-            ))}
-          </select>
-          <button
-            className="mt-2 bg-red-500 text-white p-2 rounded"
-            onClick={() => removeAgeExperience(formData.preference_age[0])}
-          >
-            Remove Age Experience
-          </button>
-        </div>
+      {/* Work Preferences */}
+      <div>
+  <h2 className="text-xl font-semibold text-blue-700 mb-4">
+    Work Preferences
+  </h2>
+  <div className="grid grid-cols-2 gap-4">
+    {/* Assigned Work Preferences */}
+    <div>
+      <label className="block mb-2">Assigned Work Preferences</label>
+      <select
+        value={selectedWorkPreference}
+        onChange={(e) => setSelectedWorkPreference(e.target.value)}
+        className="w-full px-3 py-2 border rounded"
+      >
+        <option value="" disabled>
+          Select a preference to remove
+        </option>
+        {formData.work_preference.map((pref, index) => (
+          <option key={index} value={pref}>
+            {pref.charAt(0).toUpperCase() + pref.slice(1)}
+          </option>
+        ))}
+      </select>
+      <button
+        className="mt-2 bg-red-500 text-white p-2 rounded"
+        onClick={() => {
+          if (selectedWorkPreference) {
+            handleRemove("work_preference", selectedWorkPreference);
+            showMessage("success", "Work preference removed successfully.");
+          } else {
+            showMessage("error", "Please select a work preference to remove.");
+          }
+        }}
+      >
+        Remove Work Preference
+      </button>
+    </div>
 
-        <div>
-          <label className="block mb-2">Available Age Experiences</label>
-          <select
-            value=""
-            onChange={(e) => {
-              const selected = e.target.value;
-              if (selected && !formData.preference_age.includes(selected)) {
-                addAgeExperience(selected); // Add selected age experience if not already in the assigned list
-              }
-            }}
-            className="w-full px-3 py-2 border rounded"
-          >
-            <option value="" disabled>
-              Select an age experience
+    {/* Available Work Preferences */}
+    <div>
+      <label className="block mb-2">Available Work Preferences</label>
+      <select
+        value={selectedWorkPreference}
+        onChange={(e) => setSelectedWorkPreference(e.target.value)}
+        className="w-full px-3 py-2 border rounded"
+      >
+        <option value="" disabled>
+          Select a work preference to add
+        </option>
+        {["morning", "afternoon", "evening", "overnight"]
+          .filter((pref) => !formData.work_preference.includes(pref))
+          .map((pref, index) => (
+            <option key={index} value={pref}>
+              {pref.charAt(0).toUpperCase() + pref.slice(1)}
             </option>
-            {["babies", "toddlers", "children", "teenagers"]
-              .filter((age) => !formData.preference_age.includes(age)) // Ensure selected is not in assigned
-              .map((age, index) => (
+          ))}
+      </select>
+      <button
+        className="mt-2 bg-green-500 text-white p-2 rounded"
+        onClick={() => {
+          if (
+            selectedWorkPreference &&
+            !formData.work_preference.includes(selectedWorkPreference)
+          ) {
+            handleAdd("work_preference", selectedWorkPreference);
+            showMessage("success", "Work preference added successfully.");
+          } else {
+            showMessage("error", "Please select a valid work preference to add.");
+          }
+        }}
+      >
+        Add Work Preference
+      </button>
+    </div>
+  </div>
+</div>
+
+
+
+      {/* Age Preferences */}
+      <div>
+        <h2 className="text-xl font-semibold text-blue-700 mb-4">
+          Age Experiences
+        </h2>
+        <div className="grid grid-cols-2 gap-4">
+          {/* Assigned Age Experiences */}
+          <div>
+            <label className="block mb-2">Assigned Age Experiences</label>
+            <select
+              value=""
+              onChange={(e) => setSelectedAgeExperience(e.target.value)}
+              className="w-full px-3 py-2 border rounded"
+            >
+              <option value="" disabled>
+                Select an age experience to remove
+              </option>
+              {formData.preference_age.map((age, index) => (
                 <option key={index} value={age}>
                   {age.charAt(0).toUpperCase() + age.slice(1)}
                 </option>
               ))}
-          </select>
-          <button
-            className="mt-2 bg-green-500 text-white p-2 rounded"
-            onClick={() => {
-              const selected =
-                formData.preference_age[formData.preference_age.length - 1];
-              if (selected && !formData.preference_age.includes(selected)) {
-                addAgeExperience(selected); // Add last selected age experience if not already in the assigned list
-              }
-            }}
-          >
-            Add Age Experience
-          </button>
+            </select>
+            <button
+              className="mt-2 bg-red-500 text-white p-2 rounded"
+              onClick={() => {
+                if (selectedAgeExperience) {
+                    handleRemove("preference_age", selectedAgeExperience);
+                  showMessage(
+                    "success",
+                    "Age experience removed successfully."
+                  );
+                } else {
+                  showMessage(
+                    "error",
+                    "Please select an age experience to remove."
+                  );
+                }
+              }}
+            >
+              Remove Age Experience
+            </button>
+          </div>
+
+          {/* Available Age Experiences */}
+          <div>
+            <label className="block mb-2">Available Age Experiences</label>
+            <select
+              value={selectedAgeExperience}
+              onChange={(e) => setSelectedAgeExperience(e.target.value)}
+              className="w-full px-3 py-2 border rounded"
+            >
+              <option value="" disabled>
+                Select an age experience to add
+              </option>
+              {["babies", "toddlers", "children", "teenagers"]
+                .filter((age) => !formData.preference_age.includes(age))
+                .map((age, index) => (
+                  <option key={index} value={age}>
+                    {age.charAt(0).toUpperCase() + age.slice(1)}
+                  </option>
+                ))}
+            </select>
+            <button
+              className="mt-2 bg-green-500 text-white p-2 rounded"
+              onClick={() => {
+                if (
+                  selectedAgeExperience &&
+                  !formData.preference_age.includes(selectedAgeExperience)
+                ) {
+                    handleAdd("preference_age", selectedAgeExperience);
+                  showMessage("success", "Age experience added successfully.");
+                } else {
+                  showMessage(
+                    "error",
+                    "Please select a valid age experience to add."
+                  );
+                }
+              }}
+            >
+              Add Age Experience
+            </button>
+          </div>
         </div>
       </div>
 
       {/* Languages */}
-      <h2 className="text-xl font-semibold text-blue-700 mt-6">Languages</h2>
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <label className="block mb-2">Assigned Languages</label>
-          <select
-            value={formData.languages[0] || ""}
-            onChange={(e) => {
-              removeLanguage(formData.languages[0]);
-            }}
-            className="w-full px-3 py-2 border rounded"
-          >
-            {formData.languages.map((language, index) => (
-              <option key={index} value={language}>
-                {language.charAt(0).toUpperCase() + language.slice(1)}
+      <div>
+        <h2 className="text-xl font-semibold text-blue-700 mb-4">Languages</h2>
+        <div className="grid grid-cols-2 gap-4">
+          {/* Assigned Languages */}
+          <div>
+            <label className="block mb-2">Assigned Languages</label>
+            <select
+              value=""
+              onChange={(e) => setSelectedLanguage(e.target.value)}
+              className="w-full px-3 py-2 border rounded"
+            >
+              <option value="" disabled>
+                Select a language to remove
               </option>
-            ))}
-          </select>
-          <button
-            className="mt-2 bg-red-500 text-white p-2 rounded"
-            onClick={() => removeLanguage(formData.languages[0])}
-          >
-            Remove Language
-          </button>
-        </div>
-
-        <div>
-          <label className="block mb-2">Available Languages</label>
-          <select
-            value=""
-            onChange={(e) => {
-              const selected = e.target.value;
-              if (selected) {
-                addLanguage(selected); // Add selected language
-              }
-            }}
-            className="w-full px-3 py-2 border rounded"
-          >
-            <option value="" disabled>
-              Select a language
-            </option>
-            {languagesList
-              .filter((language) => !formData.languages.includes(language))
-              .map((language, index) => (
+              {formData.languages.map((language, index) => (
                 <option key={index} value={language}>
                   {language.charAt(0).toUpperCase() + language.slice(1)}
                 </option>
               ))}
-          </select>
-          <button
-            className="mt-2 bg-green-500 text-white p-2 rounded"
-            onClick={() => {
-              const selected =
-                formData.languages[formData.languages.length - 1];
-              if (selected) {
-                addLanguage(selected); // Add last selected language
-              }
-            }}
-          >
-            Add Language
-          </button>
+            </select>
+            <button
+              className="mt-2 bg-red-500 text-white p-2 rounded"
+              onClick={() => {
+                if (selectedLanguage) {
+                    handleRemove("languages", selectedLanguage);
+                  showMessage("success", "Language removed successfully.");
+                } else {
+                  showMessage("error", "Please select a language to remove.");
+                }
+              }}
+            >
+              Remove Language
+            </button>
+          </div>
+
+          {/* Available Languages */}
+          <div>
+            <label className="block mb-2">Available Languages</label>
+            <select
+              value={selectedLanguage}
+              onChange={(e) => setSelectedLanguage(e.target.value)}
+              className="w-full px-3 py-2 border rounded"
+            >
+              <option value="" disabled>
+                Select a language to add
+              </option>
+              {languagesList
+                .filter((language) => !formData.languages.includes(language))
+                .map((language, index) => (
+                  <option key={index} value={language}>
+                    {language.charAt(0).toUpperCase() + language.slice(1)}
+                  </option>
+                ))}
+            </select>
+            <button
+              className="mt-2 bg-green-500 text-white p-2 rounded"
+              onClick={() => {
+                if (
+                  selectedLanguage &&
+                  !formData.languages.includes(selectedLanguage)
+                ) {
+                    handleAdd("languages", selectedLanguage);
+                  showMessage("success", "Language added successfully.");
+                } else {
+                  showMessage(
+                    "error",
+                    "Please select a valid language to add."
+                  );
+                }
+              }}
+            >
+              Add Language
+            </button>
+          </div>
         </div>
       </div>
     </div>

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Home, User, Briefcase } from "lucide-react";
 import axios from "axios";
 import UserQualifications from "../components/UserQualifications";
-
+import NannyQuickyStats from "../components/NannyQuickStats";
 const NannyDashboard = () => {
   const [activeSection, setActiveSection] = useState("overview");
   const [nannyProfile, setNannyProfile] = useState(null);
@@ -134,13 +134,7 @@ const NannyDashboard = () => {
     switch (activeSection) {
       case "overview":
         return (
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <h3 className="text-xl font-semibold text-blue-700">Overview</h3>
-            <p>Completed Jobs: 42</p>
-            <p>Rating: 4.8</p>
-            <p>Availability Status: Available</p>
-            <p>Professional Summary: Experienced nanny with over 10 years of childcare expertise, specializing in early childhood education and care.</p>
-          </div>
+          <NannyQuickyStats></NannyQuickyStats>
         );
         case "profile":
           return (

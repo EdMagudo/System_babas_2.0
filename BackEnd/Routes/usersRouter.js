@@ -15,6 +15,7 @@ router.get("/", usersController.getAllUsers);
 router.get("/:user_id", usersController.getUserById);
 router.put("/:user_id", usersController.updateUser);
 router.delete("/:user_id", usersController.deleteUser);
+router.put("/updPas",usersController.changePassword );
 
 // Rota de atualização de perfil (usando `multer` básico para processar `multipart/form-data`)
 const basicUpload = multer(); // Configuração básica do multer

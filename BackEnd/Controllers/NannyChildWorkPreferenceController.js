@@ -3,10 +3,14 @@ import db from "../Models/index.js";
 const NannyChildWorkPreference = db.NannyChildWorkPreference;
 
 const createExperience = async (req, res) => {
+
+  console.log(req.params)
+  console.log(req.body)
+
   try {
     const experience = await NannyChildWorkPreference.create({
       nanny_id : req.params.id_user,
-      work_preference: req.body.preference,
+      work_preference: req.body.work_preference,
       id_nanny: req.params.id_user,
 
   });
