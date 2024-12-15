@@ -3,6 +3,8 @@ import { Home, User, Briefcase } from "lucide-react";
 import axios from "axios";
 import UserQualifications from "../components/UserQualifications";
 import NannyQuickyStats from "../components/NannyQuickStats";
+import ProfilePictureUploader from "../components/ProfilePictureUploader";
+
 const NannyDashboard = () => {
   const [activeSection, setActiveSection] = useState("overview");
   const [nannyProfile, setNannyProfile] = useState(null);
@@ -63,11 +65,32 @@ const NannyDashboard = () => {
     }));
   };
 
-  const handleFileChange = (e) => {
-    setFormData({
-      ...formData,
-      policeClearanceFile: e.target.files[0],
-    });
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const formData = new FormData();
+      formData.append("profilePicture", e.target.files[0]);
+
+      const userId = localStorage.getItem("idUser");
+
+      try {
+        const response = await axios.post(
+          `/uploadProfile/Picture/${userId}`,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+      } catch (error) {
+        console.error("Erro ao enviar a foto de perfil", error);
+      }
+    }
+  };
+
+  const handleUploadSuccess = (newImageUrl: string) => {
+    console.log("Nova URL da imagem:", newImageUrl);
+    // Atualize o estado global ou sincronize com o backend.
   };
 
   const handleSubmit = async (e) => {
@@ -130,247 +153,252 @@ const NannyDashboard = () => {
     }
   };
 
+  const formatEducationLevel = (level: string) => {
+    return level
+      .toLowerCase() // Converte tudo para minúsculas
+      .replace(/_/g, " ") // Substitui underscores por espaços
+      .replace(/\b\w/g, (char) => char.toUpperCase()); // Coloca a primeira letra de cada palavra em maiúscula
+  };
+
   const renderSection = () => {
     switch (activeSection) {
       case "overview":
+        return <NannyQuickyStats></NannyQuickyStats>;
+      case "profile":
         return (
-          <NannyQuickyStats></NannyQuickyStats>
-        );
-        case "profile":
-          return (
-            <div className="bg-white p-6 rounded-lg shadow-md">
-              <h3 className="text-xl font-semibold mb-4 text-blue-700">
-                Personal Details
-              </h3>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <p className="font-medium">
-                    Name: {nannyProfile.first_name} {nannyProfile.last_name}
-                  </p>
-                  <p>Email: {nannyProfile.email}</p>
-                  <p>
-                    Location: {nannyProfile.province_name},{" "}
-                    {nannyProfile.country_name}
-                  </p>
-                </div>
-                <div>
-                  <p>Education: {nannyProfile.nannyProfile.education_level}</p>
-                  <p>Date of Birth: {nannyProfile.nannyProfile.date_of_birth}</p>
-                  <p>Job Type: {nannyProfile.nannyProfile.job_type}</p>
-                </div>
+          <div className="bg-white p-6 rounded-lg shadow-md">
+            <h3 className="text-xl font-semibold mb-4 text-blue-700">
+              Personal Details
+            </h3>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <p className="font-medium">
+                  Name: {nannyProfile.first_name} {nannyProfile.last_name}
+                </p>
+                <p>Email: {nannyProfile.email}</p>
+                <p>
+                  Location: {nannyProfile.province_name},{" "}
+                  {nannyProfile.country_name}
+                </p>
               </div>
-  
-              {/* Availability & Experience */}
-              <div className="space-y-4 mt-6">
-                <h2 className="text-xl font-semibold text-blue-700">
-                  Availability & Experience
-                </h2>
-                <div className="space-y-2">
-                  <label className="block mb-2">Job Type</label>
-                  <div className="flex space-x-4">
-                    {["full_time", "temporary"].map((type) => (
-                      <label key={type} className="inline-flex items-center">
-                        <input
-                          type="radio"
-                          name="jobType"
-                          value={type}
-                          checked={formData.jobType === type}
-                          onChange={handleChange}
-                          className="form-radio"
-                        />
-                        <span className="ml-2 capitalize">
-                          {type.replace("-", " ")}
-                        </span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-  
-                <div className="space-y-2">
-                  <label className="block mb-2">Experience</label>
-                  <select
-                    name="experience"
-                    value={formData.experience}
-                    onChange={handleChange}
-                    className="w-full px-3 py-2 border rounded"
-                  >
-                    <option value="">Years of Experience</option>
-                    <option value="none">None</option>
-                    <option value="1-2">1 - 2 years</option>
-                    <option value="3-5">3 - 5 years</option>
-                    <option value="5+">More than 5 years</option>
-                  </select>
-                </div>
+              <div>
+                <p>Education: {nannyProfile.nannyProfile.education_level}</p>
+                <p>Date of Birth: {nannyProfile.nannyProfile.date_of_birth}</p>
+                <p>Job Type: {nannyProfile.nannyProfile.job_type}</p>
               </div>
-  
-              {/* Background Check */}
-              <div className="space-y-4 mt-6">
-                <h2 className="text-xl font-semibold text-blue-700">
-                  Background Check
-                </h2>
-                <div className="space-y-2">
-                  <label className="block mb-2">
-                    Do you have a police clearance?
-                  </label>
-                  <div className="flex space-x-4">
-                    {["yes", "no"].map((option) => (
-                      <label key={option} className="inline-flex items-center">
-                        <input
-                          type="radio"
-                          name="policeClearance"
-                          value={option}
-                          checked={formData.policeClearance === option}
-                          onChange={handleChange}
-                          className="form-radio"
-                        />
-                        <span className="ml-2 capitalize">{option}</span>
-                      </label>
-                    ))}
-                  </div>
-                  <div>
-                    <label className="block mb-2">
-                      Please upload a copy of your police clearance:
+            </div>
+
+            {/* Availability & Experience */}
+            <div className="space-y-4 mt-6">
+              <h2 className="text-xl font-semibold text-blue-700">
+                Availability & Experience
+              </h2>
+              <div className="space-y-2">
+                <label className="block mb-2">Job Type</label>
+                <div className="flex space-x-4">
+                  {["full_time", "temporary"].map((type) => (
+                    <label key={type} className="inline-flex items-center">
+                      <input
+                        type="radio"
+                        name="jobType"
+                        value={type}
+                        checked={formData.jobType === type}
+                        onChange={handleChange}
+                        className="form-radio"
+                      />
+                      <span className="ml-2 capitalize">
+                        {type.replace("-", " ")}
+                      </span>
                     </label>
-                    <input
-                      type="file"
-                      onChange={handleFileChange}
-                      className="w-full px-3 py-2 border rounded"
-                    />
-                  </div>
+                  ))}
                 </div>
-  
-                {/* Renderiza Work Preferences, Preferred Age Group e Languages apenas se education_level for null */}
-                {!nannyProfile.nannyProfile.education_level && (
-                  <>
-                    <h2 className="text-xl font-semibold text-blue-700">
-                      Work Preferences
-                    </h2>
-                    <div className="space-y-2">
-                      <label className="block mb-2">
-                        Preferred Working Hours
-                      </label>
-                      <div className="grid grid-cols-2 gap-2">
-                        {["morning", "afternoon", "evening", "overnight"].map(
-                          (time, index) => (
-                            <label
-                              key={index}
-                              className="inline-flex items-center"
-                            >
-                              <input
-                                type="checkbox"
-                                className="form-checkbox"
-                                value={time}
-                                checked={formData.work_preference.includes(time)}
-                                onChange={(e) => {
-                                  setFormData((prev) => ({
-                                    ...prev,
-                                    work_preference: e.target.checked
-                                      ? [...prev.work_preference, time]
-                                      : prev.work_preference.filter(
-                                          (t) => t !== time
-                                        ),
-                                  }));
-                                }}
-                              />
-                              <span className="ml-2">
-                                {time.charAt(0).toUpperCase() + time.slice(1)}
-                              </span>
-                            </label>
-                          )
-                        )}
-                      </div>
-                    </div>
-  
-                    <div className="space-y-2">
-                      <h2 className="text-xl font-semibold text-blue-700">
-                        Preferred Age Group
-                      </h2>
-                      <div className="grid grid-cols-2 gap-2">
-                        {["babies", "toddlers", "children", "teenagers"].map(
-                          (group, index) => (
-                            <label
-                              key={index}
-                              className="inline-flex items-center"
-                            >
-                              <input
-                                type="checkbox"
-                                className="form-checkbox"
-                                value={group}
-                                checked={formData.preference_age.includes(group)}
-                                onChange={(e) => {
-                                  setFormData((prev) => ({
-                                    ...prev,
-                                    preference_age: e.target.checked
-                                      ? [...prev.preference_age, group]
-                                      : prev.preference_age.filter(
-                                          (g) => g !== group
-                                        ),
-                                  }));
-                                }}
-                              />
-                              <span className="ml-2">
-                                {group.charAt(0).toUpperCase() +
-                                  group.slice(1).replace("_", " ")}
-                              </span>
-                            </label>
-                          )
-                        )}
-                      </div>
-                    </div>
-  
-                    {/* Languages */}
-                    <div className="space-y-4 mt-6">
-                      <h2 className="text-xl font-semibold text-blue-700">
-                        Languages & Additional Information
-                      </h2>
-                      <div className="space-y-2">
-                        <label className="block mb-2">Languages Spoken</label>
-                        <select
-                          multiple
-                          value={formData.languages}
-                          onChange={(e) =>
-                            setFormData({
-                              ...formData,
-                              languages: Array.from(
-                                e.target.selectedOptions,
-                                (opt) => opt.value
-                              ),
-                            })
-                          }
-                          className="w-full px-3 py-2 border rounded"
-                        >
-                          {languagesList.map((language, index) => (
-                            <option key={index} value={language}>
-                              {language}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-                    </div>
-                  </>
-                )}
-  
-                <div className="space-y-2">
-                  <label className="block mb-2">Additional Information</label>
-                  <textarea
-                    name="additionalInfo"
-                    value={formData.additionalInfo}
-                    onChange={handleChange}
-                    placeholder="Please share any other relevant information"
+              </div>
+
+              <div className="space-y-2">
+                <label className="block mb-2">Experience</label>
+                <select
+                  name="experience"
+                  value={formData.experience}
+                  onChange={handleChange}
+                  className="w-full px-3 py-2 border rounded"
+                >
+                  <option value="">Years of Experience</option>
+                  <option value="none">None</option>
+                  <option value="1-2">1 - 2 years</option>
+                  <option value="3-5">3 - 5 years</option>
+                  <option value="5+">More than 5 years</option>
+                </select>
+              </div>
+            </div>
+
+            {/* Background Check */}
+            <div className="space-y-4 mt-6">
+              <h2 className="text-xl font-semibold text-blue-700">
+                Background Check
+              </h2>
+              <div className="space-y-2">
+                <label className="block mb-2">
+                  Do you have a police clearance?
+                </label>
+                <div className="flex space-x-4">
+                  {["yes", "no"].map((option) => (
+                    <label key={option} className="inline-flex items-center">
+                      <input
+                        type="radio"
+                        name="policeClearance"
+                        value={option}
+                        checked={formData.policeClearance === option}
+                        onChange={handleChange}
+                        className="form-radio"
+                      />
+                      <span className="ml-2 capitalize">{option}</span>
+                    </label>
+                  ))}
+                </div>
+                <div>
+                  <label className="block mb-2">
+                    Please upload a copy of your police clearance:
+                  </label>
+                  <input
+                    type="file"
+                    onChange={handleFileChange}
                     className="w-full px-3 py-2 border rounded"
                   />
                 </div>
               </div>
-  
-              <button
-                onClick={handleSubmit}
-                className="px-4 py-2 mt-4 bg-green-500 text-white rounded hover:bg-green-600"
-              >
-                Submit
-              </button>
+
+              {/* Renderiza Work Preferences, Preferred Age Group e Languages apenas se education_level for null */}
+              {!nannyProfile.nannyProfile.education_level && (
+                <>
+                  <h2 className="text-xl font-semibold text-blue-700">
+                    Work Preferences
+                  </h2>
+                  <div className="space-y-2">
+                    <label className="block mb-2">
+                      Preferred Working Hours
+                    </label>
+                    <div className="grid grid-cols-2 gap-2">
+                      {["morning", "afternoon", "evening", "overnight"].map(
+                        (time, index) => (
+                          <label
+                            key={index}
+                            className="inline-flex items-center"
+                          >
+                            <input
+                              type="checkbox"
+                              className="form-checkbox"
+                              value={time}
+                              checked={formData.work_preference.includes(time)}
+                              onChange={(e) => {
+                                setFormData((prev) => ({
+                                  ...prev,
+                                  work_preference: e.target.checked
+                                    ? [...prev.work_preference, time]
+                                    : prev.work_preference.filter(
+                                        (t) => t !== time
+                                      ),
+                                }));
+                              }}
+                            />
+                            <span className="ml-2">
+                              {time.charAt(0).toUpperCase() + time.slice(1)}
+                            </span>
+                          </label>
+                        )
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <h2 className="text-xl font-semibold text-blue-700">
+                      Preferred Age Group
+                    </h2>
+                    <div className="grid grid-cols-2 gap-2">
+                      {["babies", "toddlers", "children", "teenagers"].map(
+                        (group, index) => (
+                          <label
+                            key={index}
+                            className="inline-flex items-center"
+                          >
+                            <input
+                              type="checkbox"
+                              className="form-checkbox"
+                              value={group}
+                              checked={formData.preference_age.includes(group)}
+                              onChange={(e) => {
+                                setFormData((prev) => ({
+                                  ...prev,
+                                  preference_age: e.target.checked
+                                    ? [...prev.preference_age, group]
+                                    : prev.preference_age.filter(
+                                        (g) => g !== group
+                                      ),
+                                }));
+                              }}
+                            />
+                            <span className="ml-2">
+                              {group.charAt(0).toUpperCase() +
+                                group.slice(1).replace("_", " ")}
+                            </span>
+                          </label>
+                        )
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Languages */}
+                  <div className="space-y-4 mt-6">
+                    <h2 className="text-xl font-semibold text-blue-700">
+                      Languages & Additional Information
+                    </h2>
+                    <div className="space-y-2">
+                      <label className="block mb-2">Languages Spoken</label>
+                      <select
+                        multiple
+                        value={formData.languages}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            languages: Array.from(
+                              e.target.selectedOptions,
+                              (opt) => opt.value
+                            ),
+                          })
+                        }
+                        className="w-full px-3 py-2 border rounded"
+                      >
+                        {languagesList.map((language, index) => (
+                          <option key={index} value={language}>
+                            {language}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                </>
+              )}
+
+              <div className="space-y-2">
+                <label className="block mb-2">Additional Information</label>
+                <textarea
+                  name="additionalInfo"
+                  value={formData.additionalInfo}
+                  onChange={handleChange}
+                  placeholder="Please share any other relevant information"
+                  className="w-full px-3 py-2 border rounded"
+                />
+              </div>
             </div>
-          );
-  case "qualifications":
+
+            <button
+              onClick={handleSubmit}
+              className="px-4 py-2 mt-4 bg-green-500 text-white rounded hover:bg-green-600"
+            >
+              Submit
+            </button>
+          </div>
+        );
+      case "qualifications":
         return (
           <UserQualifications idUser={nannyProfile.user_id} /> // Passa o ID dinâmico
         );
@@ -386,16 +414,23 @@ const NannyDashboard = () => {
           {/* Sidebar */}
           <div className="bg-white rounded-lg shadow-md p-6">
             <div className="text-center mb-6">
-              <img
-                src={nannyProfile.profilePicture}
-                alt="Profile"
-                className="w-32 h-32 rounded-full mx-auto mb-4 object-cover"
+              <ProfilePictureUploader
+                uploadEndpoint={`http://localhost:3005/user/uploadProfile/Picture/${nannyProfile.user_id}`}
+                fetchImageEndpoint={`http://localhost:3005/user/${nannyProfile.user_id}/profile-picture`}
+                onUploadSuccess={(newImageUrl) => {
+                  console.log("Foto atualizada com sucesso:", newImageUrl);
+                }}
               />
+
               <h2 className="text-2xl font-bold text-blue-700">
                 {nannyProfile.first_name} {nannyProfile.last_name}
               </h2>
               <p className="text-gray-600">
-                {nannyProfile.nannyProfile.education_level}
+                {nannyProfile?.nannyProfile?.education_level
+                  ? formatEducationLevel(
+                      nannyProfile.nannyProfile.education_level
+                    )
+                  : "Nível de educação não disponível"}
               </p>
             </div>
             <nav className="space-y-4">
