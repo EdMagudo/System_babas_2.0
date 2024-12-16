@@ -3,6 +3,13 @@ import nodemailer from 'nodemailer';
 import cors from 'cors';
 import axios from 'axios';
 import { initializeDatabase } from '../BackEnd/Models/index.js'; // Adjust the path as needed
+import path from 'path';
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+import fs from "fs";
+
+
 
 const app = express();
 
@@ -33,6 +40,12 @@ app.use('/user', routerUser);
 app.use('/lang',UserLanguage);
 app.use('/experienceAge',NannyChildAgeExperience);
 app.use('/experienceWork', NannyChildWorkPreference);
+
+//const fs = require('fs');
+
+  
+
+  app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 
 // Route to fetch countries

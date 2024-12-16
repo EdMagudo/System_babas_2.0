@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
+
 type ProfilePictureUploaderProps = {
   uploadEndpoint: string;
   fetchImageEndpoint: string;
@@ -16,7 +17,7 @@ const ProfilePictureUploader: React.FC<ProfilePictureUploaderProps> = ({
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
 
-  const userId = localStorage.getItem("UserID");
+  const userId = localStorage.getItem("idUser");
 
   useEffect(() => {
     const fetchUserImage = async () => {
@@ -24,21 +25,34 @@ const ProfilePictureUploader: React.FC<ProfilePictureUploaderProps> = ({
         console.error("User ID não encontrado.");
         return;
       }
-
+  
       try {
-        const response = await axios.get(`${fetchImageEndpoint}/${userId}`);
+        const response = await axios.get(`${fetchImageEndpoint}`);
         const profilePictureUrl = response.data.file?.filePath;
-
+  
+        console.log("Original URL do arquivo:", profilePictureUrl);
+  
         if (profilePictureUrl) {
-          setImageUrl(profilePictureUrl);
+          // Remove o prefixo "uploads/" se existir
+          const correctedUrl = profilePictureUrl.substring(8);
+             
+          console.log("URL corrigido:", correctedUrl);
+  
+          // Atualiza a imagem para o estado
+          setImageUrl(`http://localhost:3005/uploads/${correctedUrl}`);
+        } else {
+          // Define uma imagem padrão
+          setImageUrl("https://via.placeholder.com/128");
         }
       } catch (error) {
         console.error("Erro ao buscar a foto de perfil:", error);
+        setImageUrl("https://via.placeholder.com/128");
       }
     };
-
+  
     fetchUserImage();
   }, [fetchImageEndpoint, userId]);
+  
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -69,7 +83,7 @@ const ProfilePictureUploader: React.FC<ProfilePictureUploaderProps> = ({
       });
 
       const newImageUrl = response.data.profilePicture;
-      setImageUrl(newImageUrl);
+      setImageUrl(newImageUrl); // Atualiza a imagem exibida
       onUploadSuccess && onUploadSuccess(newImageUrl);
       alert("Foto de perfil atualizada com sucesso!");
     } catch (error) {

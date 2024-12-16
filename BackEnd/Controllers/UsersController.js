@@ -244,9 +244,16 @@ const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
   try {
+    // Busca o usuário pelo email
     const user = await User.findOne({ where: { email } });
     if (!user) {
       return res.status(404).json({ message: "Usuário não encontrado" });
+    }
+
+    // Verificar a senha fornecida com o hash armazenado no banco
+    const isPasswordValid = await bcrypt.compare(password, user.password_hash);
+    if (!isPasswordValid) {
+      return res.status(401).json({ message: "Senha incorreta" });
     }
 
     dotenv.config();
@@ -270,7 +277,6 @@ const loginUser = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
-
 const updatedProfile = async (req, res) => {
   console.log(req.params.id_user);
   console.log(req.body);
