@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Home, User, Briefcase } from "lucide-react";
 import axios from "axios";
+import UserQualifications from "../components/UserQualifications";
+import NannyQuickyStats from "../components/NannyQuickStats";
+import ProfilePictureUploader from "../components/ProfilePictureUploader";
+
 
 const NannyDashboard = () => {
   const [activeSection, setActiveSection] = useState("overview");
@@ -11,13 +15,13 @@ const NannyDashboard = () => {
     experience: "",
     policeClearance: "",
     policeClearanceFile: null,
-    work_preference:[],
-    preference_age:[],
+    work_preference: [],
+    preference_age: [],
     languages: [],
     additionalInfo: "",
   });
 
-  // Função para buscar os dados reais da babá da API
+  // Função para buscar dados do perfil da babá
   const fetchNannyProfile = async () => {
     const idUser = localStorage.getItem("idUser");
     if (!idUser) {
@@ -28,27 +32,28 @@ const NannyDashboard = () => {
     try {
       const response = await axios.get(`http://localhost:3005/user/${idUser}`);
       setNannyProfile(response.data);
+      console.info(response.data);
     } catch (error) {
       console.error("Erro ao buscar o perfil:", error);
     }
   };
 
-  // Função para buscar os idiomas disponíveis da API
+  // Função para buscar idiomas disponíveis
   const fetchLanguages = async () => {
     try {
       const response = await axios.get("http://localhost:3005/languages");
-      setLanguagesList(response.data); // Atualiza o estado com os idiomas recebidos
+      setLanguagesList(response.data); // Atualiza o estado com os idiomas obtidos
     } catch (error) {
       console.error("Erro ao buscar idiomas:", error);
     }
   };
 
   useEffect(() => {
-    fetchNannyProfile(); // Busca os dados da babá
-    fetchLanguages(); // Busca os idiomas disponíveis
+    fetchNannyProfile(); // Buscar dados do perfil da babá
+    fetchLanguages(); // Buscar idiomas disponíveis
   }, []);
 
-  // Verifique se os dados da babá já foram carregados
+  // Se o perfil ou idiomas não foram carregados ainda
   if (!nannyProfile || languagesList.length === 0) {
     return <div>Loading...</div>;
   }
@@ -61,100 +66,105 @@ const NannyDashboard = () => {
     }));
   };
 
-  const handleFileChange = (e) => {
-    setFormData({
-      ...formData,
-      policeClearanceFile: e.target.files[0],
-    });
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const formData = new FormData();
+      formData.append("profilePicture", e.target.files[0]);
+
+      const userId = localStorage.getItem("idUser");
+
+      try {
+        const response = await axios.post(
+          `/uploadProfile/Picture/${userId}`,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+      } catch (error) {
+        console.error("Erro ao enviar a foto de perfil", error);
+      }
+    }
+  };
+
+  const handleUploadSuccess = (newImageUrl: string) => {
+    console.log("Nova URL da imagem:", newImageUrl);
+    // Atualize o estado global ou sincronize com o backend.
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     const submitFormData = new FormData();
     const id_user = localStorage.getItem("idUser");
-    
-    // Append user ID
+
+    // Adiciona o ID do usuário
     submitFormData.append("id", id_user);
-    
-    // Append form fields
+
+    // Adiciona os campos do formulário
     submitFormData.append("jobType", formData.jobType);
     submitFormData.append("experience", formData.experience);
     submitFormData.append("policeClearance", formData.policeClearance);
-    
-    // Append file if exists
+
+    // Adiciona o arquivo se existir
     if (formData.policeClearanceFile) {
-      submitFormData.append("policeClearanceFile", formData.policeClearanceFile);
+      submitFormData.append(
+        "policeClearanceFile",
+        formData.policeClearanceFile
+      );
     }
-    
-    // Convert arrays to JSON strings
-    submitFormData.append("work_preference", JSON.stringify(formData.work_preference));
-    submitFormData.append("preference_age", JSON.stringify(formData.preference_age));
+
+    // Converte os arrays em strings JSON
+    submitFormData.append(
+      "work_preference",
+      JSON.stringify(formData.work_preference)
+    );
+    submitFormData.append(
+      "preference_age",
+      JSON.stringify(formData.preference_age)
+    );
     submitFormData.append("languages", JSON.stringify(formData.languages));
     submitFormData.append("additionalInfo", formData.additionalInfo);
-  
-    try {
 
-      console.log("FormData contents:");
+    try {
+      console.log("Conteúdo do FormData:");
       submitFormData.forEach((value, key) => {
         console.log(`${key}:`, value);
       });
       const response = await axios.put(
-        `http://localhost:3005/user/updatenannyProfiles/${id_user}`, 
-        submitFormData, 
+        `http://localhost:3005/user/updatenannyProfiles/${id_user}`,
+        submitFormData,
         {
           headers: {
-            'Content-Type': 'multipart/form-data',
+            "Content-Type": "multipart/form-data",
           },
         }
       );
-      
-      console.log("Profile updated successfully:",  JSON.stringify(response.data, null, 2));
-      alert("Profile updated successfully!");
+
+      console.log(
+        "Perfil atualizado com sucesso:",
+        JSON.stringify(response.data, null, 2)
+      );
+      alert("Perfil atualizado com sucesso!");
     } catch (error) {
-      console.error("Error updating profile:", error);
-      alert("Failed to update profile. Please try again.");
+      console.error("Erro ao atualizar perfil:", error);
+      alert("Falha ao atualizar perfil. Tente novamente.");
     }
   };
-  
+
+  const formatEducationLevel = (level: string) => {
+    return level
+      .toLowerCase() // Converte tudo para minúsculas
+      .replace(/_/g, " ") // Substitui underscores por espaços
+      .replace(/\b\w/g, (char) => char.toUpperCase()); // Coloca a primeira letra de cada palavra em maiúscula
+  };
+
   const renderSection = () => {
     switch (activeSection) {
       case "overview":
-        return (
-          <div className="grid grid-cols-2 gap-6">
-            <div className="bg-white p-6 rounded-lg shadow-md">
-              <h3 className="text-xl font-semibold mb-4 text-blue-700">
-                Quick Stats
-              </h3>
-              <div className="space-y-3">
-                <p>
-                  Completed Jobs:{" "}
-                  <span className="font-bold">
-                    {nannyProfile.completedJobs}
-                  </span>
-                </p>
-                <p>
-                  Rating:{" "}
-                  <span className="font-bold text-yellow-600">
-                    {nannyProfile.rating}/5
-                  </span>
-                </p>
-                <p>
-                  Availability:{" "}
-                  <span className="font-bold text-green-600">
-                    {nannyProfile.availabilityStatus}
-                  </span>
-                </p>
-              </div>
-            </div>
-            <div className="bg-white p-6 rounded-lg shadow-md">
-              <h3 className="text-xl font-semibold mb-4 text-blue-700">
-                Professional Summary
-              </h3>
-              <p>{nannyProfile.professionalSummary}</p>
-            </div>
-          </div>
-        );
+        return <NannyQuickyStats></NannyQuickyStats>;
       case "profile":
         return (
           <div className="bg-white p-6 rounded-lg shadow-md">
@@ -173,7 +183,9 @@ const NannyDashboard = () => {
                 </p>
               </div>
               <div>
-                <p>Education: {nannyProfile.educationLevel}</p>
+                <p>Education: {nannyProfile.nannyProfile.education_level}</p>
+                <p>Date of Birth: {nannyProfile.nannyProfile.date_of_birth}</p>
+                <p>Job Type: {nannyProfile.nannyProfile.job_type}</p>
               </div>
             </div>
 
@@ -255,97 +267,117 @@ const NannyDashboard = () => {
                   />
                 </div>
               </div>
-            </div>
 
-            <h2 className="text-xl font-semibold text-blue-700">
-              Work Preferences
-            </h2>
-            <div className="space-y-2">
-              <label className="block mb-2">Preferred Working Hours</label>
-              <div className="grid grid-cols-2 gap-2">
-                {["morning", "afternoon", "evening", "overnight"].map(
-                  (time, index) => (
-                    <label key={index} className="inline-flex items-center">
-                      <input
-                        type="checkbox"
-                        className="form-checkbox"
-                        value={time}
-                        checked={formData.work_preference.includes(time)}
-                        onChange={(e) => {
-                          setFormData(prev => ({
-                            ...prev,
-                            work_preference: e.target.checked
-                              ? [...prev.work_preference, time]
-                              : prev.work_preference.filter(t => t !== time)
-                          }));
-                        }}
-                      />
-                      <span className="ml-2">
-                        {time.charAt(0).toUpperCase() + time.slice(1)}
-                      </span>
+              {/* Renderiza Work Preferences, Preferred Age Group e Languages apenas se education_level for null */}
+              {!nannyProfile.nannyProfile.education_level && (
+                <>
+                  <h2 className="text-xl font-semibold text-blue-700">
+                    Work Preferences
+                  </h2>
+                  <div className="space-y-2">
+                    <label className="block mb-2">
+                      Preferred Working Hours
                     </label>
-                  )
-                )}
-              </div>
-            </div>
+                    <div className="grid grid-cols-2 gap-2">
+                      {["morning", "afternoon", "evening", "overnight"].map(
+                        (time, index) => (
+                          <label
+                            key={index}
+                            className="inline-flex items-center"
+                          >
+                            <input
+                              type="checkbox"
+                              className="form-checkbox"
+                              value={time}
+                              checked={formData.work_preference.includes(time)}
+                              onChange={(e) => {
+                                setFormData((prev) => ({
+                                  ...prev,
+                                  work_preference: e.target.checked
+                                    ? [...prev.work_preference, time]
+                                    : prev.work_preference.filter(
+                                        (t) => t !== time
+                                      ),
+                                }));
+                              }}
+                            />
+                            <span className="ml-2">
+                              {time.charAt(0).toUpperCase() + time.slice(1)}
+                            </span>
+                          </label>
+                        )
+                      )}
+                    </div>
+                  </div>
 
-            <div className="space-y-2">
-              <h2 className="text-xl font-semibold text-blue-700">Preferred Age Group</h2>
-              <div className="grid grid-cols-2 gap-2">
-                {["babies", "toddlers", "children", "teenagers"].map(
-                  (group, index) => (
-                    <label key={index} className="inline-flex items-center">
-                      <input 
-                        type="checkbox" 
-                        className="form-checkbox" 
-                        value={group} 
-                        checked={formData.preference_age.includes(group)}
-                        onChange={(e) => {
-                          setFormData(prev => ({
-                            ...prev,
-                            preference_age: e.target.checked
-                              ? [...prev.preference_age, group]
-                              : prev.preference_age.filter(g => g !== group)
-                          }));
-                        }}
-                      />
-                      <span className="ml-2">
-                        {group.charAt(0).toUpperCase() + group.slice(1).replace("_", " ")}
-                      </span>
-                    </label>
-                  )
-                )}
-              </div>
-            </div>
+                  <div className="space-y-2">
+                    <h2 className="text-xl font-semibold text-blue-700">
+                      Preferred Age Group
+                    </h2>
+                    <div className="grid grid-cols-2 gap-2">
+                      {["babies", "toddlers", "children", "teenagers"].map(
+                        (group, index) => (
+                          <label
+                            key={index}
+                            className="inline-flex items-center"
+                          >
+                            <input
+                              type="checkbox"
+                              className="form-checkbox"
+                              value={group}
+                              checked={formData.preference_age.includes(group)}
+                              onChange={(e) => {
+                                setFormData((prev) => ({
+                                  ...prev,
+                                  preference_age: e.target.checked
+                                    ? [...prev.preference_age, group]
+                                    : prev.preference_age.filter(
+                                        (g) => g !== group
+                                      ),
+                                }));
+                              }}
+                            />
+                            <span className="ml-2">
+                              {group.charAt(0).toUpperCase() +
+                                group.slice(1).replace("_", " ")}
+                            </span>
+                          </label>
+                        )
+                      )}
+                    </div>
+                  </div>
 
-            {/* Languages & Additional Information */}
-            <div className="space-y-4 mt-6">
-              <h2 className="text-xl font-semibold text-blue-700">
-                Languages & Additional Information
-              </h2>
-              <div className="space-y-2">
-                <label className="block mb-2">Languages Spoken</label>
-                <select
-                  multiple
-                  value={formData.languages}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      languages: Array.from(
-                        e.target.selectedOptions,
-                        (opt) => opt.value
-                      ),
-                    })
-                  }
-                  className="w-full px-3 py-2 border rounded"
-                >
-                  {languagesList.map((language, index) => (
-                    <option key={index} value={language}>
-                      {language}
-                    </option>
-                  ))}
-                </select>
-              </div>
+                  {/* Languages */}
+                  <div className="space-y-4 mt-6">
+                    <h2 className="text-xl font-semibold text-blue-700">
+                      Languages & Additional Information
+                    </h2>
+                    <div className="space-y-2">
+                      <label className="block mb-2">Languages Spoken</label>
+                      <select
+                        multiple
+                        value={formData.languages}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            languages: Array.from(
+                              e.target.selectedOptions,
+                              (opt) => opt.value
+                            ),
+                          })
+                        }
+                        className="w-full px-3 py-2 border rounded"
+                      >
+                        {languagesList.map((language, index) => (
+                          <option key={index} value={language}>
+                            {language}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                </>
+              )}
 
               <div className="space-y-2">
                 <label className="block mb-2">Additional Information</label>
@@ -367,28 +399,9 @@ const NannyDashboard = () => {
             </button>
           </div>
         );
-      case "jobs":
+      case "qualifications":
         return (
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <h3 className="text-xl font-semibold mb-4 text-blue-700">
-              Job Opportunities
-            </h3>
-            <div className="space-y-4">
-              {nannyProfile.jobs.map((job, index) => (
-                <div key={index} className="border p-4 rounded-md">
-                  <h4 className="font-semibold">{job.title}</h4>
-                  <p>{job.description}</p>
-                  <p
-                    className={`text-${
-                      job.status === "Open" ? "green" : "yellow"
-                    }-600`}
-                  >
-                    {job.status}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
+          <UserQualifications idUser={nannyProfile.user_id} /> // Passa o ID dinâmico
         );
       default:
         return null;
@@ -402,15 +415,24 @@ const NannyDashboard = () => {
           {/* Sidebar */}
           <div className="bg-white rounded-lg shadow-md p-6">
             <div className="text-center mb-6">
-              <img
-                src={nannyProfile.profilePicture}
-                alt="Profile"
-                className="w-32 h-32 rounded-full mx-auto mb-4 object-cover"
+              <ProfilePictureUploader
+                uploadEndpoint={`http://localhost:3005/user/uploadProfile/Picture/${nannyProfile.user_id}`}
+                fetchImageEndpoint={`http://localhost:3005/user/${nannyProfile.user_id}/profile-picture`}
+                onUploadSuccess={(newImageUrl) => {
+                  console.log("Foto atualizada com sucesso:", newImageUrl);
+                }}
               />
+
               <h2 className="text-2xl font-bold text-blue-700">
                 {nannyProfile.first_name} {nannyProfile.last_name}
               </h2>
-              <p className="text-gray-600">{nannyProfile.education_Level}</p>
+              <p className="text-gray-600">
+                {nannyProfile?.nannyProfile?.education_level
+                  ? formatEducationLevel(
+                      nannyProfile.nannyProfile.education_level
+                    )
+                  : "Nível de educação não disponível"}
+              </p>
             </div>
             <nav className="space-y-4">
               <button
@@ -425,7 +447,11 @@ const NannyDashboard = () => {
               </button>
               <button
                 onClick={() => setActiveSection("profile")}
-                className={`w-full flex items-center p}`}
+                className={`w-full flex items-center p-3 rounded-lg ${
+                  activeSection === "profile"
+                    ? "bg-blue-100 text-blue-700"
+                    : "hover:bg-gray-100"
+                }`}
               >
                 <User className="mr-3" /> Profile
               </button>
@@ -439,10 +465,20 @@ const NannyDashboard = () => {
               >
                 <Briefcase className="mr-3" /> Jobs
               </button>
+              <button
+                onClick={() => setActiveSection("qualifications")}
+                className={`w-full flex items-center p-3 rounded-lg ${
+                  activeSection === "qualifications"
+                    ? "bg-blue-100 text-blue-700"
+                    : "hover:bg-gray-100"
+                }`}
+              >
+                <Briefcase className="mr-3" /> Qualifications
+              </button>
             </nav>
           </div>
 
-          {/* Main Content */}
+          {/* Conteúdo Principal */}
           <div className="col-span-3">
             <div className="bg-white rounded-lg p-6 shadow-md mb-6">
               <h1 className="text-3xl font-bold text-blue-700">

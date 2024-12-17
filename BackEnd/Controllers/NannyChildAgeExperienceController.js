@@ -2,8 +2,14 @@ import db from "../Models/index.js";
 const NannyChildAgeExperience = db.Nanny_Child_Age_Experience;
 
 const createExperience = async (req, res) => {
+  console.log(req.body)
+  console.log(req.params)
   try {
-    const experience = await NannyChildAgeExperience.create(req.body);
+    const experience = await NannyChildAgeExperience.create({
+      nanny_id: req.params.nanny_id,
+      age_group: req.body.preference_age,
+    
+    });
     res.status(201).json(experience);
   } catch (error) {
     res.status(500).json({ error: error.message });
