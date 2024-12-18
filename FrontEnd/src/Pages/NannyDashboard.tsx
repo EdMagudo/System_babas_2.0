@@ -4,6 +4,7 @@ import axios from "axios";
 import UserQualifications from "../components/UserQualifications";
 import NannyQuickyStats from "../components/NannyQuickStats";
 import ProfilePictureUploader from "../components/ProfilePictureUploader";
+import BabysittingRequestManager from "../components/BabysittingRequestManager";
 
 
 const NannyDashboard = () => {
@@ -403,6 +404,9 @@ const NannyDashboard = () => {
         return (
           <UserQualifications idUser={nannyProfile.user_id} /> // Passa o ID dinâmico
         );
+
+      case "jobs":
+        return(<BabysittingRequestManager/>);  
       default:
         return null;
     }

@@ -148,7 +148,7 @@ const NannyQuickStats: React.FC<NannyQuickStatsProps> = ({
             Professional Summary
           </h3>
           <p className="text-gray-600 italic leading-relaxed">
-            "{professionalSummary}"
+            "{nannyProfile.nannyProfile.additional_info}"
           </p>
         </div>
 

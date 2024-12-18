@@ -278,9 +278,7 @@ const loginUser = async (req, res) => {
   }
 };
 const updatedProfile = async (req, res) => {
-  console.log(req.params.id_user);
-  console.log(req.body);
-  console.log(req.file);
+  
   try {
     if (req.file) {
       const fileData = {
@@ -293,12 +291,22 @@ const updatedProfile = async (req, res) => {
       await Files.create(fileData);
     }
 
-    const updatedProfileData = {
-      job_type: req.body.jobType,
-      experience_years: req.body.experience,
-      has_criminal_record: req.body.policeClearance,
-      additional_info: req.body.additionalInfo,
-    };
+
+    const updatedProfileData = {};
+
+    // Atualiza apenas os campos que não estão vazios
+    if (req.body.jobType) {
+      updatedProfileData.job_type = req.body.jobType;
+    }
+    if (req.body.experience) {
+      updatedProfileData.experience_years = req.body.experience;
+    }
+    if (req.body.policeClearance) {
+      updatedProfileData.has_criminal_record = req.body.policeClearance;
+    }
+    if (req.body.additionalInfo) {
+      updatedProfileData.additional_info = req.body.additionalInfo;
+    }
 
     const updated = await NannyProfiles.update(updatedProfileData, {
       where: { nanny_id: req.params.id_user },
