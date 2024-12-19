@@ -3,7 +3,7 @@ import db from "../Models/index.js";
 import { Sequelize } from 'sequelize';
 const ServiceRequest = db.Service_Requests;
 const Reservation = db.Reservations;
-
+/*
 const createRequest = async (req, res) => {
   try {
     const request = await ServiceRequest.create(req.body);
@@ -12,6 +12,48 @@ const createRequest = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+*/
+const createRequest = async (req, res) => {
+  try {
+    // Pegando os dados do corpo da requisição (POST)
+    const {
+      client_id,
+      nanny_id, 
+      number_of_people,
+      email,
+      address,
+      start_date,
+      end_date,
+      notes,
+    } = req.body;
+
+    // Validando se os campos obrigatórios foram enviados
+    if (!client_id || !number_of_people || !email || !address || !start_date || !end_date) {
+      return res.status(400).json({ error: 'Campos obrigatórios ausentes.' });
+    }
+
+    // Criando a nova solicitação de serviço
+    const newRequest = await ServiceRequest.create({
+      client_id,
+      nanny_id: nanny_id || null, // Se não houver nanny, mantém como null
+      number_of_people,
+      email,
+      address,
+      start_date,
+      end_date,
+      notes,
+      status: 'pending', // Status inicial como 'pending'
+    });
+
+    // Retornando a solicitação de serviço criada como resposta
+    return res.status(201).json({ message: 'Solicitação de serviço criada com sucesso.', data: newRequest });
+  } catch (error) {
+    console.error('Erro ao criar solicitação de serviço:', error);
+    return res.status(500).json({ error: 'Erro interno no servidor' });
+  }
+};
+
+
 
 const getAllRequests = async (req, res) => {
   try {

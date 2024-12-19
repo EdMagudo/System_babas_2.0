@@ -35,6 +35,9 @@ const LoginPage = () => {
         localStorage.setItem('authToken', data.token);
         localStorage.setItem('idUser', data.user.id);
         localStorage.setItem('userRole', data.user.role);
+        localStorage.setItem('userEmail', data.user.email);
+        localStorage.setItem('userProvice', data.user.country);
+        localStorage.setItem('userCountry', data.user.province);
 
         console.log(data.user.id)
      

@@ -259,7 +259,13 @@ const loginUser = async (req, res) => {
     dotenv.config();
     // Gerar um token JWT para o usuário
     const token = jwt.sign(
-      { id: user.id, email: user.email, role: user.role },
+      {
+        id: user.id,
+        email: user.email,
+        role: user.role,
+        country: user.country_name,
+        province: user.province_name,
+      },
       process.env.JWT_SECRET,
       { expiresIn: process.env.JWT_EXPIRATION }
     );
@@ -271,6 +277,8 @@ const loginUser = async (req, res) => {
         id: user.user_id,
         email: user.email,
         role: user.role,
+        country: user.country_name,
+        province: user.province_name,
       },
     });
   } catch (error) {
@@ -278,7 +286,6 @@ const loginUser = async (req, res) => {
   }
 };
 const updatedProfile = async (req, res) => {
-  
   try {
     if (req.file) {
       const fileData = {
@@ -290,7 +297,6 @@ const updatedProfile = async (req, res) => {
 
       await Files.create(fileData);
     }
-
 
     const updatedProfileData = {};
 
@@ -407,7 +413,6 @@ const changePassword = async (req, res) => {
   }
 };
 
-
 const uploadProfilePicture = async (req, res) => {
   try {
     const userId = req.params.user_id;
@@ -507,7 +512,6 @@ const uploadProfilePicture = async (req, res) => {
   }
 };
 
-
 export const getUserProfilePicture = async (req, res) => {
   try {
     const userId = req.params.user_id; // ID do usuário enviado na URL
@@ -525,7 +529,9 @@ export const getUserProfilePicture = async (req, res) => {
     if (!userFile) {
       return res
         .status(404)
-        .json({ message: "Nenhuma foto de perfil encontrada para este usuário." });
+        .json({
+          message: "Nenhuma foto de perfil encontrada para este usuário.",
+        });
     }
 
     // Retorna as informações do arquivo
@@ -541,7 +547,10 @@ export const getUserProfilePicture = async (req, res) => {
     console.error("Erro ao buscar foto de perfil:", error);
     res
       .status(500)
-      .json({ message: "Erro ao buscar foto de perfil.", error: error.message });
+      .json({
+        message: "Erro ao buscar foto de perfil.",
+        error: error.message,
+      });
   }
 };
 
@@ -556,5 +565,5 @@ export default {
   updatedProfile,
   changePassword,
   uploadProfilePicture,
-  getUserProfilePicture
+  getUserProfilePicture,
 };
