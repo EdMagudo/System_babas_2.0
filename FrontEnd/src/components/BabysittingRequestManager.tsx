@@ -84,6 +84,38 @@ const BabysittingRequestManager: React.FC = () => {
     }
   };
 
+  const formatDate = (date) => {
+    const d = new Date(date);
+    const day = String(d.getDate()).padStart(2, '0'); // Adiciona zero à esquerda
+    const month = String(d.getMonth() + 1).padStart(2, '0'); // Meses começam em 0
+    const year = d.getFullYear();
+    return `${day}-${month}-${year}`;
+  };
+
+  const handleFilter = () => {
+    // Converte as datas de filtro para o formato dd-MM-YYYY
+    const startDate = formatDate(startDateFilter);
+    const endDate = formatDate(endDateFilter);
+    
+
+    console.log('Start Date:', startDate);
+    console.log('End Date:', endDate);
+
+    // Filtrando as reservas com base na data de reserva
+    const filtered = reservations.filter((reservation) => {
+      const bookingDate = formatDate(reservation.booking_date); // Converte para formato dd-MM-YYYY
+
+      console.log(bookingDate)
+
+      console.log(bookingDate >= startDate && bookingDate <= endDate)
+      // Verifica se a data de reserva está entre as datas de início e fim
+      return bookingDate >= startDate && bookingDate <= endDate;
+    });
+
+    // Atualiza o estado das reservas filtradas
+    setReservations(filtered);
+  };
+
   const handleApproveClick = (id: number) => {
     setEditingRequest(id);
     setValue("");
@@ -169,6 +201,21 @@ const BabysittingRequestManager: React.FC = () => {
       ? reservations.filter((reservation) => reservation.status != "")
       : []; // Exibe apenas as reservas com status "confirmed" para a aba "approved"
 
+
+  const filteredReserv= reservations.filter((reservation) => {
+        const bookingDate = new Date(reservation.booking_date); // Usando booking_date em vez de startDate
+        const startDate = startDateFilter ? new Date(startDateFilter) : null;
+        const endDate = endDateFilter ? new Date(endDateFilter) : null;
+      
+        // Verifica se está dentro do intervalo de datas
+        return (
+          (!startDate || bookingDate >= startDate) &&
+          (!endDate || bookingDate <= endDate)
+        );
+      });
+      
+
+
   const getStatusBackground = (status: string) => {
     switch (status) {
       case "pending":
@@ -214,31 +261,41 @@ const BabysittingRequestManager: React.FC = () => {
       {/* Filtro de Data (somente para reservas) */}
       {activeTab === "approved" && (
         <div className="flex gap-4 mb-6">
-          <div className="flex items-center">
-            <label htmlFor="startDateFilter" className="mr-2">
-              Start Date:
-            </label>
-            <input
-              type="date"
-              id="startDateFilter"
-              className="border border-gray-300 rounded-md p-2"
-              value={startDateFilter}
-              onChange={(e) => setStartDateFilter(e.target.value)}
-            />
-          </div>
-          <div className="flex items-center">
-            <label htmlFor="endDateFilter" className="mr-2">
-              End Date:
-            </label>
-            <input
-              type="date"
-              id="endDateFilter"
-              className="border border-gray-300 rounded-md p-2"
-              value={endDateFilter}
-              onChange={(e) => setEndDateFilter(e.target.value)}
-            />
-          </div>
+        <div className="flex items-center">
+          <label htmlFor="startDateFilter" className="mr-2">
+            Start Date:
+          </label>
+          <input
+            type="date"
+            id="startDateFilter"
+            className="border border-gray-300 rounded-md p-2"
+            value={startDateFilter}
+            onChange={(e) => setStartDateFilter(e.target.value)}
+          />
         </div>
+        <div className="flex items-center">
+          <label htmlFor="endDateFilter" className="mr-2">
+            End Date:
+          </label>
+          <input
+            type="date"
+            id="endDateFilter"
+            className="border border-gray-300 rounded-md p-2"
+            value={endDateFilter}
+            onChange={(e) => setEndDateFilter(e.target.value)}
+          />
+        </div>
+      
+        <div className="flex items-center">
+          <button
+             onClick={handleFilter}
+            className="bg-blue-500 text-white rounded-md px-6 py-2 font-semibold hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+          >
+            Filter
+          </button>
+        </div>
+      </div>
+      
       )}
 
       {activeTab === "new" && filteredRequests.length === 0 ? (
@@ -246,49 +303,70 @@ const BabysittingRequestManager: React.FC = () => {
       ) : (
         filteredRequests.map((request) => (
           <div
-            key={request.id}
-            className="border border-gray-300 rounded-lg p-4 mb-4 shadow-md bg-white"
-          >
-            <h2 className="text-lg font-semibold mb-3">
-              Request for {request.startDate}
-            </h2>
-            <div className="mb-4 space-y-2">
-              <p className="flex items-center gap-2">
-                <Users className="w-5 h-5 text-pink-500" />
-                <strong className="font-medium">Number of People:</strong>{" "}
-                {request.numberOfPeople}
-              </p>
-              <p className="flex items-center gap-2">
-                <MapPin className="w-5 h-5 text-green-500" />
-                <strong className="font-medium">Address:</strong>{" "}
-                {request.address}
-              </p>
-              <p className="flex items-center gap-2">
-                <Mail className="w-5 h-5 text-blue-500" />
-                <strong className="font-medium">Email:</strong> {request.email}
-              </p>
-              <p className="flex items-center gap-2 text-gray-700 mt-2">
-                <strong className="font-medium text-blue-600">Note:</strong>
-                <span className="text-sm text-gray-600 italic">
-                  {request.notes}
-                </span>
-              </p>
-            </div>
-            <div>
-              <button
-                onClick={() => handleApproveClick(request.id)}
-                className="px-4 py-2 rounded-md text-white bg-blue-500 hover:bg-blue-600 font-medium"
-              >
-                Approve
-              </button>
-              <button
-                onClick={() => handleReject(request.id)}
-                className="px-4 py-2 rounded-md text-white bg-red-500 hover:bg-red-600 font-medium ml-4"
-              >
-                Reject
-              </button>
-            </div>
+          key={request.id}
+          className="border border-gray-300 rounded-lg p-4 mb-4 shadow-md bg-white"
+        >
+          <h2 className="text-lg font-semibold mb-3">
+            Request for {request.startDate}
+          </h2>
+          <div className="mb-4 space-y-2">
+            <p className="flex items-center gap-2">
+              <Users className="w-5 h-5 text-pink-500" />
+              <strong className="font-medium">Number of People:</strong>{" "}
+              {request.numberOfPeople}
+            </p>
+            <p className="flex items-center gap-2">
+              <MapPin className="w-5 h-5 text-green-500" />
+              <strong className="font-medium">Address:</strong> {request.address}
+            </p>
+            <p className="flex items-center gap-2">
+              <Mail className="w-5 h-5 text-blue-500" />
+              <strong className="font-medium">Email:</strong> {request.email}
+            </p>
+            <p className="flex items-center gap-2 text-gray-700 mt-2">
+              <strong className="font-medium text-blue-600">Note:</strong>
+              <span className="text-sm text-gray-600 italic">{request.notes}</span>
+            </p>
           </div>
+          <div className="mt-4">
+            {editingRequest === request.id ? (
+              <div className="space-y-2">
+                <div className="flex items-center gap-4">
+                  <input
+                    type="number"
+                    placeholder="Enter service value"
+                    value={value}
+                    onChange={(e) => setValue(e.target.value)}
+                    className="border border-gray-300 rounded-md p-2 flex-1"
+                  />
+                  <button
+                    onClick={() => handleFinalize(request.id)}
+                    className="px-4 py-2 rounded-md text-white bg-green-500 hover:bg-green-600 font-medium"
+                  >
+                    Finalize
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="flex items-center gap-4">
+                <button
+                  onClick={() => handleApproveClick(request.id)}
+                  className="px-4 py-2 rounded-md text-white bg-blue-500 hover:bg-blue-600 font-medium"
+                >
+                  Approve
+                </button>
+                <button
+                  onClick={() => handleReject(request.id)}
+                  className="px-4 py-2 rounded-md text-white bg-red-500 hover:bg-red-600 font-medium"
+                >
+                  Reject
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+        
+
         ))
       )}
 
