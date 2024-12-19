@@ -1,6 +1,11 @@
+import { Op } from 'sequelize';
 import db from "../Models/index.js";
-const NannyProfiles = db.Nanny_Profiles;
 
+const NannyProfiles = db.Nanny_Profiles;
+const Files = db.Files;
+const User = db.Users;
+
+// Criar perfil de nanny
 const createProfile = async (req, res) => {
   try {
     const profile = await NannyProfiles.create(req.body);
@@ -10,6 +15,7 @@ const createProfile = async (req, res) => {
   }
 };
 
+// Obter todos os perfis de nanny
 const getAllProfiles = async (req, res) => {
   try {
     const profiles = await NannyProfiles.findAll();
@@ -19,6 +25,34 @@ const getAllProfiles = async (req, res) => {
   }
 };
 
+const getNannyDetails = async (req, res) => {
+  try {
+    const query = `
+      SELECT 
+          u.first_name, 
+          u.email, 
+          np.nanny_id, 
+          np.education_level, 
+          np.date_of_birth, 
+          f.file_path
+      FROM Users u
+      JOIN Nanny_Profiles np ON u.user_id = np.user_id
+      LEFT JOIN Files f ON u.user_id = f.user_id
+      WHERE u.role = 'nanny';
+    `;
+
+    const [nannies, metadata] = await db.sequelize.query(query);
+
+    // Retornar os dados no formato desejado
+    res.status(200).json(nannies);
+  } catch (error) {
+    console.error('Erro ao buscar os detalhes das nannies:', error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+
+// Obter perfil de nanny por ID
 const getProfileById = async (req, res) => {
   try {
     const profile = await NannyProfiles.findByPk(req.params.nanny_id);
@@ -32,6 +66,7 @@ const getProfileById = async (req, res) => {
   }
 };
 
+// Atualizar perfil de nanny
 const updateProfile = async (req, res) => {
   try {
     const [updated] = await NannyProfiles.update(req.body, {
@@ -48,6 +83,7 @@ const updateProfile = async (req, res) => {
   }
 };
 
+// Deletar perfil de nanny
 const deleteProfile = async (req, res) => {
   try {
     const deleted = await NannyProfiles.destroy({
@@ -66,6 +102,7 @@ const deleteProfile = async (req, res) => {
 export default {
   createProfile,
   getAllProfiles,
+  getNannyDetails,
   getProfileById,
   updateProfile,
   deleteProfile,

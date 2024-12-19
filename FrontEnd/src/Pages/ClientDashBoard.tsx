@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { 
   Home, 
-  Search, 
-  Users, 
-  MessageCircle, 
-  Star, 
-  Calendar 
+  Search as SearchIcon, 
+  Star 
 } from 'lucide-react';
+import Overview from '../components/Client/Overview';  // Importe o componente Overview
+import Search from '../components/Client/Search';      // Importe o componente Search
+import Favorites from '../components/Client/Favorites'; // Importe o componente Favorites
 
 const ClientDashboard = () => {
   const [activeSection, setActiveSection] = useState('overview');
@@ -25,121 +25,11 @@ const ClientDashboard = () => {
   const renderSection = () => {
     switch(activeSection) {
       case 'overview':
-        return (
-          <div className="grid grid-cols-2 gap-6">
-            <div className="bg-white p-6 rounded-lg shadow-md">
-              <h3 className="text-xl font-semibold mb-4 text-indigo-700">Quick Stats</h3>
-              <div className="space-y-3">
-                <p>Total Nanny Searches: <span className="font-bold">{clientProfile.totalNannySearches}</span></p>
-                <p>Profile Completeness: 
-                  <span className="font-bold text-green-600 ml-2">
-                    {clientProfile.profileCompleteness}%
-                  </span>
-                </p>
-                <div className="w-full bg-gray-200 rounded-full h-2.5">
-                  <div 
-                    className="bg-green-600 h-2.5 rounded-full" 
-                    style={{width: `${clientProfile.profileCompleteness}%`}}
-                  ></div>
-                </div>
-              </div>
-            </div>
-            <div className="bg-white p-6 rounded-lg shadow-md">
-              <h3 className="text-xl font-semibold mb-4 text-indigo-700">Recent Activity</h3>
-              <ul className="space-y-3">
-                <li className="border-b pb-2">
-                  <p className="font-medium">Searched for nannies in São Paulo</p>
-                  <p className="text-sm text-gray-600">2 days ago</p>
-                </li>
-                <li className="border-b pb-2">
-                  <p className="font-medium">Viewed 3 nanny profiles</p>
-                  <p className="text-sm text-gray-600">3 days ago</p>
-                </li>
-                <li>
-                  <p className="font-medium">Updated search preferences</p>
-                  <p className="text-sm text-gray-600">5 days ago</p>
-                </li>
-              </ul>
-            </div>
-          </div>
-        );
+        return <Overview clientProfile={clientProfile} />;
       case 'search':
-        return (
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <h3 className="text-xl font-semibold mb-4 text-indigo-700">Find a Nanny</h3>
-            <div className="grid md:grid-cols-3 gap-4">
-              <div>
-                <label className="block mb-2 text-gray-700">Location</label>
-                <select className="w-full px-3 py-2 border rounded">
-                  <option>São Paulo</option>
-                  <option>Rio de Janeiro</option>
-                  <option>Belo Horizonte</option>
-                </select>
-              </div>
-              <div>
-                <label className="block mb-2 text-gray-700">Child Age</label>
-                <select className="w-full px-3 py-2 border rounded">
-                  <option>Infant (0-1 year)</option>
-                  <option>Toddler (1-3 years)</option>
-                  <option>Preschool (3-5 years)</option>
-                </select>
-              </div>
-              <div>
-                <label className="block mb-2 text-gray-700">Availability</label>
-                <select className="w-full px-3 py-2 border rounded">
-                  <option>Full-time</option>
-                  <option>Part-time</option>
-                  <option>Weekend</option>
-                </select>
-              </div>
-              <div className="col-span-3 mt-4">
-                <button className="bg-indigo-600 text-white px-6 py-2 rounded hover:bg-indigo-700">
-                  Search Nannies
-                </button>
-              </div>
-            </div>
-          </div>
-        );
+        return <Search />;
       case 'favorites':
-        return (
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <h3 className="text-xl font-semibold mb-4 text-indigo-700">Favorite Nannies</h3>
-            <div className="space-y-4">
-              <div className="flex items-center justify-between border p-4 rounded">
-                <div className="flex items-center">
-                  <img 
-                    src="/api/placeholder/80/80" 
-                    alt="Nanny" 
-                    className="w-16 h-16 rounded-full mr-4"
-                  />
-                  <div>
-                    <h4 className="font-semibold">Ana Rodrigues</h4>
-                    <p className="text-gray-600">Early Childhood Educator</p>
-                  </div>
-                </div>
-                <button className="text-indigo-600 hover:text-indigo-800">
-                  View Profile
-                </button>
-              </div>
-              <div className="flex items-center justify-between border p-4 rounded">
-                <div className="flex items-center">
-                  <img 
-                    src="/api/placeholder/80/80" 
-                    alt="Nanny" 
-                    className="w-16 h-16 rounded-full mr-4"
-                  />
-                  <div>
-                    <h4 className="font-semibold">Carlos Santos</h4>
-                    <p className="text-gray-600">Experienced Caregiver</p>
-                  </div>
-                </div>
-                <button className="text-indigo-600 hover:text-indigo-800">
-                  View Profile
-                </button>
-              </div>
-            </div>
-          </div>
-        );
+        return <Favorites />;
       default:
         return null;
     }
@@ -171,7 +61,7 @@ const ClientDashboard = () => {
                 onClick={() => setActiveSection('search')}
                 className={`w-full flex items-center p-3 rounded-lg ${activeSection === 'search' ? 'bg-indigo-100 text-indigo-700' : 'hover:bg-gray-100'}`}
               >
-                <Search className="mr-3" /> Find a Nanny
+                <SearchIcon className="mr-3" /> Find a Nanny
               </button>
               <button 
                 onClick={() => setActiveSection('favorites')}

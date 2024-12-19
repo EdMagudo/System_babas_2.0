@@ -30,6 +30,7 @@ app.use(express.urlencoded({ extended: true }));
 //Rotas
 import routerAdmin from './Routes/adminRoutes.js';
 import routerUser from './Routes/usersRouter.js';
+import routerNanny from './Routes/nannyProfilesRouter.js';
 import UserLanguage from './Routes/userLanguageRouter.js';
 import NannyChildAgeExperience from './Routes/nannyChildAgeExperienceRouter.js';
 import NannyChildWorkPreference from './Routes/nannyChildWorkPreferenceRouter.js';
@@ -38,6 +39,7 @@ import NannyChildWorkPreference from './Routes/nannyChildWorkPreferenceRouter.js
 app.use('/admin', routerAdmin);
 app.use('/user', routerUser);
 app.use('/lang',UserLanguage);
+app.use('/nanny',routerNanny);
 app.use('/experienceAge',NannyChildAgeExperience);
 app.use('/experienceWork', NannyChildWorkPreference);
 
@@ -90,23 +92,45 @@ app.get('/provinces/:country', async (req, res) => {
     }
 });
 
-app.get('/languages', async (req, res) => {
-    try {
-        const response = await axios.get('https://restcountries.com/v3.1/all');
+// app.get('/languages', async (req, res) => {
+//     try {
+//         const response = await axios.get('https://restcountries.com/v3.1/all');
 
-        // Extrair idiomas de todos os países
-        const languages = new Set();
-        response.data.forEach(country => {
-            if (country.languages) {
-                Object.values(country.languages).forEach(lang => languages.add(lang));
-            }
-        });
+//         // Extrair idiomas de todos os países
+//         const languages = new Set();
+//         response.data.forEach(country => {
+//             if (country.languages) {
+//                 Object.values(country.languages).forEach(lang => languages.add(lang));
+//             }
+//         });
 
-        res.json([...languages]); // Retornar os idiomas como uma lista única
-    } catch (error) {
-        console.error('Erro ao buscar idiomas:', error.message);
-        res.status(500).json({ error: 'Erro ao buscar idiomas', details: error.message });
-    }
+//         res.json([...languages]); // Retornar os idiomas como uma lista única
+//     } catch (error) {
+//         console.error('Erro ao buscar idiomas:', error.message);
+//         res.status(500).json({ error: 'Erro ao buscar idiomas', details: error.message });
+//     }
+// });
+
+app.get('/languages', (req, res) => {
+    // Array estático de idiomas
+    const languages = [
+        "Afrikaans", "Albanian", "Arabic", "Armenian", "Basque", "Bengali",
+        "Bosnian", "Bulgarian", "Catalan", "Chinese", "Croatian", "Czech",
+        "Danish", "Dutch", "English", "Estonian", "Finnish", "French",
+        "Georgian", "German", "Greek", "Gujarati", "Haitian Creole", "Hebrew",
+        "Hindi", "Hungarian", "Icelandic", "Indonesian", "Italian", "Japanese",
+        "Kazakh", "Khmer", "Korean", "Kurdish", "Latvian", "Lithuanian",
+        "Macedonian", "Malay", "Maltese", "Norwegian", "Persian", "Polish",
+        "Portuguese", "Romanian", "Russian", "Serbian", "Sinhala", "Slovak",
+        "Slovenian", "Spanish", "Swahili", "Swedish", "Tamil", "Telugu", "Thai",
+        "Turkish", "Ukrainian", "Urdu", "Vietnamese", "Welsh", "Xhosa", "Yiddish",
+        "Zulu"
+    ];
+
+    // Retornar o array de idiomas como resposta
+    res.json({
+        languages: languages
+    });
 });
 
 app.post('/send-email', async (req, res) => {

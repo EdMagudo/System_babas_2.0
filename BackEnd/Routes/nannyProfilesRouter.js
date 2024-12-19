@@ -8,5 +8,7 @@ router.get("/", nannyProfilesController.getAllProfiles); // Lista todos os perfi
 router.get("/:nanny_id", nannyProfilesController.getProfileById); // Busca um perfil de babá pelo ID
 router.put("/:nanny_id", nannyProfilesController.updateProfile); // Atualiza um perfil de babá pelo ID
 router.delete("/:nanny_id", nannyProfilesController.deleteProfile); // Remove um perfil de babá pelo ID
+router.get("/in/nanny", nannyProfilesController.getNannyDetails); 
+
 
 export default router;
