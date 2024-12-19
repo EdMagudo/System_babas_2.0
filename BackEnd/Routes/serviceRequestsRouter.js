@@ -8,5 +8,8 @@ router.get("/", serviceRequestsController.getAllRequests); // Lista todas as sol
 router.get("/:request_id", serviceRequestsController.getRequestById); // Obtém os detalhes de uma solicitação específica
 router.put("/:request_id", serviceRequestsController.updateRequest); // Atualiza uma solicitação existente
 router.delete("/:request_id", serviceRequestsController.deleteRequest); // Exclui uma solicitação de serviço
+router.get("/allRequest/:nanny_id", serviceRequestsController.getRequestsForNanny)
+router.put("/rejectRequest/:id", serviceRequestsController.rejectRequest); //
+router.put("/approvedRequest/:id", serviceRequestsController.approvedRequest); //
 
 export default router;

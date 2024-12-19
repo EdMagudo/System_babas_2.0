@@ -23,14 +23,11 @@ export default (sequelize, DataTypes) => {
             type: DataTypes.ENUM('booked', 'confirmed', 'completed', 'cancelled'),
             allowNull: false
         },
-        total_hours: {
+        value: {
             type: DataTypes.DECIMAL(10, 2),
             allowNull: true
         },
-        hourly_rate: {
-            type: DataTypes.DECIMAL(10, 2),
-            allowNull: true
-        },
+        
         booking_date: {
             type: DataTypes.DATE,
             defaultValue: DataTypes.NOW
