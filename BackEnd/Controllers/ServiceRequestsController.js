@@ -1,5 +1,8 @@
+import { now } from "sequelize/lib/utils";
 import db from "../Models/index.js";
+import { Sequelize } from 'sequelize';
 const ServiceRequest = db.Service_Requests;
+const Reservation = db.Reservations;
 
 const createRequest = async (req, res) => {
   try {
@@ -113,7 +116,26 @@ const approvedRequest = async (req, res) => {
       return res.status(404).json({ message: 'Request not found' });
     }
 
-    res.status(200).json({ message: 'Request approved successfully' });
+    const approvedRequest = await ServiceRequest.findOne({
+      where: { request_id: id },
+    });
+
+    if (!approvedRequest) {
+      return res.status(404).json({ message: 'Request not found after update' });
+    }
+
+    // Crie uma reserva automaticamente com os detalhes da solicitação
+    const newReservation = await Reservation.create({
+      request_id: approvedRequest.request_id,
+      nanny_id : approvedRequest.nanny_id,
+      value: req.body.value || 0, // Use o valor fornecido ou 0 como padrão
+      status: 'confirmed',
+      booking_date:approvedRequest.start_date, //
+    });
+    res.status(200).json({
+      message: 'Request approved and reservation created successfully',
+      reservation: newReservation,
+    });
   } catch (error) {
     console.error('Error rejecting request:', error);
     res.status(500).json({ message: 'Error rejecting request' });

@@ -34,6 +34,7 @@ import UserLanguage from './Routes/userLanguageRouter.js';
 import NannyChildAgeExperience from './Routes/nannyChildAgeExperienceRouter.js';
 import NannyChildWorkPreference from './Routes/nannyChildWorkPreferenceRouter.js';
 import ServiceRequests from './Routes/serviceRequestsRouter.js';
+import Reservations from './Routes/reservationsRouter.js';
 
 
 app.use('/admin', routerAdmin);
@@ -41,7 +42,10 @@ app.use('/user', routerUser);
 app.use('/lang',UserLanguage);
 app.use('/experienceAge',NannyChildAgeExperience);
 app.use('/experienceWork', NannyChildWorkPreference);
-app.use('/requestServices',ServiceRequests)
+app.use('/requestServices',ServiceRequests);
+app.use('/reservations',Reservations);
+
+
 
 
   
