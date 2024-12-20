@@ -30,6 +30,8 @@ const BabysittingRequestManager: React.FC = () => {
   const [value, setValue] = useState<string>("");
   const [startDateFilter, setStartDateFilter] = useState<string>("");
   const [endDateFilter, setEndDateFilter] = useState<string>("");
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [itemsPerPage] = useState<number>(5); 
 
   useEffect(() => {
     fetchReservations();
@@ -84,37 +86,63 @@ const BabysittingRequestManager: React.FC = () => {
     }
   };
 
-  const formatDate = (date) => {
-    const d = new Date(date);
-    const day = String(d.getDate()).padStart(2, '0'); // Adiciona zero à esquerda
-    const month = String(d.getMonth() + 1).padStart(2, '0'); // Meses começam em 0
-    const year = d.getFullYear();
-    return `${day}-${month}-${year}`;
+ 
+  
+  const fetchAllReservations = async () => {
+     const idUser = localStorage.getItem("idUser");
+    try {
+      const response = await axios.get(
+        `http://localhost:3005/reservations/getAll/reservations/${idUser}`
+      );
+      return response.data; // Retorna apenas os dados da resposta
+    } catch (error) {
+      console.error("Error fetching reservations:", error);
+      return [];
+    }
   };
-
-  const handleFilter = () => {
-    // Converte as datas de filtro para o formato dd-MM-YYYY
-    const startDate = formatDate(startDateFilter);
-    const endDate = formatDate(endDateFilter);
+  
+  const handleFilter = async () => {
     
-
-    console.log('Start Date:', startDate);
-    console.log('End Date:', endDate);
-
-    // Filtrando as reservas com base na data de reserva
-    const filtered = reservations.filter((reservation) => {
-      const bookingDate = formatDate(reservation.booking_date); // Converte para formato dd-MM-YYYY
-
-      console.log(bookingDate)
-
-      console.log(bookingDate >= startDate && bookingDate <= endDate)
-      // Verifica se a data de reserva está entre as datas de início e fim
-      return bookingDate >= startDate && bookingDate <= endDate;
+    // Limpa o array de reservas antes de recarregar os dados
+    setReservations([]);
+  
+    // Sempre busca todas as reservas novamente ao aplicar filtros
+    const allReservations = await fetchAllReservations(); // Recarrega todas as reservas
+     
+    // Se não há filtros definidos, exibe todas as reservas
+    if (!startDateFilter && !endDateFilter) {
+      setReservations(allReservations);
+          return;
+    }
+  
+    // Converte os filtros para objetos Date
+    const startDate = startDateFilter ? new Date(startDateFilter) : null;
+    const endDate = endDateFilter ? new Date(endDateFilter) : null;
+  
+    // Aplica o filtro às reservas carregadas
+    const filtered = allReservations.filter((reservation) => {
+      const bookingDate = new Date(reservation.booking_date); // Converte a data da reserva
+        
+      // Verifica condições de comparação
+      if (startDate && endDate) {
+        return bookingDate >= startDate && bookingDate <= endDate;
+      } else if (startDate) {
+        return bookingDate >= startDate;
+      } else if (endDate) {
+        return bookingDate <= endDate;
+      } else {
+        return true; // Sem filtro
+      }
     });
-
-    // Atualiza o estado das reservas filtradas
+  
+    // Atualiza o estado com as reservas filtradas
     setReservations(filtered);
+    setCurrentPage(1);
+   
   };
+
+
+
 
   const handleApproveClick = (id: number) => {
     setEditingRequest(id);
@@ -198,8 +226,23 @@ const BabysittingRequestManager: React.FC = () => {
 
   const filteredReservations =
     activeTab === "approved"
-      ? reservations.filter((reservation) => reservation.status != "")
-      : []; // Exibe apenas as reservas com status "confirmed" para a aba "approved"
+      ? reservations.filter((reservation) => reservation.status !== "")
+      : [];
+
+  // Pagination Logic
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filteredReservations.slice(indexOfFirstItem, indexOfLastItem);
+
+  const totalPages = Math.ceil(filteredReservations.length / itemsPerPage);
+
+  const handleNext = () => {
+    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+  };
+
+  const handlePrevious = () => {
+    if (currentPage > 1) setCurrentPage(currentPage - 1);
+  };
 
 
   const filteredReserv= reservations.filter((reservation) => {
@@ -370,12 +413,10 @@ const BabysittingRequestManager: React.FC = () => {
         ))
       )}
 
-      {activeTab === "approved" && filteredReservations.length === 0 ? (
-        <div className="text-center text-gray-500">
-          No approved reservations
-        </div>
+       {activeTab === "approved" && currentItems.length === 0 ? (
+        <div className="text-center text-gray-500">No approved reservations</div>
       ) : (
-        filteredReservations.map((reservation) => (
+        currentItems.map((reservation) => (
           <div
             key={reservation.reservation_id}
             className="border border-gray-300 rounded-lg p-4 mb-4 shadow-md bg-white"
@@ -439,6 +480,25 @@ const BabysittingRequestManager: React.FC = () => {
           </div>
         ))
       )}
+      <div className="flex justify-center mt-6 gap-4">
+        <button
+          onClick={handlePrevious}
+          className="px-4 py-2 bg-gray-300 text-gray-700 rounded-md"
+          disabled={currentPage === 1}
+        >
+          Previous
+        </button>
+        <span>
+          Page {currentPage} of {totalPages}
+        </span>
+        <button
+          onClick={handleNext}
+          className="px-4 py-2 bg-gray-300 text-gray-700 rounded-md"
+          disabled={currentPage === totalPages}
+        >
+          Next
+        </button>
+      </div>
     </div>
   );
 };

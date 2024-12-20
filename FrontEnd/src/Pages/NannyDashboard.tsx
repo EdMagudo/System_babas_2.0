@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Home, User, Briefcase } from "lucide-react";
 import axios from "axios";
-import UserQualifications from "../components/UserQualifications";
-import NannyQuickyStats from "../components/NannyQuickStats";
-import ProfilePictureUploader from "../components/ProfilePictureUploader";
-import BabysittingRequestManager from "../components/BabysittingRequestManager";
+import UserQualifications from "../components/Nanny/UserQualifications";
+import NannyQuickyStats from "../components/Nanny/NannyQuickStats";
+import ProfilePictureUploader from "../components/Nanny/ProfilePictureUploader";
+import BabysittingRequestManager from "../components/Nanny/BabysittingRequestManager";
 
 
 const NannyDashboard = () => {
