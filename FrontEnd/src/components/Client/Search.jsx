@@ -14,6 +14,7 @@ const Search = () => {
     country: '',
     province: '',
   });
+  const [availability, setAvailability] = useState(''); // Novo estado para disponibilidade
 
   // Função de mudança de entrada para atualizar o estado do cliente
   const handleInputChange = (e) => {
@@ -24,10 +25,19 @@ const Search = () => {
     }));
   };
 
+  // Função de mudança para disponibilidade
+  const handleAvailabilityChange = (e) => {
+    setAvailability(e.target.value); // Atualiza a disponibilidade selecionada
+  };
+
   // Função para buscar as nannies
   const handleSearch = async () => {
     try {
-      const response = await fetch('http://localhost:3005/nanny/in/nanny/');
+      // Constroi a URL com os parâmetros de busca
+      let queryParams = `?province=${client.province}&availability=${availability}`;
+
+      // Faz a requisição com a URL contendo os parâmetros
+      const response = await fetch(`http://localhost:3005/nanny/in/nanny/${queryParams}`);
       const data = await response.json();
       setSearchResults(data);
     } catch (error) {
@@ -158,13 +168,19 @@ const Search = () => {
             </select>
           </div>
 
-          {/* Availability */}
+          {/* Availability Selection */}
           <div>
             <label className="block mb-2 text-gray-700">Availability</label>
-            <select className="w-full px-3 py-2 border rounded-lg">
-              <option>Full-time</option>
-              <option>Part-time</option>
-              <option>Weekend</option>
+            <select
+              value={availability}
+              onChange={handleAvailabilityChange}
+              className="w-full px-3 py-2 border rounded-lg"
+              required
+            >
+              <option value="">Select Availability</option>
+              <option value="full-time">Full-time</option>
+              <option value="part-time">Part-time</option>
+              <option value="weekend">Weekend</option>
             </select>
           </div>
 

@@ -27,7 +27,11 @@ const getAllProfiles = async (req, res) => {
 
 const getNannyDetails = async (req, res) => {
   try {
-    const query = `
+    // Pegando os parâmetros passados na query string
+    const { province_name, job_type } = req.query;
+console.log(province_name, job_type);
+    // Construir a query base
+    let query = `
       SELECT 
           u.first_name, 
           u.email, 
@@ -38,10 +42,26 @@ const getNannyDetails = async (req, res) => {
       FROM Users u
       JOIN Nanny_Profiles np ON u.user_id = np.user_id
       LEFT JOIN Files f ON u.user_id = f.user_id
-      WHERE u.role = 'nanny';
+      WHERE u.role = 'nanny'
     `;
 
-    const [nannies, metadata] = await db.sequelize.query(query);
+    // Adicionar o filtro para province_name, se fornecido
+    if (province_name) {
+      query += ` AND np.province_name = :province_name`;
+    }
+
+    // Adicionar o filtro para job_type, se fornecido
+    if (job_type) {
+      query += ` AND np.job_type = :job_type`;
+    }
+
+    // Executar a query com os parâmetros
+    const [nannies, metadata] = await db.sequelize.query(query, {
+      replacements: {
+        province_name: province_name,
+        job_type: job_type,
+      }
+    });
 
     // Retornar os dados no formato desejado
     res.status(200).json(nannies);
@@ -50,6 +70,7 @@ const getNannyDetails = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
 
 
 // Obter perfil de nanny por ID
