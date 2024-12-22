@@ -14,9 +14,11 @@ const Search = () => {
     country: '',
     province: '',
   });
-  const [availability, setAvailability] = useState(''); // Novo estado para disponibilidade
+  const [availability, setAvailability] = useState('');
+  const [showContactForm, setShowContactForm] = useState(null); 
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 4;
 
-  // Função de mudança de entrada para atualizar o estado do cliente
   const handleInputChange = (e) => {
     const { id, value } = e.target;
     setClient((prev) => ({
@@ -25,28 +27,27 @@ const Search = () => {
     }));
   };
 
-  // Função de mudança para disponibilidade
   const handleAvailabilityChange = (e) => {
-    setAvailability(e.target.value); // Atualiza a disponibilidade selecionada
+    setAvailability(e.target.value);
   };
 
-  // Função para buscar as nannies
   const handleSearch = async () => {
     try {
-      // Constroi a URL com os parâmetros de busca
       let queryParams = `?province=${client.province}&availability=${availability}`;
-
-      // Faz a requisição com a URL contendo os parâmetros
       const response = await fetch(`http://localhost:3005/nanny/in/nanny/${queryParams}`);
       const data = await response.json();
       setSearchResults(data);
+      setCurrentPage(1); 
     } catch (error) {
       console.error('Error fetching nannies:', error);
     }
   };
 
-  // Função para enviar os dados de contato
-  const handleContact = async (nannyId) => {
+  const handleContact = (nannyId) => {
+    setShowContactForm(nannyId); 
+  };
+
+  const handleSubmitRequest = async (nannyId) => {
     try {
       const clientId = localStorage.getItem('idUser');
       const email = localStorage.getItem('userEmail');
@@ -81,6 +82,7 @@ const Search = () => {
         setStartDate('');
         setEndDate('');
         setSpecialRequests('');
+        setShowContactForm(null); // Reseta o formulário após o envio
       } else {
         throw new Error('Failed to send service request');
       }
@@ -90,7 +92,6 @@ const Search = () => {
     }
   };
 
-  // Efeito para carregar países
   useEffect(() => {
     const fetchCountries = async () => {
       try {
@@ -104,7 +105,6 @@ const Search = () => {
     fetchCountries();
   }, []);
 
-  // Efeito para carregar províncias com base no país selecionado
   useEffect(() => {
     if (client.country) {
       const fetchProvinces = async () => {
@@ -120,13 +120,28 @@ const Search = () => {
     }
   }, [client.country]);
 
+  const handleNextPage = () => {
+    if (currentPage * itemsPerPage < searchResults.length) {
+      setCurrentPage((prev) => prev + 1);
+    }
+  };
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage((prev) => prev - 1);
+    }
+  };
+
+  const currentResults = searchResults.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
   return (
     <div className="space-y-6">
-      {/* Search Form */}
       <div className="bg-white p-6 rounded-lg shadow-md">
         <h3 className="text-xl font-semibold mb-4 text-indigo-700">Find a Nanny</h3>
         <div className="grid md:grid-cols-3 gap-4">
-          {/* Country Selection */}
           <div>
             <label className="block mb-2">Country</label>
             <select
@@ -147,7 +162,6 @@ const Search = () => {
             </select>
           </div>
 
-          {/* Province Selection */}
           <div>
             <label className="block mb-2">Province</label>
             <select
@@ -168,7 +182,6 @@ const Search = () => {
             </select>
           </div>
 
-          {/* Availability Selection */}
           <div>
             <label className="block mb-2 text-gray-700">Availability</label>
             <select
@@ -179,8 +192,7 @@ const Search = () => {
             >
               <option value="">Select Availability</option>
               <option value="full-time">Full-time</option>
-              <option value="part-time">Part-time</option>
-              <option value="weekend">Weekend</option>
+              <option value="temporary">Temporary</option>
             </select>
           </div>
 
@@ -195,111 +207,44 @@ const Search = () => {
         </div>
       </div>
 
-      {/* Search Results */}
       {searchResults.length > 0 && (
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {searchResults.map((nanny) => (
+        <div className="grid grid-cols-2 gap-6">
+          {currentResults.map((nanny) => (
             <div
               key={nanny.nanny_id}
-              className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transform hover:scale-102 transition-all duration-300"
+              className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transform hover:scale-105 transition-all duration-300"
             >
-              {/* Top Section with Photo */}
               <div className="relative">
                 <img
                   src="/api/placeholder/400/400"
                   alt={`${nanny.first_name}'s profile`}
-                  className="w-full h-48 object-cover"
+                  className="w-full h-48 object-cover rounded-t-xl"
                 />
               </div>
 
-              {/* Content Section */}
               <div className="p-6">
-                {/* Header */}
                 <div className="mb-4">
-                  <h3 className="text-xl font-semibold text-gray-800 mb-1">{nanny.first_name}</h3>
+                  <h3 className="text-xl font-semibold text-indigo-600 mb-1">{nanny.first_name}</h3>
+                  <span className="text-sm text-gray-500">
+                    {nanny.education_level.replace(/_/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase())}
+                  </span>
                 </div>
 
-                {/* Quick Info */}
                 <div className="space-y-3">
-                  <div className="flex items-center gap-2">
-                    <Award className="w-4 h-4 text-indigo-500" />
-                    <span className="text-sm text-gray-700">
-                      {nanny.education_level.replace(/_/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase())}
-                    </span>
+                  <div className="flex items-center gap-2 text-sm text-gray-700">
+                    <Award className="w-5 h-5 text-indigo-500" />
+                    {nanny.education_level.replace(/_/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase())}
                   </div>
-                  <div className="flex items-center gap-2">
-                    <Mail className="w-4 h-4 text-indigo-500" />
-                    <span className="text-sm text-gray-700">{nanny.email}</span>
+                  <div className="flex items-center gap-2 text-sm text-gray-700">
+                    <Mail className="w-5 h-5 text-indigo-500" />
+                    {nanny.email}
                   </div>
-                  <div className="flex items-center gap-2">
-                    <MapPin className="w-4 h-4 text-indigo-500" />
-                    <span className="text-sm text-gray-700">
-                      {new Date(nanny.date_of_birth).toLocaleDateString()}
-                    </span>
+                  <div className="flex items-center gap-2 text-sm text-gray-700">
+                    <MapPin className="w-5 h-5 text-indigo-500" />
+                    {new Date(nanny.date_of_birth).toLocaleDateString()}
                   </div>
                 </div>
 
-                {/* Custom Info */}
-                <div className="mt-6">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Number of Children</label>
-                  <div className="flex items-center bg-gray-100 rounded-lg">
-                    <button
-                      onClick={() => setChildren(Math.max(1, children - 1))}
-                      className="px-4 py-2 text-gray-600 hover:bg-gray-200 rounded-l-lg"
-                    >
-                      -
-                    </button>
-                    <span className="px-4 text-lg font-semibold">{children}</span>
-                    <button
-                      onClick={() => setChildren(children + 1)}
-                      className="px-4 py-2 text-gray-600 hover:bg-gray-200 rounded-r-lg"
-                    >
-                      +
-                    </button>
-                  </div>
-                </div>
-
-                {/* Date Pickers */}
-                <div className="mt-4">
-                  <div className="mb-4">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Start Date</label>
-                    <div className="flex items-center">
-                      <input
-                        type="date"
-                        value={startDate}
-                        onChange={(e) => setStartDate(e.target.value)}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                      />
-                      <Calendar className="absolute right-3 text-gray-400" size={20} />
-                    </div>
-                  </div>
-
-                  <div className="mb-4">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">End Date</label>
-                    <div className="flex items-center">
-                      <input
-                        type="date"
-                        value={endDate}
-                        onChange={(e) => setEndDate(e.target.value)}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                      />
-                      <Calendar className="absolute right-3 text-gray-400" size={20} />
-                    </div>
-                  </div>
-                </div>
-
-                {/* Special Requests */}
-                <div className="mt-4">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Special Requests / Preferences</label>
-                  <textarea
-                    value={notes}
-                    onChange={(e) => setSpecialRequests(e.target.value)}
-                    placeholder="Language preferences, qualifications, allergies, routines, etc."
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 h-24"
-                  />
-                </div>
-
-                {/* Contact Button */}
                 <div className="mt-6">
                   <button
                     onClick={() => handleContact(nanny.nanny_id)}
@@ -308,11 +253,98 @@ const Search = () => {
                     Contact
                   </button>
                 </div>
+
+                {showContactForm === nanny.nanny_id && (
+                  <div className="mt-6">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Number of Children</label>
+                      <div className="flex items-center bg-gray-100 rounded-lg">
+                        <button
+                          onClick={() => setChildren(Math.max(1, children - 1))}
+                          className="px-4 py-2 text-gray-600 hover:bg-gray-200 rounded-l-lg"
+                        >
+                          -
+                        </button>
+                        <span className="px-4 text-lg font-semibold">{children}</span>
+                        <button
+                          onClick={() => setChildren(children + 1)}
+                          className="px-4 py-2 text-gray-600 hover:bg-gray-200 rounded-r-lg"
+                        >
+                          +
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="mt-4">
+                      <div className="mb-4">
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Start Date</label>
+                        <div className="flex items-center">
+                          <input
+                            type="date"
+                            value={startDate}
+                            onChange={(e) => setStartDate(e.target.value)}
+                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                          />
+                          <Calendar className="absolute right-3 text-gray-400" size={20} />
+                        </div>
+                      </div>
+
+                      <div className="mb-4">
+                        <label className="block text-sm font-medium text-gray-700 mb-2">End Date</label>
+                        <div className="flex items-center">
+                          <input
+                            type="date"
+                            value={endDate}
+                            onChange={(e) => setEndDate(e.target.value)}
+                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                          />
+                          <Calendar className="absolute right-3 text-gray-400" size={20} />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="mt-4">
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Notes</label>
+                      <textarea
+                        value={notes}
+                        onChange={(e) => setSpecialRequests(e.target.value)}
+                        placeholder="Write any special notes (e.g., preferences, allergies, etc.)"
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 h-24"
+                      />
+                    </div>
+
+                    <div className="mt-6">
+                      <button
+                        onClick={() => handleSubmitRequest(nanny.nanny_id)}
+                        className="w-full bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg transition-colors duration-200"
+                      >
+                        Finalize
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           ))}
         </div>
       )}
+
+      <div className="flex justify-between mt-6">
+        <button
+          onClick={handlePrevPage}
+          className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 disabled:opacity-50"
+          disabled={currentPage === 1}
+        >
+          Previous
+        </button>
+        <button
+          onClick={handleNextPage}
+          className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 disabled:opacity-50"
+          disabled={currentPage * itemsPerPage >= searchResults.length}
+        >
+          Next
+        </button>
+      </div>
     </div>
   );
 };

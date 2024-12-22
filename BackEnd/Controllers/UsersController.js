@@ -16,6 +16,15 @@ import path from "path"; // Certifique-se de importar o módulo path
 
 const upload = multer({ dest: "uploads/" }); // Define o diretório de destino para o arquivo
 
+
+
+
+
+
+
+
+
+
 const createUser = async (req, res) => {
   try {
     // Verifica se o email ou ID já existe
