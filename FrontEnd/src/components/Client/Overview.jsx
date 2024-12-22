@@ -12,6 +12,9 @@ const Overview = ({ clientProfile, idUser }) => {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [feedbackMessage, setFeedbackMessage] = useState(""); // Novo estado para feedback
+  const [feedbackType, setFeedbackType] = useState(""); // Novo estado para definir o tipo de feedback (sucesso ou erro)
+  const [showPassword, setShowPassword] = useState({
+    current: false,
     new: false,
     confirm: false,
   });
