@@ -8,7 +8,7 @@ import {
 import Overview from '../components/Client/Overview';  // Importe o componente Overview
 import Search from '../components/Client/Search';      // Importe o componente Search
 import Favorites from '../components/Client/Favorites'; // Importe o componente Favorites
-import ProfilePictureUploader from '../components/ProfilePictureUploader';
+import ProfilePictureUploader from '../components/Nanny/ProfilePictureUploader';
 
 const ClientDashboard = () => {
   const [activeSection, setActiveSection] = useState('overview');
