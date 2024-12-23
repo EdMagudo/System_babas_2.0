@@ -151,6 +151,86 @@ const getUserById = async (req, res) => {
   }
 };
 
+const getAllNannyWithRequirement = async (req, res) => {
+  try {
+    const { province, jobType } = req.body; // Alterando de req.query para req.body
+
+    // Validar os parâmetros
+    if (!province || !jobType) {
+      return res.status(400).json({
+        error: "Missing required parameters: province and jobType",
+      });
+    }
+
+    console.log("Fetching users with province:", province, "and jobType:", jobType);
+
+    // Buscar os usuários com seus perfis e arquivos associados
+    const users = await User.findAll({
+      where: {
+        province_name: province,
+      },
+      include: [
+        {
+          model: NannyProfiles,
+          as: "nannyProfile",
+          where: { job_type: jobType },
+          include: [
+            {
+              model: NannyChildWorkPreference,
+              as: "workPreferences",
+              attributes: ["id_nanny", "work_preference"],
+            },
+          ],
+        },
+        {
+          model: Files,
+          as: "files",
+          where: {
+            file_type: ["image/png", "image/jpeg", "image/jpg", "image/webp", "image/gif"],
+          },
+          attributes: ["file_path", "file_type"], // Inclua apenas os atributos necessários
+        },
+      ],
+    });
+
+    // Verificar se há resultados
+    if (!users || users.length === 0) {
+      return res.status(404).json({ error: "No users found" });
+    }
+
+    // Montar a resposta com os dados dos usuários
+    const userResponses = users.map((user) => ({
+      user_id: user.user_id,
+      first_name: user.first_name,
+      email: user.email,
+      country: user.country_name,
+      province: user.province_name,
+      dob: user.dob,
+      nannyProfile: user.nannyProfile
+        ? {
+            education_level: user.nannyProfile.education_level,
+            dob: user.nannyProfile.date_of_birth,
+            job_type: user.nannyProfile.job_type,
+            workPreferences: user.nannyProfile.workPreferences.map((wp) => wp.work_preference),
+          }
+        : null,
+      files: user.files.map((file) => ({
+        path: file.file_path,
+      })),
+    }));
+
+    res.status(200).json(userResponses);
+  } catch (error) {
+    console.error("Error fetching users with files:", error);
+    res.status(500).json({
+      error: "An error occurred while fetching users",
+      details: error.message,
+    });
+  }
+};
+
+
+
 const updateUser = async (req, res) => {
   try {
     const [updated] = await User.update(req.body, {
@@ -575,4 +655,5 @@ export default {
   changePassword,
   uploadProfilePicture,
   getUserProfilePicture,
+  getAllNannyWithRequirement
 };

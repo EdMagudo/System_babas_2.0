@@ -27,5 +27,7 @@ const basicUpload = multer(); // Configuração básica do multer
 // Configuração para aceitar o upload de um único arquivo (por exemplo, policeClearanceFile)
 router.put("/updatenannyProfiles/:id_user", upload.single('policeClearanceFile'), usersController.updatedProfile);
 
+router.post("/getAllNannyWith/Requirement", usersController.getAllNannyWithRequirement)
+
 
 export default router;
