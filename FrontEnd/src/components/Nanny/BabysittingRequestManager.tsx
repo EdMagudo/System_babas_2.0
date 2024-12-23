@@ -30,6 +30,8 @@ const BabysittingRequestManager: React.FC = () => {
   const [value, setValue] = useState<string>("");
   const [startDateFilter, setStartDateFilter] = useState<string>("");
   const [endDateFilter, setEndDateFilter] = useState<string>("");
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [itemsPerPage] = useState<number>(5); 
 
   useEffect(() => {
     fetchReservations();
@@ -83,6 +85,64 @@ const BabysittingRequestManager: React.FC = () => {
       console.error("Erro ao buscar as solicitações:", error);
     }
   };
+
+ 
+  
+  const fetchAllReservations = async () => {
+     const idUser = localStorage.getItem("idUser");
+    try {
+      const response = await axios.get(
+        `http://localhost:3005/reservations/getAll/reservations/${idUser}`
+      );
+      return response.data; // Retorna apenas os dados da resposta
+    } catch (error) {
+      console.error("Error fetching reservations:", error);
+      return [];
+    }
+  };
+  
+  const handleFilter = async () => {
+    
+    // Limpa o array de reservas antes de recarregar os dados
+    setReservations([]);
+  
+    // Sempre busca todas as reservas novamente ao aplicar filtros
+    const allReservations = await fetchAllReservations(); // Recarrega todas as reservas
+     
+    // Se não há filtros definidos, exibe todas as reservas
+    if (!startDateFilter && !endDateFilter) {
+      setReservations(allReservations);
+          return;
+    }
+  
+    // Converte os filtros para objetos Date
+    const startDate = startDateFilter ? new Date(startDateFilter) : null;
+    const endDate = endDateFilter ? new Date(endDateFilter) : null;
+  
+    // Aplica o filtro às reservas carregadas
+    const filtered = allReservations.filter((reservation) => {
+      const bookingDate = new Date(reservation.booking_date); // Converte a data da reserva
+        
+      // Verifica condições de comparação
+      if (startDate && endDate) {
+        return bookingDate >= startDate && bookingDate <= endDate;
+      } else if (startDate) {
+        return bookingDate >= startDate;
+      } else if (endDate) {
+        return bookingDate <= endDate;
+      } else {
+        return true; // Sem filtro
+      }
+    });
+  
+    // Atualiza o estado com as reservas filtradas
+    setReservations(filtered);
+    setCurrentPage(1);
+   
+  };
+
+
+
 
   const handleApproveClick = (id: number) => {
     setEditingRequest(id);
@@ -166,8 +226,38 @@ const BabysittingRequestManager: React.FC = () => {
 
   const filteredReservations =
     activeTab === "approved"
-      ? reservations.filter((reservation) => reservation.status != "")
-      : []; // Exibe apenas as reservas com status "confirmed" para a aba "approved"
+      ? reservations.filter((reservation) => reservation.status !== "")
+      : [];
+
+  // Pagination Logic
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filteredReservations.slice(indexOfFirstItem, indexOfLastItem);
+
+  const totalPages = Math.ceil(filteredReservations.length / itemsPerPage);
+
+  const handleNext = () => {
+    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+  };
+
+  const handlePrevious = () => {
+    if (currentPage > 1) setCurrentPage(currentPage - 1);
+  };
+
+
+  const filteredReserv= reservations.filter((reservation) => {
+        const bookingDate = new Date(reservation.booking_date); // Usando booking_date em vez de startDate
+        const startDate = startDateFilter ? new Date(startDateFilter) : null;
+        const endDate = endDateFilter ? new Date(endDateFilter) : null;
+      
+        // Verifica se está dentro do intervalo de datas
+        return (
+          (!startDate || bookingDate >= startDate) &&
+          (!endDate || bookingDate <= endDate)
+        );
+      });
+      
+
 
   const getStatusBackground = (status: string) => {
     switch (status) {
@@ -214,31 +304,41 @@ const BabysittingRequestManager: React.FC = () => {
       {/* Filtro de Data (somente para reservas) */}
       {activeTab === "approved" && (
         <div className="flex gap-4 mb-6">
-          <div className="flex items-center">
-            <label htmlFor="startDateFilter" className="mr-2">
-              Start Date:
-            </label>
-            <input
-              type="date"
-              id="startDateFilter"
-              className="border border-gray-300 rounded-md p-2"
-              value={startDateFilter}
-              onChange={(e) => setStartDateFilter(e.target.value)}
-            />
-          </div>
-          <div className="flex items-center">
-            <label htmlFor="endDateFilter" className="mr-2">
-              End Date:
-            </label>
-            <input
-              type="date"
-              id="endDateFilter"
-              className="border border-gray-300 rounded-md p-2"
-              value={endDateFilter}
-              onChange={(e) => setEndDateFilter(e.target.value)}
-            />
-          </div>
+        <div className="flex items-center">
+          <label htmlFor="startDateFilter" className="mr-2">
+            Start Date:
+          </label>
+          <input
+            type="date"
+            id="startDateFilter"
+            className="border border-gray-300 rounded-md p-2"
+            value={startDateFilter}
+            onChange={(e) => setStartDateFilter(e.target.value)}
+          />
         </div>
+        <div className="flex items-center">
+          <label htmlFor="endDateFilter" className="mr-2">
+            End Date:
+          </label>
+          <input
+            type="date"
+            id="endDateFilter"
+            className="border border-gray-300 rounded-md p-2"
+            value={endDateFilter}
+            onChange={(e) => setEndDateFilter(e.target.value)}
+          />
+        </div>
+      
+        <div className="flex items-center">
+          <button
+             onClick={handleFilter}
+            className="bg-blue-500 text-white rounded-md px-6 py-2 font-semibold hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+          >
+            Filter
+          </button>
+        </div>
+      </div>
+      
       )}
 
       {activeTab === "new" && filteredRequests.length === 0 ? (
@@ -246,58 +346,77 @@ const BabysittingRequestManager: React.FC = () => {
       ) : (
         filteredRequests.map((request) => (
           <div
-            key={request.id}
-            className="border border-gray-300 rounded-lg p-4 mb-4 shadow-md bg-white"
-          >
-            <h2 className="text-lg font-semibold mb-3">
-              Request for {request.startDate}
-            </h2>
-            <div className="mb-4 space-y-2">
-              <p className="flex items-center gap-2">
-                <Users className="w-5 h-5 text-pink-500" />
-                <strong className="font-medium">Number of People:</strong>{" "}
-                {request.numberOfPeople}
-              </p>
-              <p className="flex items-center gap-2">
-                <MapPin className="w-5 h-5 text-green-500" />
-                <strong className="font-medium">Address:</strong>{" "}
-                {request.address}
-              </p>
-              <p className="flex items-center gap-2">
-                <Mail className="w-5 h-5 text-blue-500" />
-                <strong className="font-medium">Email:</strong> {request.email}
-              </p>
-              <p className="flex items-center gap-2 text-gray-700 mt-2">
-                <strong className="font-medium text-blue-600">Note:</strong>
-                <span className="text-sm text-gray-600 italic">
-                  {request.notes}
-                </span>
-              </p>
-            </div>
-            <div>
-              <button
-                onClick={() => handleApproveClick(request.id)}
-                className="px-4 py-2 rounded-md text-white bg-blue-500 hover:bg-blue-600 font-medium"
-              >
-                Approve
-              </button>
-              <button
-                onClick={() => handleReject(request.id)}
-                className="px-4 py-2 rounded-md text-white bg-red-500 hover:bg-red-600 font-medium ml-4"
-              >
-                Reject
-              </button>
-            </div>
+          key={request.id}
+          className="border border-gray-300 rounded-lg p-4 mb-4 shadow-md bg-white"
+        >
+          <h2 className="text-lg font-semibold mb-3">
+            Request for {request.startDate}
+          </h2>
+          <div className="mb-4 space-y-2">
+            <p className="flex items-center gap-2">
+              <Users className="w-5 h-5 text-pink-500" />
+              <strong className="font-medium">Number of People:</strong>{" "}
+              {request.numberOfPeople}
+            </p>
+            <p className="flex items-center gap-2">
+              <MapPin className="w-5 h-5 text-green-500" />
+              <strong className="font-medium">Address:</strong> {request.address}
+            </p>
+            <p className="flex items-center gap-2">
+              <Mail className="w-5 h-5 text-blue-500" />
+              <strong className="font-medium">Email:</strong> {request.email}
+            </p>
+            <p className="flex items-center gap-2 text-gray-700 mt-2">
+              <strong className="font-medium text-blue-600">Note:</strong>
+              <span className="text-sm text-gray-600 italic">{request.notes}</span>
+            </p>
           </div>
+          <div className="mt-4">
+            {editingRequest === request.id ? (
+              <div className="space-y-2">
+                <div className="flex items-center gap-4">
+                  <input
+                    type="number"
+                    placeholder="Enter service value"
+                    value={value}
+                    onChange={(e) => setValue(e.target.value)}
+                    className="border border-gray-300 rounded-md p-2 flex-1"
+                  />
+                  <button
+                    onClick={() => handleFinalize(request.id)}
+                    className="px-4 py-2 rounded-md text-white bg-green-500 hover:bg-green-600 font-medium"
+                  >
+                    Finalize
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="flex items-center gap-4">
+                <button
+                  onClick={() => handleApproveClick(request.id)}
+                  className="px-4 py-2 rounded-md text-white bg-blue-500 hover:bg-blue-600 font-medium"
+                >
+                  Approve
+                </button>
+                <button
+                  onClick={() => handleReject(request.id)}
+                  className="px-4 py-2 rounded-md text-white bg-red-500 hover:bg-red-600 font-medium"
+                >
+                  Reject
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+        
+
         ))
       )}
 
-      {activeTab === "approved" && filteredReservations.length === 0 ? (
-        <div className="text-center text-gray-500">
-          No approved reservations
-        </div>
+       {activeTab === "approved" && currentItems.length === 0 ? (
+        <div className="text-center text-gray-500">No approved reservations</div>
       ) : (
-        filteredReservations.map((reservation) => (
+        currentItems.map((reservation) => (
           <div
             key={reservation.reservation_id}
             className="border border-gray-300 rounded-lg p-4 mb-4 shadow-md bg-white"
@@ -361,6 +480,25 @@ const BabysittingRequestManager: React.FC = () => {
           </div>
         ))
       )}
+      <div className="flex justify-center mt-6 gap-4">
+        <button
+          onClick={handlePrevious}
+          className="px-4 py-2 bg-gray-300 text-gray-700 rounded-md"
+          disabled={currentPage === 1}
+        >
+          Previous
+        </button>
+        <span>
+          Page {currentPage} of {totalPages}
+        </span>
+        <button
+          onClick={handleNext}
+          className="px-4 py-2 bg-gray-300 text-gray-700 rounded-md"
+          disabled={currentPage === totalPages}
+        >
+          Next
+        </button>
+      </div>
     </div>
   );
 };

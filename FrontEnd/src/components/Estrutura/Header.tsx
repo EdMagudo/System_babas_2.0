@@ -30,7 +30,6 @@ const Header = () => {
     nanny: [
       { name: 'Home', path: '/' },
       { name: 'My Dashboard', path: '/nanny-dashboard' },
-      { name: 'My Jobs', path: '/nanny-jobs' },
       { name: 'Logout', path: '/logout' },
     ],
   };
