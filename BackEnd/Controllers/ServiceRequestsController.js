@@ -111,6 +111,7 @@ const updateRequest = async (req, res) => {
 };
 
 const deleteRequest = async (req, res) => {
+  console.log(req.params.request_id)
   try {
     const deleted = await ServiceRequest.destroy({
       where: { request_id: req.params.request_id },
@@ -130,6 +131,24 @@ const getRequestsForNanny = async (req, res) => {
     console.log('Fetching requests for nanny with ID:', req.params.nanny_id);
     const requests = await ServiceRequest.findAll({
       where: { nanny_id: req.params.nanny_id },
+      order: [['start_date', 'ASC']],
+    });
+    console.log('Requests found:', requests);
+    res.json(requests);
+  } catch (error) {
+    console.error('Error fetching requests for nanny:', error);
+    res.status(500).json({ error: 'Error fetching requests for nanny' });
+  }
+};
+
+const getRequestsForClient = async (req, res) => {
+  try {
+    console.log('Fetching requests for nanny with ID:', req.params.nanny_id);
+    const requests = await ServiceRequest.findAll({
+      where: {
+         client_id: req.params.client_id ,
+        status: 'pending'
+      },
       order: [['start_date', 'ASC']],
     });
     console.log('Requests found:', requests);
@@ -211,5 +230,6 @@ export default {
   deleteRequest,
   getRequestsForNanny,
   rejectRequest,
-  approvedRequest
+  approvedRequest,
+  getRequestsForClient
 };

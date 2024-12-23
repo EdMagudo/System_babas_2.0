@@ -7,8 +7,9 @@ import {
 } from 'lucide-react';
 import Overview from '../components/Client/Overview';  // Importe o componente Overview
 import Search from '../components/Client/Search';      // Importe o componente Search
-import Favorites from '../components/Client/Favorites'; // Importe o componente Favorites
+import Favorites from '../components/Client/Requirements'; // Importe o componente Favorites
 import ProfilePictureUploader from '../components/Nanny/ProfilePictureUploader';
+import Reservations from '../components/Client/Reservations';
 
 const ClientDashboard = () => {
   const [activeSection, setActiveSection] = useState('overview');
@@ -42,6 +43,8 @@ const ClientDashboard = () => {
         return <Search />;
       case 'favorites':
         return <Favorites />;
+      case  'reservations':
+          return <Reservations/>
       default:
         return null;
     }
@@ -87,6 +90,14 @@ const ClientDashboard = () => {
               >
                 <Star className="mr-3" /> Requeriments
               </button>
+
+              <button 
+                onClick={() => setActiveSection('reservations')}
+                className={`w-full flex items-center p-3 rounded-lg ${activeSection === 'reservations' ? 'bg-indigo-100 text-indigo-700' : 'hover:bg-gray-100'}`}
+              >
+                <Star className="mr-3" /> Reservations
+              </button>
+              
             </nav>
           </div>
 
