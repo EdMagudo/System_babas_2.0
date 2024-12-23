@@ -42,7 +42,8 @@ const UserQualifications: React.FC<UserQualificationsProps> = ({ idUser }) => {
           languages: userRes.data.languages || [],
         });
 
-        setLanguagesList(languagesRes.data);
+        setLanguagesList(languagesRes.data.languages);
+        
       } catch (error) {
         showMessage("error", "Failed to load data. Please try again later.");
         console.error(error);

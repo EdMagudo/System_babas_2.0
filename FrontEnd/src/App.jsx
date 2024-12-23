@@ -1,12 +1,12 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Header from './components/Header';
-import Footer from './components/Footer';
-import Logout from './components/Logout';
+import Header from './components/Estrutura/Header';
+import Footer from './components/Estrutura/Footer';
+import Logout from './components/Estrutura/Logout';
 import HomePage from './Pages/HomePage';
 import ClientForm from './components/ClientForm';
-import NannyForm from './components/NannyForm';
-import ContactUs from './components/contactUs';
+import NannyForm from './components/Nanny/NannyForm';
+import ContactUs from './components/Estrutura/contactUs';
 import FindNanny from './components/FindNanny';
 import LoginPage from './Pages/loginPage';
 import ClientDashboard from './Pages/ClientDashBoard'; // Importar o Dashboard do cliente
