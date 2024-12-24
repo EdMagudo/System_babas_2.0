@@ -15,43 +15,60 @@ const createRequest = async (req, res) => {
 */
 const createRequest = async (req, res) => {
   try {
-    // Pegando os dados do corpo da requisição (POST)
-    const {
-      client_id,
-      nanny_id, 
-      number_of_people,
-      email,
-      address,
-      start_date,
-      end_date,
-      notes,
-    } = req.body;
+    // Verificando os campos obrigatórios
+    const { client_id, nanny_id, number_of_people, email, address, start_date, end_date, notes } = req.body;
 
-    // Validando se os campos obrigatórios foram enviados
     if (!client_id || !number_of_people || !email || !address || !start_date || !end_date) {
-      return res.status(400).json({ error: 'Campos obrigatórios ausentes.' });
+      return res.status(400).json({
+        error: 'Campos obrigatórios ausentes: client_id, number_of_people, email, address, start_date e end_date.',
+      });
     }
 
-    // Criando a nova solicitação de serviço
-    const newRequest = await ServiceRequest.create({
-      client_id,
-      nanny_id: nanny_id || null, // Se não houver nanny, mantém como null
-      number_of_people,
-      email,
-      address,
-      start_date,
-      end_date,
-      notes,
-      status: 'pending', // Status inicial como 'pending'
-    });
+    // Convertendo as datas para o formato correto
+    const startDate = new Date(start_date);
+    const endDate = new Date(end_date);
 
-    // Retornando a solicitação de serviço criada como resposta
-    return res.status(201).json({ message: 'Solicitação de serviço criada com sucesso.', data: newRequest });
+    // Validando se as datas são válidas
+    if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
+      return res.status(400).json({ error: 'As datas fornecidas são inválidas.' });
+    }
+
+    // Verificando se a data de início é anterior à data de término
+    if (startDate >= endDate) {
+      return res.status(400).json({ error: 'A data de início não pode ser posterior à data de término.' });
+    }
+
+    // Criando os dados da solicitação
+    const requestData = {
+      client_id: client_id,
+      nanny_id: nanny_id || null,
+      number_of_people: number_of_people,
+      email: email,
+      address: address,
+      start_date: startDate,
+      end_date: endDate,
+      notes: notes,
+      status: 'pending',
+      created_at: new Date(),
+    };
+
+    console
+    .log(requestData);
+
+    // Criando a solicitação de serviço no banco de dados
+    const newRequest = await ServiceRequest.create(requestData);
+
+    // Retornando uma resposta de sucesso
+    return res.status(201).json({
+      message: 'Solicitação de serviço criada com sucesso.',
+      data: newRequest,
+    });
   } catch (error) {
     console.error('Erro ao criar solicitação de serviço:', error);
     return res.status(500).json({ error: 'Erro interno no servidor' });
   }
 };
+
 
 
 
@@ -94,6 +111,7 @@ const updateRequest = async (req, res) => {
 };
 
 const deleteRequest = async (req, res) => {
+  console.log(req.params.request_id)
   try {
     const deleted = await ServiceRequest.destroy({
       where: { request_id: req.params.request_id },
@@ -113,6 +131,24 @@ const getRequestsForNanny = async (req, res) => {
     console.log('Fetching requests for nanny with ID:', req.params.nanny_id);
     const requests = await ServiceRequest.findAll({
       where: { nanny_id: req.params.nanny_id },
+      order: [['start_date', 'ASC']],
+    });
+    console.log('Requests found:', requests);
+    res.json(requests);
+  } catch (error) {
+    console.error('Error fetching requests for nanny:', error);
+    res.status(500).json({ error: 'Error fetching requests for nanny' });
+  }
+};
+
+const getRequestsForClient = async (req, res) => {
+  try {
+    console.log('Fetching requests for nanny with ID:', req.params.nanny_id);
+    const requests = await ServiceRequest.findAll({
+      where: {
+         client_id: req.params.client_id ,
+        status: 'pending'
+      },
       order: [['start_date', 'ASC']],
     });
     console.log('Requests found:', requests);
@@ -194,5 +230,6 @@ export default {
   deleteRequest,
   getRequestsForNanny,
   rejectRequest,
-  approvedRequest
+  approvedRequest,
+  getRequestsForClient
 };

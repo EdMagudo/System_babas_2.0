@@ -71,31 +71,71 @@ const getAllReservationsForNanny = async (req, res) => {
   try {
     console.log('Fetching all reservations with service request and user data');
 
-    // Buscando todas as reservas, incluindo dados da request e do usuário (client)
+    // Fetching all reservations, including service request and client data
     const reservations = await Reservations.findAll({
       include: [
         {
           model: ServiceRequest,
-          as: 'serviceRequest',  // Nome da associação (verifique se está configurado no seu modelo)
+          as: 'serviceRequest', // Ensure this matches your association name
           include: [
             {
-              model: Users,  // Nome do modelo de Users (cliente)
-              as: 'client',  // Nome da associação (verifique se está configurado no seu modelo)
-            }
-          ]
-        }
+              model: Users, // Ensure this matches your Users model name
+              as: 'client', // Ensure this matches your association name
+            },
+          ],
+        },
       ],
-      order: [['booking_date', 'ASC']]  // Ordenar pelas datas de reserva
+      where: { nanny_id: req.params.nanny_id }, // Corrected syntax
+      order: [['booking_date', 'ASC']], // Sorting by booking date in ascending order
     });
 
-    // Verificando se há reservas encontradas
-    if (reservations.length === 0) {
+    // Check if no reservations were found
+    if (!reservations || reservations.length === 0) {
       return res.status(404).json({ message: 'No reservations found' });
     }
 
     console.log('Reservations found:', reservations);
 
-    // Retornando as reservas encontradas com os dados relacionados
+    // Return reservations with related data
+    res.json(reservations);
+  } catch (error) {
+    console.error('Error fetching all reservations:', error);
+    res.status(500).json({ error: 'Error fetching all reservations' });
+  }
+};
+
+
+
+const getAllReservationsForClient = async (req, res) => {
+  try {
+    console.log('Fetching all reservations with service request and user data');
+
+    // Fetching all reservations, including service request and client data
+    const reservations = await Reservations.findAll({
+      include: [
+        {
+          model: ServiceRequest,
+          as: 'serviceRequest', // Ensure this matches your association name
+          include: [
+            {
+              model: Users, // Ensure this matches your Users model name
+              as: 'client', // Ensure this matches your association name
+            },
+          ],
+        },
+      ],
+      where: { client_id: req.params.client_id }, // Corrected syntax
+      order: [['booking_date', 'ASC']], // Sorting by booking date in ascending order
+    });
+
+    // Check if no reservations were found
+    if (!reservations || reservations.length === 0) {
+      return res.status(404).json({ message: 'No reservations found' });
+    }
+
+    console.log('Reservations found:', reservations);
+
+    // Return reservations with related data
     res.json(reservations);
   } catch (error) {
     console.error('Error fetching all reservations:', error);
@@ -132,5 +172,6 @@ export default {
   updateReservation,
   deleteReservation,
   getAllReservationsForNanny,
-  cancelReservation
+  cancelReservation,
+  getAllReservationsForClient
 };

@@ -32,17 +32,19 @@ const getNannyDetails = async (req, res) => {
 console.log(province_name, job_type);
     // Construir a query base
     let query = `
-      SELECT 
-          u.first_name, 
-          u.email, 
-          np.nanny_id, 
-          np.education_level, 
-          np.date_of_birth, 
-          f.file_path
-      FROM Users u
-      JOIN Nanny_Profiles np ON u.user_id = np.user_id
-      LEFT JOIN Files f ON u.user_id = f.user_id
-      WHERE u.role = 'nanny'
+     SELECT DISTINCT
+    u.first_name, 
+    u.email, 
+    np.nanny_id, 
+    np.education_level, 
+    u.province_name, 
+    np.date_of_birth, 
+    f.file_path
+FROM Users u
+JOIN Nanny_Profiles np ON u.user_id = np.user_id
+LEFT JOIN Files f ON u.user_id = f.user_id
+WHERE u.role = 'nanny'
+
     `;
 
     // Adicionar o filtro para province_name, se fornecido
