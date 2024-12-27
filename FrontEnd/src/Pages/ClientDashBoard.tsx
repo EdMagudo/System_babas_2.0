@@ -16,7 +16,8 @@ const ClientDashboard = () => {
   const [clientProfile, setClientProfile] = useState(null); // Estado para armazenar os dados do perfil
   const [loading, setLoading] = useState(true); // Estado para controle de carregamento
 
-  const userId = 2; // ID do usuário logado (substitua conforme necessário)
+ // const userId = 2; // ID do usuário logado (substitua conforme necessário)
+  const userId = localStorage.getItem("idUser");
 
   // Função para buscar os dados do cliente
   useEffect(() => {
