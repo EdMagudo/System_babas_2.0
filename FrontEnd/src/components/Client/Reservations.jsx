@@ -7,6 +7,8 @@ const Reservations = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(5);
   const [message, setMessage] = useState({ text: '', type: '' });
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
 
   const fetchReservations = async () => {
     const clientId = localStorage.getItem('idUser');
@@ -14,10 +16,10 @@ const Reservations = () => {
       console.error('Client ID not found in localStorage');
       return;
     }
-
+    console.log('Id cliente: ',clientId)
     try {
       const response = await axios.get(
-        `http://localhost:3005/reservations/getAll/reservations/1`
+        `http://localhost:3005/reservations/getAll/reservations/client/${clientId}`
       );
       setReservations(response.data);
     } catch (error) {
@@ -77,10 +79,24 @@ const Reservations = () => {
     fetchReservations();
   }, []);
 
+  const handleFilter = () => {
+    if (!startDate || !endDate) return reservations;
+
+    return reservations.filter((reservation) => {
+      const start = new Date(reservation.serviceRequest.start_date);
+      const end = new Date(reservation.serviceRequest.end_date);
+      const filterStart = new Date(startDate);
+      const filterEnd = new Date(endDate);
+
+      return start >= filterStart && end <= filterEnd;
+    });
+  };
+
+  const filteredReservations = handleFilter();
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = reservations.slice(indexOfFirstItem, indexOfLastItem);
-  const totalPages = Math.ceil(reservations.length / itemsPerPage);
+  const currentItems = filteredReservations.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(filteredReservations.length / itemsPerPage);
 
   return (
     <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
@@ -96,7 +112,28 @@ const Reservations = () => {
         </div>
       )}
 
-      <div className="p-6 space-y-6">
+      <div className="p-6 space-y-4">
+        <div className="flex flex-col md:flex-row md:items-end gap-4">
+          <div className="w-full md:w-1/2">
+            <label className="block text-sm font-medium text-gray-700">Start Date</label>
+            <input
+              type="date"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            />
+          </div>
+          <div className="w-full md:w-1/2">
+            <label className="block text-sm font-medium text-gray-700">End Date</label>
+            <input
+              type="date"
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            />
+          </div>
+        </div>
+
         {currentItems.length === 0 ? (
           <div className="text-center py-8 text-gray-500">No reservations available</div>
         ) : (
@@ -170,7 +207,7 @@ const Reservations = () => {
             Page {currentPage} of {totalPages}
           </span>
           <button
-            onClick={() => currentPage < totalPages && setCurrentPage(currentPage + 1)}
+                       onClick={() => currentPage < totalPages && setCurrentPage(currentPage + 1)}
             className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
             disabled={currentPage === totalPages}
           >

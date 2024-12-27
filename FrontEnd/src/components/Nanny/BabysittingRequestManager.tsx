@@ -76,6 +76,7 @@ const BabysittingRequestManager: React.FC = () => {
         numberOfPeople: req.number_of_people || req.num_children,
         address: req.address,
         email: req.email,
+        client: req.client_id,
         notes: req.special_requests || req.notes,
         value: req.value || null,
         status: req.status,
@@ -149,11 +150,12 @@ const BabysittingRequestManager: React.FC = () => {
     setValue("");
   };
 
-  const handleFinalize = async (id: number) => {
+  const handleFinalize = async (id, clientId) => {
     if (!value || isNaN(Number(value))) {
       alert("Please enter a valid service value.");
       return;
     }
+
 
     const confirmApprove = window.confirm(
       "Are you sure you want to approve this request?"
@@ -163,7 +165,7 @@ const BabysittingRequestManager: React.FC = () => {
     try {
       await axios.put(
         `http://localhost:3005/requestServices/approvedRequest/${id}`,
-        { value: Number(value) }
+        { value: Number(value), client_id: clientId}
       );
       setRequests(
         requests.map((req) =>
@@ -383,7 +385,7 @@ const BabysittingRequestManager: React.FC = () => {
                     className="border border-gray-300 rounded-md p-2 flex-1"
                   />
                   <button
-                    onClick={() => handleFinalize(request.id)}
+                    onClick={() => handleFinalize(request.id,request.client)}
                     className="px-4 py-2 rounded-md text-white bg-green-500 hover:bg-green-600 font-medium"
                   >
                     Finalize

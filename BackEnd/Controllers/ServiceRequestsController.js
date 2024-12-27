@@ -181,7 +181,7 @@ const rejectRequest = async (req, res) => {
 };
 
 const approvedRequest = async (req, res) => {
-  console.log('Rejecting request for nanny with ID:', req.params);
+  console.log('Data:', req.body);
   const { id } = req.params; // Obtenha o ID da requisição a partir dos parâmetros
   try {
     // Encontre a solicitação pelo ID e atualize o status para 'rejected'
@@ -206,6 +206,7 @@ const approvedRequest = async (req, res) => {
     const newReservation = await Reservation.create({
       request_id: approvedRequest.request_id,
       nanny_id : approvedRequest.nanny_id,
+      client_id:req.body.client_id,
       value: req.body.value || 0, // Use o valor fornecido ou 0 como padrão
       status: 'confirmed',
       booking_date:approvedRequest.start_date, //

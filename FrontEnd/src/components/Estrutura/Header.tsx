@@ -17,14 +17,12 @@ const Header = () => {
       { name: 'Home', path: '/' },
       { name: 'Join as Nanny', path: '/register-nanny' },
       { name: 'Join as Client', path: '/register-client' },
-      { name: 'Find a Nanny', path: '/search' },
       { name: 'Contact Us', path: '/contact-us' },
       { name: 'Sign in', path: '/sign-in' },
     ],
     client: [
       { name: 'Home', path: '/' },
       { name: 'My Dashboard', path: '/client-dashboard' },
-      { name: 'Find a Nanny', path: '/search' },
       { name: 'Logout', path: '/logout' },
     ],
     nanny: [

@@ -5,6 +5,13 @@ export default (sequelize, DataTypes) => {
             primaryKey: true,
             autoIncrement: true
         },
+        client_id: {
+            type: DataTypes.INTEGER,
+            references: {
+                model: 'Users',
+                key: 'user_id'
+            }
+        },
         request_id: {
             type: DataTypes.INTEGER,
             references: {

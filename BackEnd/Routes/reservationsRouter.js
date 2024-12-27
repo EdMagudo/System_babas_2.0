@@ -11,7 +11,7 @@ router.delete("/:reservation_id", reservationsController.deleteReservation); // 
 
 router.get("/getAll/reservations/:nanny_id", reservationsController.getAllReservationsForNanny )
 
-router.get("/getAll/reservations/:client_id", reservationsController.getAllReservationsForClient )
+router.get("/getAll/reservations/client/:client_id", reservationsController.getAllReservationsForClient )
 
 
 
