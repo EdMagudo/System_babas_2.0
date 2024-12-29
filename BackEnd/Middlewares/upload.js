@@ -7,7 +7,9 @@ const storage = multer.diskStorage({
     cb(null, 'uploads/'); // Pasta onde os arquivos serão salvos
   },
   filename: function (req, file, cb) {
-    cb(null, `${Date.now()}-${file.originalname}`); // Nome do arquivo
+    // Remover espaços e gerar o nome do arquivo
+    const cleanName = file.originalname.trim().replace(/\s+/g, '-'); // Substitui espaços por hífen
+    cb(null, `${Date.now()}-${cleanName}`); // Nome do arquivo com timestamp
   },
 });
 

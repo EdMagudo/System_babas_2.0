@@ -8,6 +8,7 @@ const router = Router();
 
 // Rotas com upload configurado
 router.post("/", upload.single('file'), usersController.createUser);
+
 router.post('/register', upload.fields([{ name: 'idCopy', maxCount: 1 }]), usersController.createNannyUser);
 
 // Rotas sem upload
@@ -28,6 +29,8 @@ const basicUpload = multer(); // Configuração básica do multer
 router.put("/updatenannyProfiles/:id_user", upload.single('policeClearanceFile'), usersController.updatedProfile);
 
 router.post("/getAllNannyWith/Requirement", usersController.getAllNannyWithRequirement)
+
+router.post('/changeStatus', usersController.changeStatus);
 
 
 export default router;

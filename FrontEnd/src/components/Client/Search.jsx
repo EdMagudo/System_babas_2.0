@@ -49,6 +49,8 @@ const Search = () => {
       jobType: availability,
     };
 
+    console.log(requestBody)
+
     const url = "http://localhost:3005/user/getAllNannyWith/Requirement";
 
     // Fazendo a requisição POST com os parâmetros no corpo
@@ -232,7 +234,7 @@ const Search = () => {
               required
             >
               <option value="">Select Availability</option>
-              <option value="full-time">Full-time</option>
+              <option value="full_time">Full-time</option>
               <option value="temporary">Temporary</option>
             </select>
           </div>

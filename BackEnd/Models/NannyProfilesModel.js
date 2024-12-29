@@ -41,10 +41,6 @@ export default (sequelize, DataTypes) => {
         special_needs_experience: {
             type: DataTypes.BOOLEAN,
         },
-        background_check_status: {
-            type: DataTypes.ENUM('pending', 'approved', 'rejected'),
-            defaultValue: 'pending'
-        },
         additional_info: {
             type: DataTypes.TEXT,
             allowNull: true

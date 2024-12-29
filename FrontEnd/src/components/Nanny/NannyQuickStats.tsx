@@ -119,19 +119,19 @@ const NannyQuickStats: React.FC<NannyQuickStatsProps> = ({
             <div className="flex justify-between items-center">
               <span className="text-gray-600">Availability</span>
               <div className="flex items-center">
-                {nannyProfile.nannyProfile.background_check_status === "pending" && (
+                {nannyProfile.background_check_status === "pending" && (
                   <>
                     <CheckCircle className="w-5 h-5 text-yellow-500 mr-2" />
                     <span className="font-bold text-yellow-600">Pending</span>
                   </>
                 )}
-                {nannyProfile.nannyProfile.background_check_status.background_check_status === "approved" && (
+                {nannyProfile.background_check_status.background_check_status === "approved" && (
                   <>
                     <CheckCircle className="w-5 h-5 text-green-500 mr-2" />
                     <span className="font-bold text-green-600">Approved</span>
                   </>
                 )}
-                {nannyProfile.nannyProfile.background_check_status === "rejected" && (
+                {nannyProfile.background_check_status === "rejected" && (
                   <>
                     <XCircle className="w-5 h-5 text-red-500 mr-2" />
                     <span className="font-bold text-red-600">Rejected</span>

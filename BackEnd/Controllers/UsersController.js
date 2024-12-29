@@ -16,15 +16,6 @@ import path from "path"; // Certifique-se de importar o módulo path
 
 const upload = multer({ dest: "uploads/" }); // Define o diretório de destino para o arquivo
 
-
-
-
-
-
-
-
-
-
 const createUser = async (req, res) => {
   try {
     // Verifica se o email ou ID já existe
@@ -48,7 +39,8 @@ const createUser = async (req, res) => {
     delete userData.file; // Remover o objeto file antes de criar o usuário
 
     const user = await User.create(userData);
-
+    console.log("Por cima do file");
+    console.log(req.body);
     // Salvar o arquivo na tabela Files se existir
     if (req.file) {
       const fileData = {
@@ -59,6 +51,8 @@ const createUser = async (req, res) => {
       };
 
       await Files.create(fileData);
+    } else {
+      console.log("Nao tem file");
     }
 
     res.status(201).json({
@@ -72,7 +66,17 @@ const createUser = async (req, res) => {
 
 const getAllUsers = async (req, res) => {
   try {
-    const users = await User.findAll();
+    const users = await User.findAll({
+      include: {
+        model: Files, // Modelo relacionado
+        as: "files", // Alias definido na associação
+        attributes: ["file_id", "file_name", "file_path", "file_type"], // Atributos que você deseja retornar
+        where: {
+          file_type: "application/pdf", // Filtra apenas arquivos do tipo PDF
+        },
+        required: false, // Garante que usuários sem arquivos ainda sejam retornados
+      },
+    });
     res.status(200).json(users);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -162,12 +166,18 @@ const getAllNannyWithRequirement = async (req, res) => {
       });
     }
 
-    console.log("Fetching users with province:", province, "and jobType:", jobType);
+    console.log(
+      "Fetching users with province:",
+      province,
+      "and jobType:",
+      jobType
+    );
 
     // Buscar os usuários com seus perfis e arquivos associados
     const users = await User.findAll({
       where: {
         province_name: province,
+        background_check_status: "approved",
       },
       include: [
         {
@@ -186,7 +196,13 @@ const getAllNannyWithRequirement = async (req, res) => {
           model: Files,
           as: "files",
           where: {
-            file_type: ["image/png", "image/jpeg", "image/jpg", "image/webp", "image/gif"],
+            file_type: [
+              "image/png",
+              "image/jpeg",
+              "image/jpg",
+              "image/webp",
+              "image/gif",
+            ],
           },
           attributes: ["file_path", "file_type"], // Inclua apenas os atributos necessários
         },
@@ -211,7 +227,9 @@ const getAllNannyWithRequirement = async (req, res) => {
             education_level: user.nannyProfile.education_level,
             dob: user.nannyProfile.date_of_birth,
             job_type: user.nannyProfile.job_type,
-            workPreferences: user.nannyProfile.workPreferences.map((wp) => wp.work_preference),
+            workPreferences: user.nannyProfile.workPreferences.map(
+              (wp) => wp.work_preference
+            ),
           }
         : null,
       files: user.files.map((file) => ({
@@ -228,8 +246,6 @@ const getAllNannyWithRequirement = async (req, res) => {
     });
   }
 };
-
-
 
 const updateUser = async (req, res) => {
   try {
@@ -299,17 +315,20 @@ const createNannyUser = async (req, res) => {
     const user = await User.create(userData);
 
     // Salvar o arquivo na tabela Files se existir
-    if (req.file) {
+    if (req.files && req.files.idCopy && req.files.idCopy[0]) {
+      const file = req.files.idCopy[0]; // Obtém o primeiro arquivo do array
+
       const fileData = {
         user_id: user.user_id,
-        file_name: req.file.originalname, // Nome original do arquivo
-        file_path: req.file.path, // Caminho do arquivo salvo
-        file_type: req.file.mimetype, // Tipo MIME do arquivo
+        file_name: file.originalname, // Nome original do arquivo
+        file_path: file.path.trim().replace(/\s+/g, "-"),
+        file_type: file.mimetype, // Tipo MIME do arquivo
       };
 
       await Files.create(fileData);
+    } else {
+      console.log("Arquivo não encontrado.");
     }
-
     // Criar o perfil de nanny associado ao usuário
     const nannyProfileData = {
       user_id: user.user_id,
@@ -616,11 +635,9 @@ export const getUserProfilePicture = async (req, res) => {
     });
 
     if (!userFile) {
-      return res
-        .status(404)
-        .json({
-          message: "Nenhuma foto de perfil encontrada para este usuário.",
-        });
+      return res.status(404).json({
+        message: "Nenhuma foto de perfil encontrada para este usuário.",
+      });
     }
 
     // Retorna as informações do arquivo
@@ -634,12 +651,37 @@ export const getUserProfilePicture = async (req, res) => {
     });
   } catch (error) {
     console.error("Erro ao buscar foto de perfil:", error);
-    res
-      .status(500)
-      .json({
-        message: "Erro ao buscar foto de perfil.",
-        error: error.message,
-      });
+    res.status(500).json({
+      message: "Erro ao buscar foto de perfil.",
+      error: error.message,
+    });
+  }
+};
+
+const changeStatus = async (req, res) => {
+  const { user_id, status } = req.body;
+
+  // Validação do status
+  const allowedStatuses = ['approved', 'pending', 'rejected'];
+  if (!allowedStatuses.includes(status)) {
+    return res.status(400).json({ message: 'Status inválido. Use "approved", "pending" ou "rejected".' });
+  }
+
+  try {
+    // Busca o usuário no banco de dados
+    const user = await User.findOne({ where: { user_id } });
+
+    if (!user) {
+      return res.status(404).json({ message: 'Usuário não encontrado.' });
+    }
+
+    user.background_check_status = status;
+    await user.save(); // Salva no banco de dados
+
+    res.status(200).json({ message: 'Status atualizado com sucesso!', user });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Erro ao atualizar o status.' });
   }
 };
 
@@ -655,5 +697,6 @@ export default {
   changePassword,
   uploadProfilePicture,
   getUserProfilePicture,
-  getAllNannyWithRequirement
+  getAllNannyWithRequirement,
+  changeStatus
 };

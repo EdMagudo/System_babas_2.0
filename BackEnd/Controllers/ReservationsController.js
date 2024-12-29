@@ -14,10 +14,37 @@ const createReservation = async (req, res) => {
 
 const getAllReservations = async (req, res) => {
   try {
-    const reservations = await Reservations.findAll();
-    res.status(200).json(reservations);
+    console.log('Fetching all reservations with service request and user data');
+
+    // Fetching all reservations, including service request and client data
+    const reservations = await Reservations.findAll({
+      include: [
+        {
+          model: ServiceRequest,
+          as: 'serviceRequest', // Ensure this matches your association name
+          include: [
+            {
+              model: Users, // Ensure this matches your Users model name
+              as: 'client', // Ensure this matches your association name
+            },
+          ],
+        },
+      ],
+      order: [['booking_date', 'ASC']], // Sorting by booking date in ascending order
+    });
+
+    // Check if no reservations were found
+    if (!reservations || reservations.length === 0) {
+      return res.status(404).json({ message: 'No reservations found' });
+    }
+
+    console.log('Reservations found:', reservations);
+
+    // Return reservations with related data
+    res.json(reservations);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error('Error fetching all reservations:', error);
+    res.status(500).json({ error: 'Error fetching all reservations' });
   }
 };
 

@@ -30,6 +30,10 @@ const Header = () => {
       { name: 'My Dashboard', path: '/nanny-dashboard' },
       { name: 'Logout', path: '/logout' },
     ],
+    admin:[
+      { name: 'Home', path: '/' },
+      { name: 'Logout', path: '/logout' },
+    ]
   };
 
   // Determine o menu baseado no tipo de usuário

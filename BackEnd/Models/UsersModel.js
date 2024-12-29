@@ -38,6 +38,10 @@ export default (sequelize, DataTypes) => {
             type: DataTypes.STRING(255),
             allowNull: true
         },
+        background_check_status: {
+            type: DataTypes.ENUM('pending', 'approved', 'rejected'),
+            defaultValue: 'pending'
+        },
         created_at: {
             type: DataTypes.DATE,
             defaultValue: DataTypes.NOW
