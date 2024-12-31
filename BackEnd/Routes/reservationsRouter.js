@@ -13,9 +13,9 @@ router.get("/getAll/reservations/:nanny_id", reservationsController.getAllReserv
 
 router.get("/getAll/reservations/client/:client_id", reservationsController.getAllReservationsForClient )
 
-
-
 router.put("/cancel/reservation/:id_reservation", reservationsController.cancelReservation)
+
+router.get("/getAll/reservations",reservationsController.countConfirmedAndBookedReservations)
 
 
 

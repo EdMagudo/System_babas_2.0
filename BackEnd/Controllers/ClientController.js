@@ -1,6 +1,8 @@
 import db from "../Models/index.js";
 import multer from "multer";
 import path from "path";
+import { Sequelize } from 'sequelize';
+const { Op } = Sequelize;
 
 // Configuração do Multer para o upload de arquivos
 const storage = multer.diskStorage({
@@ -26,9 +28,43 @@ const upload = multer({
   }
 });
 
+const countUsers = async () => {
+  try {
+    const users = await db.Users.findAll({
+      where: {
+        background_check_status: {
+          [Sequelize.Op.in]: ['pending', 'approved'] // Inclui 'pending' e 'approved'
+        }
+      },
+      raw: true // Retorna um resultado mais direto
+    });
+
+    const counts = {
+      nannies: 0,
+      clients: 0
+    };
+
+    users.forEach(user => {
+      if (user.role === 'nanny') {
+        counts.nannies += 1;
+      } else if (user.role === 'client') {
+        counts.clients += 1;
+      }
+    });
+
+    console.log('Contagem final:', counts); // Log da contagem final
+
+    return counts; // Retorna explicitamente o objeto counts
+
+  } catch (error) {
+    console.error('Erro ao contar usuários:', error);
+    throw error;
+  }
+};
+
+
 // Função para criar um cliente e fazer o upload do arquivo
 const createClientWithFile = async (req, res) => {
-  console.log(req.body)
   try {
     // Upload do arquivo
     upload.single('file')(req, res, async (err) => {
@@ -135,5 +171,6 @@ export default {
   getAllClients,
   getClientById,
   updateClient,
-  deleteClient
+  deleteClient,
+  countUsers
 };

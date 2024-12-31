@@ -7,8 +7,6 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-import fs from "fs";
-
 
 
 const app = express();
@@ -26,7 +24,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 
-
 //Rotas
 import routerAdmin from './Routes/adminRoutes.js';
 import routerUser from './Routes/usersRouter.js';
@@ -37,6 +34,10 @@ import NannyChildWorkPreference from './Routes/nannyChildWorkPreferenceRouter.js
 import ServiceRequests from './Routes/serviceRequestsRouter.js';
 import Reservations from './Routes/reservationsRouter.js';
 import Client from './Routes/clientRoutes.js'
+import Payment from './Routes/PaymentsRouter.js'
+import AdminController from './Controllers/AdminController.js';
+import ClientController from './Controllers/ClientController.js';
+import Admin from './Routes/adminRoutes.js';
 
 
 app.use('/admin', routerAdmin);
@@ -48,10 +49,23 @@ app.use('/experienceWork', NannyChildWorkPreference);
 app.use('/requestServices',ServiceRequests);
 app.use('/reservations',Reservations);
 app.use('/client',Client);
+app.use('/Payment',Payment);
+app.use('/Admin', Admin);
 
 
   app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
+
+  // Supondo que você esteja usando Express.js
+app.get('/count-users', async (req, res) => {
+    try {
+      const counts = await ClientController.countUsers(); // Chama a função de contagem de usuários
+      res.json(counts); // Envia o resultado como resposta JSON
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+  
 
 // Route to fetch countries
 app.get('/countries', async (req, res) => {
@@ -177,6 +191,7 @@ const startServer = async () => {
     try {
         // Initialize the database
         await initializeDatabase();
+        AdminController.initializeAdmin();
 
         // Start the server
         const PORT = process.env.PORT || 3005;

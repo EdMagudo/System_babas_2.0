@@ -15,6 +15,8 @@ import ReviewsModel from './ReviewsModel.js';
 import FilesModel from './FilesModel.js';
 import NannyChildWorkPreference from './NannyChildWorkPreference.js';
 
+
+
 // Create Sequelize instance
 const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
   host: dbConfig.HOST,

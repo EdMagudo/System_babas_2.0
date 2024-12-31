@@ -3,6 +3,9 @@ const Reservations = db.Reservations;
 const ServiceRequest = db.Service_Requests;
 const Users = db.Users;
 
+import { Sequelize } from 'sequelize';
+const { Op } = Sequelize;
+
 const createReservation = async (req, res) => {
   try {
     const reservation = await Reservations.create(req.body);
@@ -191,6 +194,28 @@ const cancelReservation = async (req, res) => {
   }
 };
 
+const countConfirmedAndBookedReservations = async (req, res) => {
+  try {
+    console.log('Counting confirmed and booked reservations');
+
+    // Contando as reservas com status 'confirmed' ou 'booked'
+    const count = await Reservations.count({
+      where: {
+        status: {
+          [Sequelize.Op.in]: ['confirmed', 'booked'] // Filtra os status confirmed e booked
+        }
+      }
+    });
+
+    // Retorna o número de reservas com status 'confirmed' ou 'booked'
+    res.json({ count });
+  } catch (error) {
+    console.error('Error counting confirmed and booked reservations:', error);
+    res.status(500).json({ error: 'Error counting confirmed and booked reservations' });
+  }
+};
+
+
 
 export default {
   createReservation,
@@ -200,5 +225,6 @@ export default {
   deleteReservation,
   getAllReservationsForNanny,
   cancelReservation,
-  getAllReservationsForClient
+  getAllReservationsForClient,
+  countConfirmedAndBookedReservations
 };

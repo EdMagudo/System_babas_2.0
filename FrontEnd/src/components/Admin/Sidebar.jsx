@@ -14,7 +14,7 @@ const Sidebar = ({ selectedTab, onSelectTab }) => {
       <button onClick={() => onSelectTab('reservas')} className={`h-6 w-6 ${selectedTab === 'reservas' ? 'text-blue-500' : 'text-gray-400 hover:text-blue-500'}`}>
         <Calendar />
       </button>
-      <button className="h-6 w-6 text-gray-400 hover:text-blue-500 mt-auto">
+      <button onClick={() => onSelectTab('pagamentos')} className={`h-6 w-6 ${selectedTab === 'pagamentos' ? 'text-blue-500' : 'text-gray-400 hover:text-blue-500'}`}>
         <Settings />
       </button>
     </nav>
