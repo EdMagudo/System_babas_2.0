@@ -27,6 +27,8 @@ const Dashboard = () => {
         const reservationsData = responseData.data;
         const paymentData = res.data;
 
+        console.log(paymentData)
+
     
         // Atualiza o estado com os dados recebidos
         setStats({

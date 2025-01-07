@@ -200,8 +200,12 @@ app.post('/sam/pay', async (req, res) => {
         if (!url) {
             return res.status(500).send('Failed to create PayPal order');
         }
-        
+            
+        console.log(url)
         res.redirect(url);
+
+
+        
     } catch (error) {
         console.error('Error in /pay route:', error);
         res.status(500).send('Error: ' + error.message);
