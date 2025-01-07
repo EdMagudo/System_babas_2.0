@@ -14,17 +14,23 @@ import { v4 as uuidv4 } from "uuid";
 import fs from "fs";
 import path from "path"; // Certifique-se de importar o módulo path
 
+
 const upload = multer({ dest: "uploads/" }); // Define o diretório de destino para o arquivo
 
 const createUser = async (req, res) => {
+
+  console.log("Entrei")
+
   try {
     // Verifica se o email ou ID já existe
-    const existingUser = await User.findOne({
-      where: { email: req.body.email },
-    });
-    const existingIdNumber = req.body.id_number
-      ? await User.findOne({ where: { id_number: req.body.id_number } })
-      : null;
+    const { email, id_number, first_name, last_name, country_name, province_name } = req.body;
+
+    if (!email || !id_number) {
+      return res.status(400).json({ message: "Email, ID e senha são obrigatórios." });
+    }
+
+    const existingUser = await User.findOne({ where: { email } });
+    const existingIdNumber = await User.findOne({ where: { id_number } });
 
     if (existingUser) {
       return res.status(400).json({ message: "O email já está em uso." });
@@ -34,14 +40,21 @@ const createUser = async (req, res) => {
       return res.status(400).json({ message: "O ID já está em uso." });
     }
 
-    // Criação do usuário
-    const userData = { ...req.body };
-    delete userData.file; // Remover o objeto file antes de criar o usuário
+    // Preparação dos dados do usuário
+    const userData = {
+      email,
+      password_hash: await bcrypt.hash(id_number, 10), // Hash da senha recebida
+      role: 'client', // Padrão ou conforme enviado
+      first_name,
+      last_name,
+      id_number,
+      country_name,
+      province_name,
+    };
 
     const user = await User.create(userData);
-    console.log("Por cima do file");
-    console.log(req.body);
-    // Salvar o arquivo na tabela Files se existir
+
+    // Salvar o arquivo, se enviado
     if (req.file) {
       const fileData = {
         user_id: user.user_id,
@@ -51,8 +64,6 @@ const createUser = async (req, res) => {
       };
 
       await Files.create(fileData);
-    } else {
-      console.log("Nao tem file");
     }
 
     res.status(201).json({
@@ -63,6 +74,7 @@ const createUser = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
 
 const getAllUsers = async (req, res) => {
   try {
