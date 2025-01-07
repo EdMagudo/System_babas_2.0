@@ -45,7 +45,6 @@ import ClientController from './Controllers/ClientController.js';
 import Admin from './Routes/adminRoutes.js';
 import File from './Routes/filesRouter.js';
 
-import Client from './Routes/clientRoutes.js';
 
 app.use('/admin', routerAdmin);
 app.use('/user', routerUser);
