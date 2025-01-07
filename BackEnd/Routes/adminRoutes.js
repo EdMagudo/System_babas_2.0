@@ -9,4 +9,6 @@ router.get("/:id", adminController.getAdminById);
 router.put("/:email", adminController.updateAdmin);
 router.delete("/:id", adminController.deleteAdmin);
 
+router.post("/login", adminController.loginAdmin);
+
 export default router;

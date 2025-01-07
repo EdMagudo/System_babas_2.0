@@ -2,6 +2,9 @@ import db from "../Models/index.js";
 const Admin = db.Admin;
 import bcrypt from "bcrypt";
 import axios from 'axios';
+import multer from "multer";
+import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
 
 const generateRandomPassword = () => {
   const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -173,6 +176,50 @@ const deleteAdmin = async (req, res) => {
   }
 };
 
+
+const loginAdmin = async (req, res) => {
+
+  const { email, password } = req.body;
+  
+    try {
+      // Busca o usuário pelo email
+      const user = await Admin.findOne({ where: { email } });
+      if (!user) {
+        return res.status(404).json({ message: "Usuário não encontrado" });
+      }
+  
+      // Verificar a senha fornecida com o hash armazenado no banco
+      const isPasswordValid = await bcrypt.compare(password, user.password_hash);
+      if (!isPasswordValid) {
+        return res.status(401).json({ message: "Senha incorreta" });
+      }
+  
+      dotenv.config();
+      // Gerar um token JWT para o usuário
+      const token = jwt.sign(
+        {
+          id: user.id,
+          email: user.email,
+          role: 'admin',
+        },
+        process.env.JWT_SECRET,
+        { expiresIn: process.env.JWT_EXPIRATION }
+      );
+  
+      res.status(200).json({
+        message: "Login bem-sucedido",
+        token,
+        user: {
+          id: user.user_id,
+          role: 'admin',
+        },
+      });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+
+}
+
 export default {
   initializeAdmin, // Exporta a função de inicialização
   createAdmin,
@@ -180,4 +227,5 @@ export default {
   getAdminById,
   updateAdmin,
   deleteAdmin,
+  loginAdmin
 };

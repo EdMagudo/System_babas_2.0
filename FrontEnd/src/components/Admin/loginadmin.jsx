@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Lock, Mail, LogIn } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const AdminLogin = () => {
   const [email, setEmail] = useState('');
@@ -9,9 +10,8 @@ const AdminLogin = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  // Validate email format before submitting
   const validateEmail = (email) => {
-    const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+    const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     return emailPattern.test(email);
   };
 
@@ -20,40 +20,34 @@ const AdminLogin = () => {
     setError('');
     setIsLoading(true);
 
-    // Basic client-side validation
     if (!email || !password) {
-      setError('Please fill in both fields.');
+      setError('Both fields are required.');
       setIsLoading(false);
       return;
     }
 
     if (!validateEmail(email)) {
-      setError('Please enter a valid email address.');
+      setError('Invalid email format.');
       setIsLoading(false);
       return;
     }
 
     try {
-      const response = await fetch('http://localhost:3005/admin/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
+      const response = await axios.post('http://localhost:3005/Admin/login', {
+        email,
+        password,
       });
 
-      const data = await response.json();
+      // Store token and user role
+      localStorage.setItem('userRole', response.data.user.role);
+      localStorage.setItem('adminToken', response.data.token);
 
-      if (response.ok) {
-        // Store the token
-        localStorage.setItem('adminToken', data.token);
-        // Redirect to admin dashboard
-        navigate('/admin/dashboard');
-      } else {
-        setError(data.message || 'Login failed. Please check your credentials.');
-      }
+      // Navigate to dashboard
+      navigate('/admin');
     } catch (err) {
-      setError('An error occurred. Please try again.');
+      setError(
+        err.response?.data?.message || 'Unable to connect to the server. Please try again later.'
+      );
     } finally {
       setIsLoading(false);
     }
@@ -63,9 +57,7 @@ const AdminLogin = () => {
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         <div>
-          <h2 className="mt-6 text-center text-3xl font-bold text-gray-900">
-            Admin Login
-          </h2>
+          <h2 className="mt-6 text-center text-3xl font-bold text-gray-900">Admin Login</h2>
           <p className="mt-2 text-center text-sm text-gray-600">
             Please sign in to access the admin dashboard
           </p>
@@ -73,7 +65,10 @@ const AdminLogin = () => {
 
         <div className="bg-white py-8 px-6 shadow-xl rounded-2xl space-y-6 border border-gray-100">
           {error && (
-            <div className="bg-rose-50 text-rose-600 p-4 rounded-xl text-sm">
+            <div
+              className="bg-rose-50 text-rose-600 p-4 rounded-xl text-sm"
+              aria-live="polite"
+            >
               {error}
             </div>
           )}
@@ -95,7 +90,9 @@ const AdminLogin = () => {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="pl-12 pr-4 py-3 w-full rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
+                  className={`pl-12 pr-4 py-3 w-full rounded-xl border text-sm focus:outline-none transition-all duration-200 ${
+                    error && !email ? 'border-rose-500' : 'border-gray-200 focus:ring-2 focus:ring-indigo-500'
+                  }`}
                   placeholder="Enter your email"
                 />
               </div>
@@ -117,7 +114,9 @@ const AdminLogin = () => {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="pl-12 pr-4 py-3 w-full rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
+                  className={`pl-12 pr-4 py-3 w-full rounded-xl border text-sm focus:outline-none transition-all duration-200 ${
+                    error && !password ? 'border-rose-500' : 'border-gray-200 focus:ring-2 focus:ring-indigo-500'
+                  }`}
                   placeholder="Enter your password"
                 />
               </div>

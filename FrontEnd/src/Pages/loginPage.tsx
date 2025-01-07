@@ -37,10 +37,7 @@ const LoginPage = () => {
         localStorage.setItem('userRole', data.user.role);
         localStorage.setItem('userEmail', data.user.email);
         localStorage.setItem('userProvice', data.user.country);
-        localStorage.setItem('userCountry', data.user.province);
-
-        console.log(data.user.id)
-     
+        localStorage.setItem('userCountry', data.user.province);   
 
         // Navegar para o dashboard correto com base no role
         if (data.user.role === 'client') {
