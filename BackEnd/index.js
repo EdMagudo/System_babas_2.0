@@ -38,6 +38,7 @@ import Payment from './Routes/PaymentsRouter.js'
 import AdminController from './Controllers/AdminController.js';
 import ClientController from './Controllers/ClientController.js';
 import Admin from './Routes/adminRoutes.js';
+import File from './Routes/filesRouter.js';
 
 
 app.use('/admin', routerAdmin);
@@ -51,6 +52,7 @@ app.use('/reservations',Reservations);
 app.use('/client',Client);
 app.use('/Payment',Payment);
 app.use('/Admin', Admin);
+app.use('/File', File);
 
 
   app.use('/uploads', express.static(path.join(__dirname, 'uploads')));

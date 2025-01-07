@@ -12,6 +12,7 @@ import LoginPage from './Pages/loginPage';
 import ClientDashboard from './Pages/ClientDashBoard'; // Importar o Dashboard do cliente
 import NannyDashboard from './Pages/NannyDashboard'; // Importar o Dashboard da babá
 import Admin from './Pages/AdminDashboard'
+import loginAdmin from './components/Admin/loginadmin';
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
             <Route path="/nanny-dashboard" element={<NannyDashboard />} />
             <Route path="/logout" element={<Logout />} />
             <Route path='/admin' element={<Admin/>}/>
+            <Route path='/loginAdmin' element={loginAdmin}/>
             <Route path="*" element={<h1>404 - Page Not Found</h1>} />
           </Routes>
         </main>

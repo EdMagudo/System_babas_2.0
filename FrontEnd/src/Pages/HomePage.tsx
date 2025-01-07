@@ -9,47 +9,7 @@ import image4 from '../assets/white.webp';
 import image5 from '../assets/white1.jpg';
 
 const ExpressNanniesHomepage = () => {
-  const nannies = [
-    {
-      id: 1,
-      name: 'Alice',
-      experience: 5,
-      photo: '../assets/white1.jpg',
-      rating: 4.8,
-      location: 'Maputo',
-      availableFrom: '8AM',
-      availableTo: '6PM',
-      hourlyRate: 10,
-      languages: ['English', 'Portuguese'],
-      specialties: ['First Aid', 'Child Psychology'],
-    },
-    {
-      id: 3,
-      name: 'Alice',
-      experience: 5,
-      photo: '../assets/white1.jpg',
-      rating: 4.8,
-      location: 'Maputo',
-      availableFrom: '8AM',
-      availableTo: '6PM',
-      hourlyRate: 10,
-      languages: ['English', 'Portuguese'],
-      specialties: ['First Aid', 'Child Psychology'],
-    },
-    {
-      id: 2,
-      name: 'Maria',
-      experience: 3,
-      photo: '/api/placeholder/300/300',
-      rating: 4.5,
-      location: 'Beira',
-      availableFrom: '9AM',
-      availableTo: '5PM',
-      hourlyRate: 8,
-      languages: ['Portuguese'],
-      specialties: ['Infant Care', 'Special Needs'],
-    },
-  ];
+  
 
   const images = [image1, image2, image3, image4, image5]; // Array com as imagens do carrossel
 
@@ -86,17 +46,7 @@ const ExpressNanniesHomepage = () => {
 
 
         {/* Search Section */}
-        <div className="relative max-w-2xl mx-auto mb-12">
-          <input
-            type="text"
-            placeholder="Search for nannies..."
-            className="w-full px-6 py-4 rounded-full border border-gray-200 shadow-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all duration-200"
-          />
-          <Search
-            className="absolute right-6 top-1/2 transform -translate-y-1/2 text-gray-400"
-            size={20}
-          />
-        </div>
+      
 
         {/* Featured Section */}
         <div className="text-center mb-8">

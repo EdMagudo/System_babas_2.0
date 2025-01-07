@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Calendar, Clock, CreditCard, FileText, RefreshCw, User } from "lucide-react";
 
 const ReservationList = () => {
   const [reservations, setReservations] = useState([]);
@@ -29,6 +30,7 @@ const ReservationList = () => {
           const response = await fetch(`http://localhost:3005/user/${nannyId}`);
           const data = await response.json();
           names[nannyId] = `${data.first_name} ${data.last_name}`;
+
         } catch (error) {
           console.error(`Error fetching nanny name for ID ${nannyId}:`, error);
         }
@@ -71,73 +73,75 @@ const ReservationList = () => {
   };
 
   return (
-    <div className="max-w-5xl mx-auto p-8 space-y-8">
+    <div className="max-w-5xl mx-auto p-8 bg-gray-50 min-h-screen">
       {/* Header */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
-        <h1 className="text-2xl font-semibold text-gray-900">Reservations</h1>
+        <h1 className="text-3xl font-bold text-gray-900">Reservations</h1>
         <div className="flex items-center gap-4">
-          <div className="bg-white rounded-xl shadow-sm p-1 flex">
-            <button
-              onClick={() => setActiveTab("confirmed")}
-              className={`px-6 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-2
-                ${
-                  activeTab === "confirmed"
-                    ? "bg-blue-50 text-blue-600"
-                    : "text-gray-600 hover:bg-gray-50"
-                }`}
-            >
-              <span className="text-lg">📑</span>
-              Confirmed
-            </button>
-            <button
-              onClick={() => setActiveTab("completed")}
-              className={`px-6 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-2
-                ${
-                  activeTab === "completed"
-                    ? "bg-blue-50 text-blue-600"
-                    : "text-gray-600 hover:bg-gray-50"
-                }`}
-            >
-              <span className="text-lg">✅</span>
-              Completed
-            </button>
+          <div className="bg-white rounded-2xl shadow-lg p-1.5">
+            <div className="flex space-x-1">
+              <button
+                onClick={() => setActiveTab("confirmed")}
+                className={`px-6 py-3 rounded-xl text-sm font-medium transition-all duration-200 flex items-center gap-2
+                  ${
+                    activeTab === "confirmed"
+                      ? "bg-blue-500 text-white shadow-md"
+                      : "text-gray-600 hover:bg-gray-50"
+                  }`}
+              >
+                <FileText className="w-4 h-4" />
+                Confirmed
+              </button>
+              <button
+                onClick={() => setActiveTab("completed")}
+                className={`px-6 py-3 rounded-xl text-sm font-medium transition-all duration-200 flex items-center gap-2
+                  ${
+                    activeTab === "completed"
+                      ? "bg-blue-500 text-white shadow-md"
+                      : "text-gray-600 hover:bg-gray-50"
+                  }`}
+              >
+                <CreditCard className="w-4 h-4" />
+                Completed
+              </button>
+            </div>
           </div>
         </div>
       </div>
 
       {/* Filters */}
-      <div className="bg-white rounded-xl shadow-sm p-4 space-y-4">
-        <div className="flex items-center justify-between">
-          <h2 className="text-sm font-medium text-gray-700 flex items-center gap-2">
-            <span className="text-gray-400">📅</span>
+      <div className="bg-white rounded-2xl shadow-lg p-6 mb-8">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
+            <Calendar className="w-5 h-5 text-blue-500" />
             Date Range
           </h2>
           <button
             onClick={clearFilters}
             className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50 transition-all duration-200"
           >
-            <span className="text-lg">🔄</span>
-            Clear
+            <RefreshCw className="w-4 h-4" />
+            Clear Filters
           </button>
         </div>
         <div className="flex flex-col md:flex-row gap-4">
           <div className="relative flex-1">
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">📅</span>
+            <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
             <input
               type="date"
               value={startDate}
               onChange={(e) => setStartDate(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-200 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+              className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
               placeholder="Start date"
             />
           </div>
           <div className="relative flex-1">
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">📅</span>
+            <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
             <input
               type="date"
               value={endDate}
               onChange={(e) => setEndDate(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-200 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+              className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
               placeholder="End date"
             />
           </div>
@@ -145,45 +149,45 @@ const ReservationList = () => {
       </div>
 
       {/* Reservations Grid */}
-      <div className="grid gap-4">
+      <div className="space-y-4">
         {currentReservations.map((reservation) => (
           <div
             key={reservation.reservation_id}
-            className="bg-white rounded-xl shadow-sm border border-gray-100 hover:border-blue-100 transition-all duration-200 overflow-hidden"
+            className="bg-white rounded-2xl shadow-lg border border-gray-100 hover:border-blue-200 transition-all duration-200 overflow-hidden group"
           >
             <div className="p-6">
               <div className="flex flex-col md:flex-row justify-between gap-6">
-                <div className="space-y-4">
-                  <div className="flex items-center gap-3">
-                    <div className="h-10 w-10 rounded-full bg-blue-50 flex items-center justify-center">
-                      <span className="text-blue-600 text-lg">👤</span>
+                <div className="space-y-4 flex-1">
+                  <div className="flex items-center gap-4">
+                    <div className="h-12 w-12 rounded-full bg-blue-50 flex items-center justify-center group-hover:bg-blue-100 transition-colors duration-200">
+                      <User className="w-6 h-6 text-blue-500" />
                     </div>
                     <div>
-                      <h3 className="text-lg font-semibold text-gray-900">
-                        {nannyNames[reservation.nanny_id] || "Loading..."}
+                      <h3 className="text-xl font-bold text-gray-900">
+                        {nannyNames[reservation.reservation_id] || "Loading..."}
                       </h3>
                       <p className="text-sm text-gray-500">
-                        {reservation.serviceRequest.client.first_name}{" "}
+                        Client: {reservation.serviceRequest.client.first_name}{" "}
                         {reservation.serviceRequest.client.last_name}
                       </p>
                     </div>
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-2">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-3">
                       <p className="text-sm text-gray-600 flex items-center gap-2">
-                        <span className="text-gray-400">📅</span>
+                        <Calendar className="w-4 h-4 text-blue-500" />
                         <span className="font-medium">Start:</span>{" "}
                         {new Date(reservation.booking_date).toLocaleDateString()}
                       </p>
                       <p className="text-sm text-gray-600 flex items-center gap-2">
-                        <span className="text-gray-400">⏰</span>
+                        <Clock className="w-4 h-4 text-blue-500" />
                         <span className="font-medium">End:</span>{" "}
                         {reservation.serviceRequest.end_date}
                       </p>
                     </div>
                     <div>
                       <p className="text-sm text-gray-600 flex items-start gap-2">
-                        <span className="text-gray-400 mt-1">📝</span>
+                        <FileText className="w-4 h-4 text-blue-500 mt-1" />
                         <span className="flex-1">
                           <span className="font-medium">Notes:</span>{" "}
                           {reservation.serviceRequest.notes}
@@ -192,24 +196,23 @@ const ReservationList = () => {
                     </div>
                   </div>
                 </div>
-                <div className="flex flex-col items-end justify-between gap-4">
+                <div className="flex flex-col items-end justify-between gap-4 min-w-[200px]">
                   <div className="text-right">
-                    <p className="text-2xl font-bold text-blue-600 flex items-center justify-end gap-1">
-                      <span>💰</span>
-                      {reservation.value}
+                    <p className="text-3xl font-bold text-blue-600">
+                      ${reservation.value}
                     </p>
                   </div>
                   {activeTab === "confirmed" ? (
                     <button
                       onClick={() => handlePayment(reservation.reservation_id)}
-                      className="px-6 py-2.5 rounded-lg text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 transition-colors duration-200 flex items-center gap-2 shadow-sm"
+                      className="w-full px-6 py-3 rounded-xl text-sm font-medium text-white bg-blue-500 hover:bg-blue-600 transition-colors duration-200 flex items-center justify-center gap-2 shadow-md"
                     >
-                      <span>💳</span>
+                      <CreditCard className="w-4 h-4" />
                       Process Payment
                     </button>
                   ) : (
-                    <span className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-green-700 bg-green-50">
-                      <span>✅</span>
+                    <span className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl text-sm font-medium text-green-700 bg-green-50 w-full">
+                      <CreditCard className="w-4 h-4" />
                       Paid
                     </span>
                   )}
@@ -221,13 +224,12 @@ const ReservationList = () => {
       </div>
 
       {/* Pagination */}
-      <div className="flex justify-between items-center pt-6">
+      <div className="flex justify-between items-center pt-8">
         <button
           onClick={() => currentPage > 1 && setCurrentPage(currentPage - 1)}
-          className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-white rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-sm"
+          className="flex items-center gap-2 px-6 py-3 text-sm font-medium text-gray-700 bg-white rounded-xl hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-md"
           disabled={currentPage === 1}
         >
-          <span>◀️</span>
           Previous
         </button>
         <span className="text-sm font-medium text-gray-600">
@@ -235,11 +237,10 @@ const ReservationList = () => {
         </span>
         <button
           onClick={() => currentPage < totalPages && setCurrentPage(currentPage + 1)}
-          className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-white rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-sm"
+          className="flex items-center gap-2 px-6 py-3 text-sm font-medium text-gray-700 bg-white rounded-xl hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-md"
           disabled={currentPage === totalPages}
         >
           Next
-          <span>▶️</span>
         </button>
       </div>
     </div>
