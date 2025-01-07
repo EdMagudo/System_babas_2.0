@@ -233,8 +233,12 @@ app.get('/cancel-order', (req, res) => {
 });
 
 app.get('/payment-success', (req, res) => {
-    res.send(`Payment completed successfully for reservation ${req.query.reservationId}`);
+    const reservationId = req.query.reservationId;
+
+    // Redirecionar para o frontend com o ID da reserva como query parameter, se necessário
+    res.redirect(`http://localhost:5173/client-dashboard?reservationId=${reservationId}`);
 });
+
 
 app.get('/payment-error', (req, res) => {
     res.send('Payment failed. Please try again.');
