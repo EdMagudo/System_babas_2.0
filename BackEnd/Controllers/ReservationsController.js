@@ -164,6 +164,28 @@ const cancelReservation = async (req, res) => {
   }
 };
 
+const payReservation = async (req, res) => {
+  console.log('Canceling reservation with ID:', req.params.id_reservation);
+ 
+  try {
+    // Encontre a reserva pelo ID e atualize o status para 'cancelled'
+    const updatedRows = await Reservations.update(
+      { status: 'booked' },
+      { where: { reservation_id: req.params.id_reservation } }
+    );
+
+    if (updatedRows[0] === 0) {
+      return res.status(404).json({ message: 'Reservation not found' });
+    }
+
+    res.status(200).json({ message: 'Reservation cancelled successfully' });
+  } catch (error) {
+    console.error('Error canceling reservation:', error);
+    res.status(500).json({ message: 'Error canceling reservation' });
+  }
+};
+
+
 
 export default {
   createReservation,
@@ -173,5 +195,6 @@ export default {
   deleteReservation,
   getAllReservationsForNanny,
   cancelReservation,
-  getAllReservationsForClient
+  getAllReservationsForClient,
+  payReservation
 };

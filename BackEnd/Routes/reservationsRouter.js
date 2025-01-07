@@ -16,6 +16,7 @@ router.get("/getAll/reservations/client/:client_id", reservationsController.getA
 
 
 router.put("/cancel/reservation/:id_reservation", reservationsController.cancelReservation)
+router.put("/payReservation/reservation/:id_reservation", reservationsController.payReservation)
 
 
 
