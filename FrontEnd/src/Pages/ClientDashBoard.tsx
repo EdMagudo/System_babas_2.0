@@ -5,30 +5,42 @@ import {
   Search as SearchIcon, 
   Star 
 } from 'lucide-react';
-import Overview from '../components/Client/Overview';  // Importe o componente Overview
-import Search from '../components/Client/Search';      // Importe o componente Search
-import Favorites from '../components/Client/Requirements'; // Importe o componente Favorites
+import { useSearchParams } from 'react-router-dom';
+import Overview from '../components/Client/Overview'; 
+import Search from '../components/Client/Search';
+import Favorites from '../components/Client/Requirements';
 import ProfilePictureUploader from '../components/Nanny/ProfilePictureUploader';
 import Reservations from '../components/Client/Reservations';
 
 const ClientDashboard = () => {
   const [activeSection, setActiveSection] = useState('overview');
-  const [clientProfile, setClientProfile] = useState(null); // Estado para armazenar os dados do perfil
-  const [loading, setLoading] = useState(true); // Estado para controle de carregamento
-
-  const userId = 2; // ID do usuário logado (substitua conforme necessário)
+  const [clientProfile, setClientProfile] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const userId = localStorage.getItem("idUser");
+  
+  // Para manipular query params
+  const [searchParams] = useSearchParams();
+  
+  // Verificar `reservationId` nos parâmetros da URL
+  useEffect(() => {
+    const reservationId = searchParams.get('reservationId');
+    if (reservationId) {
+      alert(`Pagamento efetuado com sucesso para a reserva ID: ${reservationId}`);
+      // Opcional: remover o parâmetro da URL após exibir o alerta
+      window.history.replaceState({}, document.title, '/client-dashboard');
+    }
+  }, [searchParams]);
 
   // Função para buscar os dados do cliente
   useEffect(() => {
     const fetchClientData = async () => {
       try {
-        // Alterando a URL para a correta
         const response = await axios.get(`http://localhost:3005/client/${userId}`);
-        setClientProfile(response.data); // Armazenando os dados no estado
-        setLoading(false); // Finaliza o carregamento
+        setClientProfile(response.data);
+        setLoading(false);
       } catch (error) {
         console.error('Erro ao buscar dados do cliente:', error);
-        setLoading(false); // Finaliza o carregamento mesmo em caso de erro
+        setLoading(false);
       }
     };
 
@@ -43,25 +55,24 @@ const ClientDashboard = () => {
         return <Search />;
       case 'favorites':
         return <Favorites />;
-      case  'reservations':
-          return <Reservations/>
+      case 'reservations':
+        return <Reservations />;
       default:
         return null;
     }
   };
 
   if (loading) {
-    return <div>Loading...</div>; // Exibe uma mensagem de carregamento até os dados estarem prontos
+    return <div>Loading...</div>;
   }
 
   return (
     <div className="min-h-screen bg-gray-100 p-8">
       <div className="max-w-6xl mx-auto">
         <div className="grid grid-cols-4 gap-6">
-          {/* Sidebar */}
           <div className="bg-white rounded-lg shadow-md p-6">
             <div className="text-center mb-6">
-            <ProfilePictureUploader
+              <ProfilePictureUploader
                 uploadEndpoint={`http://localhost:3005/user/uploadProfile/Picture/${clientProfile.user_id}`}
                 fetchImageEndpoint={`http://localhost:3005/user/${clientProfile.user_id}/profile-picture`}
                 onUploadSuccess={(newImageUrl) => {
@@ -90,18 +101,15 @@ const ClientDashboard = () => {
               >
                 <Star className="mr-3" /> Requeriments
               </button>
-
               <button 
                 onClick={() => setActiveSection('reservations')}
                 className={`w-full flex items-center p-3 rounded-lg ${activeSection === 'reservations' ? 'bg-indigo-100 text-indigo-700' : 'hover:bg-gray-100'}`}
               >
                 <Star className="mr-3" /> Reservations
               </button>
-              
             </nav>
           </div>
 
-          {/* Main Content */}
           <div className="col-span-3">
             <div className="bg-white rounded-lg p-6 shadow-md mb-6">
               <h1 className="text-3xl font-bold text-indigo-700">Welcome, {clientProfile.first_name}!</h1>

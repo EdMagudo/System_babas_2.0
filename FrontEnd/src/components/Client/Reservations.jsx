@@ -48,22 +48,22 @@ const Reservations = () => {
     }
   };
 
-  const handlePayment = async (reservation_id) => {
-    try {
-      alert(`Payment initiated for reservation ID: ${reservation_id}`);
-      const response = await axios.post(
-        `http://localhost:3005/reservations/payment/${reservation_id}`
-      );
-      if (response.status === 200) {
-        setMessage({ text: 'Payment successful!', type: 'success' });
-        fetchReservations();
-      } else {
-        setMessage({ text: 'Payment failed. Try again.', type: 'error' });
-      }
-    } catch (error) {
-      console.error('Error processing payment:', error);
-      setMessage({ text: 'Payment failed. Try again.', type: 'error' });
-    }
+  const handlePayment = (reservation_id) => {
+    // Create a hidden form and submit it programmatically
+    const form = document.createElement('form');
+    form.method = 'post';
+    form.action = 'http://localhost:3005/sam/pay';
+
+    // Add reservation_id as hidden input
+    const hiddenField = document.createElement('input');
+    hiddenField.type = 'hidden';
+    hiddenField.name = 'reservationId';
+    hiddenField.value = reservation_id;
+    form.appendChild(hiddenField);
+
+    document.body.appendChild(form);
+    form.submit();
+    document.body.removeChild(form);
   };
 
   useEffect(() => {
@@ -181,14 +181,30 @@ const Reservations = () => {
                       Cancel Reservation
                     </button>
                   )}
-                  {reservation.status === 'confirmed' && (
-                    <button
-                      onClick={() => handlePayment(reservation.reservation_id)}
-                      className="px-4 py-2 text-sm font-medium text-green-600 hover:text-green-700 hover:bg-green-50 rounded-md transition-colors duration-200"
-                    >
-                      Pay Now
-                    </button>
-                  )}
+             {reservation.status === 'confirmed' && (
+  <form 
+    action="http://localhost:3005/sam/pay" 
+    method="post"
+    style={{ display: 'inline' }}
+  >
+    <input 
+      type="hidden" 
+      name="reservationId" 
+      value={reservation.reservation_id} 
+    />
+    <input 
+      type="hidden" 
+      name="amount" 
+      value={reservation.value} 
+    />
+    <button
+      type="submit"
+      className="px-4 py-2 text-sm font-medium text-green-600 hover:text-green-700 hover:bg-green-50 rounded-md transition-colors duration-200"
+    >
+      Pay Now
+    </button>
+  </form>
+)}
                 </div>
               </div>
             </div>
@@ -207,7 +223,7 @@ const Reservations = () => {
             Page {currentPage} of {totalPages}
           </span>
           <button
-                       onClick={() => currentPage < totalPages && setCurrentPage(currentPage + 1)}
+            onClick={() => currentPage < totalPages && setCurrentPage(currentPage + 1)}
             className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
             disabled={currentPage === totalPages}
           >

@@ -2,12 +2,16 @@ import express from 'express';
 import nodemailer from 'nodemailer';
 import cors from 'cors';
 import axios from 'axios';
-import { initializeDatabase } from '../BackEnd/Models/index.js'; // Adjust the path as needed
+import { initializeDatabase } from './Models/index.js'; // Ajuste o caminho conforme necessário
 import path from 'path';
 import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+import fs from "fs";
+import paypal from './services/paypal.js';  // Módulo PayPal
+import dotenv from 'dotenv';
+dotenv.config();
 
 const app = express();
 
@@ -25,6 +29,7 @@ app.use(express.urlencoded({ extended: true }));
 
 
 //Rotas
+// Rotas
 import routerAdmin from './Routes/adminRoutes.js';
 import routerUser from './Routes/usersRouter.js';
 import routerNanny from './Routes/nannyProfilesRouter.js';
@@ -40,12 +45,13 @@ import ClientController from './Controllers/ClientController.js';
 import Admin from './Routes/adminRoutes.js';
 import File from './Routes/filesRouter.js';
 
+import Client from './Routes/clientRoutes.js';
 
 app.use('/admin', routerAdmin);
 app.use('/user', routerUser);
-app.use('/lang',UserLanguage);
-app.use('/nanny',routerNanny);
-app.use('/experienceAge',NannyChildAgeExperience);
+app.use('/lang', UserLanguage);
+app.use('/nanny', routerNanny);
+app.use('/experienceAge', NannyChildAgeExperience);
 app.use('/experienceWork', NannyChildWorkPreference);
 app.use('/requestServices',ServiceRequests);
 app.use('/reservations',Reservations);
@@ -56,7 +62,11 @@ app.use('/File', File);
 
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/requestServices', ServiceRequests);
+app.use('/reservations', Reservations);
+app.use('/client', Client);
 
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
   // Supondo que você esteja usando Express.js
 app.get('/count-users', async (req, res) => {
@@ -73,19 +83,11 @@ app.get('/count-users', async (req, res) => {
 app.get('/countries', async (req, res) => {
     try {
         const response = await axios.get('https://countriesnow.space/api/v0.1/countries/info?returns=name');
-
-        // Extract country names
         const countries = response.data.data.map(country => country.name);
-
         res.json(countries);
     } catch (error) {
         console.error('Detailed error:', error.message);
-        console.error('Error details:', error.response ? error.response.data : 'No response data');
-        
-        res.status(500).json({ 
-            error: 'Error fetching countries', 
-            details: error.message 
-        });
+        res.status(500).json({ error: 'Error fetching countries', details: error.message });
     }
 });
 
@@ -95,85 +97,44 @@ app.get('/provinces/:country', async (req, res) => {
         const response = await axios.post('https://countriesnow.space/api/v0.1/countries/states', {
             country: req.params.country
         });
-
-        // Extract province/state names
         const provinces = response.data.data.states.map(state => state.name);
-
         res.json(provinces);
     } catch (error) {
         console.error('Detailed error:', error.message);
-        console.error('Error details:', error.response ? error.response.data : 'No response data');
-        
-        res.status(500).json({ 
-            error: 'Error fetching provinces', 
-            details: error.message 
-        });
+        res.status(500).json({ error: 'Error fetching provinces', details: error.message });
     }
 });
 
-// app.get('/languages', async (req, res) => {
-//     try {
-//         const response = await axios.get('https://restcountries.com/v3.1/all');
-
-//         // Extrair idiomas de todos os países
-//         const languages = new Set();
-//         response.data.forEach(country => {
-//             if (country.languages) {
-//                 Object.values(country.languages).forEach(lang => languages.add(lang));
-//             }
-//         });
-
-//         res.json([...languages]); // Retornar os idiomas como uma lista única
-//     } catch (error) {
-//         console.error('Erro ao buscar idiomas:', error.message);
-//         res.status(500).json({ error: 'Erro ao buscar idiomas', details: error.message });
-//     }
-// });
-
+// Static list of languages
 app.get('/languages', (req, res) => {
-    // Array estático de idiomas
     const languages = [
-        "Afrikaans", "Albanian", "Arabic", "Armenian", "Basque", "Bengali",
-        "Bosnian", "Bulgarian", "Catalan", "Chinese", "Croatian", "Czech",
-        "Danish", "Dutch", "English", "Estonian", "Finnish", "French",
-        "Georgian", "German", "Greek", "Gujarati", "Haitian Creole", "Hebrew",
-        "Hindi", "Hungarian", "Icelandic", "Indonesian", "Italian", "Japanese",
-        "Kazakh", "Khmer", "Korean", "Kurdish", "Latvian", "Lithuanian",
-        "Macedonian", "Malay", "Maltese", "Norwegian", "Persian", "Polish",
-        "Portuguese", "Romanian", "Russian", "Serbian", "Sinhala", "Slovak",
-        "Slovenian", "Spanish", "Swahili", "Swedish", "Tamil", "Telugu", "Thai",
-        "Turkish", "Ukrainian", "Urdu", "Vietnamese", "Welsh", "Xhosa", "Yiddish",
-        "Zulu"
+        "Afrikaans", "Albanian", "Arabic", "Armenian", "Basque", "Bengali", "Bosnian", "Bulgarian", "Catalan", "Chinese", "Croatian", "Czech", "Danish", "Dutch", "English", "Estonian", "Finnish", "French",
+        "Georgian", "German", "Greek", "Gujarati", "Haitian Creole", "Hebrew", "Hindi", "Hungarian", "Icelandic", "Indonesian", "Italian", "Japanese", "Kazakh", "Khmer", "Korean", "Kurdish", "Latvian", "Lithuanian",
+        "Macedonian", "Malay", "Maltese", "Norwegian", "Persian", "Polish", "Portuguese", "Romanian", "Russian", "Serbian", "Sinhala", "Slovak", "Slovenian", "Spanish", "Swahili", "Swedish", "Tamil", "Telugu", "Thai", 
+        "Turkish", "Ukrainian", "Urdu", "Vietnamese", "Welsh", "Xhosa", "Yiddish", "Zulu"
     ];
-
-    // Retornar o array de idiomas como resposta
-    res.json({
-        languages: languages
-    });
+    res.json({ languages });
 });
 
+// Send email
 app.post('/send-email', async (req, res) => {
     const { name, email, subject, message } = req.body;
-
-    // Criação do transporte Nodemailer
     const transporter = nodemailer.createTransport({
-        service: 'gmail', // Ou qualquer outro serviço de e-mail
+        service: 'gmail',
         auth: {
-            user: 'ediltonmagudo@gmail.com',  // Seu e-mail
-            pass: 'unom owtx nfvr faqj'     // Senha de aplicativo (não a senha do Gmail)
+            user: 'ediltonmagudo@gmail.com',
+            pass: 'unom owtx nfvr faqj'  // Use a senha de aplicativo para segurança
         }
     });
 
-    // Configuração do e-mail
     const mailOptions = {
-        from: email, // E-mail do remetente
-        to: 'ediltonmagudo@gmail.com', // E-mail do destinatário
+        from: email,
+        to: 'ediltonmagudo@gmail.com',
         subject: subject,
-        text: `Mensagem de ${name} (${email}):\n\n${message}` // Corpo do e-mail
+        text: `Mensagem de ${name} (${email}):\n\n${message}`
     };
 
     try {
-        // Enviar o e-mail
         await transporter.sendMail(mailOptions);
         res.status(200).json({ message: 'E-mail enviado com sucesso!' });
     } catch (error) {
@@ -182,16 +143,139 @@ app.post('/send-email', async (req, res) => {
     }
 });
 
-
 // Test route
 app.get('/', (req, res) => {
     res.json('Countries API');
 });
+app.set('view engine', 'ejs');
+app.get('/sam', (req, res) => {
+    res.render('index');
+});
+// PayPal Payment Route
+// app.post('/sam/pay', async (req, res) => {
+//     try {
+//         const url = await paypal.createOrder();
+//         if (!url) {
+//             return res.status(500).send('Failed to create PayPal order');
+//         }
+//         res.redirect(url);
+//     } catch (error) {
+//         console.error('Error in /pay route:', error);
+//         res.status(500).send('Error: ' + error.message);
+//     }
+// });
+  
 
+// // Complete PayPal Order Route
+
+// app.get('/complete-order', async (req, res) => {
+//     try {
+//         await paypal.capturePayment(req.query.token)
+
+//         res.send('Course purchased successfully')
+//     } catch (error) {
+//         res.send('Error: ' + error)
+//     }
+// })
+
+// app.get('/cancel-order', (req, res) => {
+//     res.redirect('/')
+// })
+
+import ReservationController from './Controllers/ReservationsController.js';
+
+let id_reserva ='';
+app.post('/sam/pay', async (req, res) => {
+    try {
+        const { reservationId, amount } = req.body;
+       console.log(req.body);
+       id_reserva = reservationId;
+       console.log(req.body);
+        if (!reservationId || !amount) {
+            return res.status(400).send('Missing required payment information');
+        }
+
+        // Create PayPal order with reservationId stored in custom_id
+        const url = await paypal.createOrder(amount, reservationId);
+        
+        if (!url) {
+            return res.status(500).send('Failed to create PayPal order');
+        }
+        
+        res.redirect(url);
+    } catch (error) {
+        console.error('Error in /pay route:', error);
+        res.status(500).send('Error: ' + error.message);
+    }
+});
+
+// Complete PayPal Order Route
+app.get('/complete-order', async (req, res) => {
+    try {
+        const result = await paypal.capturePayment(req.query.token);
+        
+        // Get the reservationId from custom_id in PayPal response
+        const reservationId = id_reserva;
+        
+        if (!reservationId) {
+            throw new Error('Reservation ID not found in PayPal response');
+        }
+
+        // Create request object with the correct parameter name
+        const mockReq = {
+            params: {
+                id_reservation: reservationId
+            }
+        };
+
+        // Create a promise-based wrapper for the controller method
+        const updatePromise = new Promise((resolve, reject) => {
+            const mockRes = {
+                status: (code) => ({
+                    json: (data) => {
+                        if (code === 200) {
+                            resolve(data);
+                        } else {
+                            reject(new Error(data.message || 'Payment processing failed'));
+                        }
+                    }
+                })
+            };
+            
+            // Call the controller method
+            ReservationController.payReservation(mockReq, mockRes);
+        });
+
+        // Wait for the update to complete
+        await updatePromise;
+        
+        // Redirect to success page
+        res.redirect(`/payment-success?reservationId=${reservationId}`);
+        
+    } catch (error) {
+        console.error('Error completing payment:', error);
+        res.redirect('/payment-error');
+    }
+});
+
+app.get('/cancel-order', (req, res) => {
+    res.redirect('/reservations');
+});
+
+app.get('/payment-success', (req, res) => {
+    const reservationId = req.query.reservationId;
+
+    // Redirecionar para o frontend com o ID da reserva como query parameter, se necessário
+    res.redirect(`http://localhost:5173/client-dashboard?reservationId=${reservationId}`);
+});
+
+
+app.get('/payment-error', (req, res) => {
+    res.send('Payment failed. Please try again.');
+});
 // Initialize database before starting the server
 const startServer = async () => {
     try {
-        // Initialize the database
         await initializeDatabase();
         AdminController.initializeAdmin();
 
@@ -204,5 +288,5 @@ const startServer = async () => {
     }
 };
 
-// Call the function to start the server
+// Start the server
 startServer();

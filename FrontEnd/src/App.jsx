@@ -15,6 +15,7 @@ import Admin from './Pages/AdminDashboard'
 import AdminLogin from './components/Admin/Loginadmin';
 import Error404 from './components/Error404';
 
+import PayPalComponent from './Pages/payPalComponent';
 function App() {
   return (
     <Router>
@@ -34,6 +35,8 @@ function App() {
             <Route path='/admin' element={<Admin/>}/>
             <Route path='/loginAdmin' element={<AdminLogin/>}/>
             <Route path="*" element={<Error404/>} />
+            <Route path="/pay" element={<PayPalComponent />} />
+            <Route path="*" element={<h1>404 - Page Not Found</h1>} />
           </Routes>
         </main>
         <Footer />
