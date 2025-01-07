@@ -84,7 +84,7 @@ const getAllUsers = async (req, res) => {
 };
 
 const getUserById = async (req, res) => {
-  console.log("Request params:", req.params);
+  //console.log("Request params:", req.params);
 
   try {
     const userId = req.params.user_id;
@@ -94,7 +94,7 @@ const getUserById = async (req, res) => {
       return res.status(400).json({ error: "Missing user_id parameter" });
     }
 
-    console.log("Fetching user with ID:", userId);
+   // console.log("Fetching user with ID:", userId);
 
     // Primeiro, buscar o usuário
     const user = await User.findByPk(userId);
@@ -141,10 +141,10 @@ const getUserById = async (req, res) => {
       languages: languages.map((lang) => lang.language),
     };
 
-    console.log(
-      "User fetched successfully:",
-      JSON.stringify(userResponse, null, 2)
-    );
+    // console.log(
+    //   "User fetched successfully:",
+    //   JSON.stringify(userResponse, null, 2)
+    // );
     return res.status(200).json(userResponse);
   } catch (error) {
     console.error("Error fetching user and nanny profile:", error);
@@ -395,17 +395,23 @@ const loginUser = async (req, res) => {
 };
 const updatedProfile = async (req, res) => {
   try {
+    // Verifica se um arquivo foi enviado
     if (req.file) {
+      // Dados do arquivo a serem salvos
       const fileData = {
-        user_id: req.params.id_user,
+        user_id: req.params.id_user,  // Usando o id do usuário
         file_name: req.file.originalname,
         file_path: req.file.path,
         file_type: req.file.mimetype,
       };
 
+      // Criação do arquivo na base de dados
       await Files.create(fileData);
+    } else {
+      console.log("Nenhum arquivo enviado.");
     }
 
+    // Atualizar o perfil com os dados fornecidos, se existirem
     const updatedProfileData = {};
 
     // Atualiza apenas os campos que não estão vazios
@@ -422,14 +428,18 @@ const updatedProfile = async (req, res) => {
       updatedProfileData.additional_info = req.body.additionalInfo;
     }
 
-    const updated = await NannyProfiles.update(updatedProfileData, {
-      where: { nanny_id: req.params.id_user },
-    });
+    // Atualiza o perfil se houver dados
+    if (Object.keys(updatedProfileData).length > 0) {
+      const updated = await NannyProfiles.update(updatedProfileData, {
+        where: { nanny_id: req.params.id_user },
+      });
 
-    if (updated[0] === 0) {
-      return res.status(404).json({ message: "Perfil não encontrado" });
+      if (updated[0] === 0) {
+        return res.status(404).json({ message: "Perfil não encontrado" });
+      }
     }
 
+    // Atualiza as línguas, caso haja
     if (req.body.languages) {
       const languages = JSON.parse(req.body.languages);
       for (const language of languages) {
@@ -440,17 +450,18 @@ const updatedProfile = async (req, res) => {
       }
     }
 
+    // Atualiza as preferências de trabalho, caso haja
     if (req.body.work_preference) {
       const workPreferences = JSON.parse(req.body.work_preference);
       for (const workPreference of workPreferences) {
         await NannyChildWorkPreference.create({
           nanny_id: req.params.id_user,
           work_preference: workPreference,
-          id_nanny: req.params.id_user,
         });
       }
     }
 
+    // Atualiza as preferências de idade, caso haja
     if (req.body.preference_age) {
       const agePreferences = JSON.parse(req.body.preference_age);
       for (const age of agePreferences) {
@@ -461,14 +472,16 @@ const updatedProfile = async (req, res) => {
       }
     }
 
-    res
-      .status(200)
-      .json({ message: "Perfil e dados relacionados atualizados com sucesso" });
+    return res.status(200).json({
+      message: "Arquivo e dados do perfil (se presentes) salvos com sucesso!",
+    });
   } catch (error) {
-    console.error("Erro ao atualizar perfil:", error);
-    res.status(500).json({ error: error.message });
+    console.error("Erro ao criar o arquivo e salvar dados:", error);
+    return res.status(500).json({ error: error.message });
   }
 };
+
+
 
 const changePassword = async (req, res) => {
   try {

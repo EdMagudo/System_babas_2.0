@@ -69,26 +69,15 @@ const NannyDashboard = () => {
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      const formData = new FormData();
-      formData.append("profilePicture", e.target.files[0]);
-
-      const userId = localStorage.getItem("idUser");
-
-      try {
-        const response = await axios.post(
-          `/uploadProfile/Picture/${userId}`,
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
-      } catch (error) {
-        console.error("Erro ao enviar a foto de perfil", error);
-      }
+      const file = e.target.files[0];
+  
+      setFormData((prev) => ({
+        ...prev,
+        policeClearanceFile: file, // Armazena o arquivo de polícia no estado
+      }));
     }
   };
+  
 
   const handleUploadSuccess = (newImageUrl: string) => {
     console.log("Nova URL da imagem:", newImageUrl);
@@ -97,63 +86,42 @@ const NannyDashboard = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     const submitFormData = new FormData();
     const id_user = localStorage.getItem("idUser");
-
-    // Adiciona o ID do usuário
+  
     submitFormData.append("id", id_user);
-
-    // Adiciona os campos do formulário
     submitFormData.append("jobType", formData.jobType);
     submitFormData.append("experience", formData.experience);
     submitFormData.append("policeClearance", formData.policeClearance);
-
-    // Adiciona o arquivo se existir
+  
+    // Envia o arquivo de polícia se houver
     if (formData.policeClearanceFile) {
-      submitFormData.append(
-        "policeClearanceFile",
-        formData.policeClearanceFile
-      );
+      submitFormData.append("policeClearanceFile", formData.policeClearanceFile);
     }
-
-    // Converte os arrays em strings JSON
-    submitFormData.append(
-      "work_preference",
-      JSON.stringify(formData.work_preference)
-    );
-    submitFormData.append(
-      "preference_age",
-      JSON.stringify(formData.preference_age)
-    );
+  
+    submitFormData.append("work_preference", JSON.stringify(formData.work_preference));
+    submitFormData.append("preference_age", JSON.stringify(formData.preference_age));
     submitFormData.append("languages", JSON.stringify(formData.languages));
     submitFormData.append("additionalInfo", formData.additionalInfo);
-
+  
     try {
-      console.log("Conteúdo do FormData:");
-      submitFormData.forEach((value, key) => {
-        console.log(`${key}:`, value);
-      });
       const response = await axios.put(
         `http://localhost:3005/user/updatenannyProfiles/${id_user}`,
         submitFormData,
         {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
+          headers: { "Content-Type": "multipart/form-data" },
         }
       );
-
-      console.log(
-        "Perfil atualizado com sucesso:",
-        JSON.stringify(response.data, null, 2)
-      );
+  
+      console.log("Perfil atualizado com sucesso:", response.data);
       alert("Perfil atualizado com sucesso!");
     } catch (error) {
       console.error("Erro ao atualizar perfil:", error);
       alert("Falha ao atualizar perfil. Tente novamente.");
     }
   };
+  
 
   const formatEducationLevel = (level: string) => {
     return level

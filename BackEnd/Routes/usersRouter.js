@@ -24,8 +24,6 @@ router.put('/uploadProfile/Picture/:user_id', up.single('profilePicture'), users
 router.get("/:user_id/profile-picture", usersController.getUserProfilePicture);
 
 // Rota de atualização de perfil (usando `multer` básico para processar `multipart/form-data`)
-const basicUpload = multer(); // Configuração básica do multer
-// Configuração para aceitar o upload de um único arquivo (por exemplo, policeClearanceFile)
 router.put("/updatenannyProfiles/:id_user", upload.single('policeClearanceFile'), usersController.updatedProfile);
 
 router.post("/getAllNannyWith/Requirement", usersController.getAllNannyWithRequirement)
