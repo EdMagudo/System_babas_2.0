@@ -55,7 +55,7 @@ app.use('/Admin', Admin);
 app.use('/File', File);
 
 
-  app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 
   // Supondo que você esteja usando Express.js
