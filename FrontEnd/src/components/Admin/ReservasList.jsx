@@ -52,7 +52,9 @@ const ReservationList = () => {
   useEffect(() => {
     let filtered = reservations.filter((reservation) => {
       if (activeTab === "confirmed") {
-        return reservation.status === "confirmed" || reservation.status === "booked";
+        return (
+          reservation.status === "confirmed" || reservation.status === "booked"
+        );
       }
       if (activeTab === "completed") {
         return reservation.status === "completed";
@@ -218,13 +220,24 @@ const ReservationList = () => {
                         <FileText className="w-4 h-4 text-blue-500 mt-1" />
                         <span className="flex-1">
                           <span className="font-medium">Nanny's e-mail:</span>{" "}
-                          {emailNannyNames[reservation.nanny_id] || "Loading..."}
+                          {emailNannyNames[reservation.nanny_id] ||
+                            "Loading..."}
                         </span>
                       </p>
-                    </div>
-                    <div>
+
                       <p className="text-sm text-gray-600 flex items-start gap-2 mt-2">
                         <FileText className="w-4 h-4 text-blue-500 mt-1" />
+                        <span className="flex-1">
+                          <span className="font-medium">Client's e-mail:</span>{" "}
+                          {reservation.serviceRequest.client.email}
+                        </span>
+                      </p>
+
+                    </div>
+
+                    <div>
+                      <p className="text-sm text-gray-600 flex items-start gap-2 mt-2">
+                        <FileText className="w-4 h-4 text-blue-600 mt-1" />
                         <span className="flex-1">
                           <span className="font-medium">Status:</span>{" "}
                           {reservation.status}
@@ -233,6 +246,13 @@ const ReservationList = () => {
                     </div>
                   </div>
                 </div>
+
+                <div className="text-right">
+                  <p className="text-3xl font-bold text-blue-600">
+                    ${reservation.value}
+                  </p>
+                </div>
+
                 <div>
                   <button
                     onClick={() => handlePayment(reservation.reservation_id)}
