@@ -23,13 +23,20 @@ const ClientDashboard = () => {
   
   // Verificar `reservationId` nos parâmetros da URL
   useEffect(() => {
-    const reservationId = searchParams.get('reservationId');
-    if (reservationId) {
-      alert(`Pagamento efetuado com sucesso para a reserva ID: ${reservationId}`);
-      // Opcional: remover o parâmetro da URL após exibir o alerta
-      window.history.replaceState({}, document.title, '/client-dashboard');
-    }
+    const handlePaymentSuccess = async () => {
+      const reservationId = searchParams.get('reservationId');
+      if (reservationId) {
+        alert(`Payment successfully completed for reservation ID: ${reservationId}`);
+  
+        // Remove the parameter from the URL after payment
+        window.history.replaceState({}, document.title, '/client-dashboard');
+      }
+    };
+  
+    handlePaymentSuccess();
   }, [searchParams]);
+
+  
 
   // Função para buscar os dados do cliente
   useEffect(() => {

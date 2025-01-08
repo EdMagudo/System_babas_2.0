@@ -18,6 +18,10 @@ router.put("/payReservation/reservation/:id_reservation", reservationsController
 
 router.get("/getAll/reservations",reservationsController.countConfirmedAndBookedReservations)
 
+router.get("/countReservations/:nanny_id",reservationsController.countCompletedForNanny);
+
+router.get("/countReservationsC/:client_id",reservationsController.countBookedForClient);
+
 
 
 export default router;

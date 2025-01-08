@@ -6,36 +6,6 @@ const Users = db.Users;
 import { Op } from 'sequelize';
 import moment from 'moment'; 
 
-// Criar um novo pagamento
-const createPayment = async (req, res) => {
-  try {
-    // Buscar a reserva pelo ID
-    const reservation = await Reservations.findOne({
-      where: { reservation_id: req.params.reservationId },
-    });
-
-    if (!reservation) {
-      return res.status(404).json({ message: "Reservation not found" });
-    }
-
-    // Criar o pagamento associado à reserva
-    const payment = await Payments.create({
-      reservation_id: req.params.reservationId,
-      client_id: reservation.user_id,
-      amount: req.body.amount,
-      payment_method: 'Paypal',
-      payment_date: moment().format('YYYY-MM-DD HH:mm:ss'),
-      payment_status: 'Completed',
-    });
-
-    // Retornar o pagamento criado
-    res.status(201).json(payment);
-  } catch (error) {
-    // Capturar erros e retornar mensagem apropriada
-    res.status(500).json({ error: error.message });
-  }
-};
-
 
 // Obter todos os pagamentos
 const getAllPayments = async (req, res) => {
@@ -167,8 +137,7 @@ const getTotalCompletedPayments = async (req, res) => {
 
 
 export default {
-  createPayment,
-  getAllPayments,
+   getAllPayments,
   getPaymentById,
   updatePayment,
   deletePayment,

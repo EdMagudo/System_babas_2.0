@@ -9,7 +9,9 @@ const Overview = ({ clientProfile, idUser }) => {
   } = clientProfile;
 
   const [email, setEmail] = useState("");
+  
   const [currentPassword, setCurrentPassword] = useState("");
+  const [completedJobs, setCompletedJobs] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [feedbackMessage, setFeedbackMessage] = useState(""); // Novo estado para feedback
   const [feedbackType, setFeedbackType] = useState(""); // Novo estado para definir o tipo de feedback (sucesso ou erro)
@@ -18,6 +20,8 @@ const Overview = ({ clientProfile, idUser }) => {
     new: false,
     confirm: false,
   });
+
+  
 
   // Carregar o email ao montar o componente
   useEffect(() => {
@@ -32,9 +36,21 @@ const Overview = ({ clientProfile, idUser }) => {
         setFeedbackType("error"); // Definir tipo de feedback como erro
       }
     };
-    
+
+    fetchCompletedJobs()
     fetchUserProfile();
   }, [idUser]);
+
+  const fetchCompletedJobs = async () => {
+    const idUser = localStorage.getItem("idUser");
+    try {
+      const response = await axios.get(`http://localhost:3005/reservations/countReservationsC/${idUser}`);
+      setCompletedJobs(response.data);
+    } catch (error) {
+      console.error("Error fetching completed jobs:", error);
+    }
+  };
+
 
   const togglePasswordVisibility = (field) => {
     setShowPassword((prevState) => ({
@@ -80,8 +96,8 @@ const Overview = ({ clientProfile, idUser }) => {
         </h3>
         <div className="space-y-4">
           <p>
-            Total Nanny Searches:{" "}
-            <span className="font-bold text-gray-800">{totalNannySearches}</span>
+          Total of paid reservations:{" "}
+            <span className="font-bold text-gray-800">{completedJobs.count}</span>
           </p>
         </div>
       </div>

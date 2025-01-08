@@ -3,7 +3,6 @@ import PaymentsController from "../Controllers/PaymentsController.js";
 
 const router = express.Router();
 
-router.post("/", PaymentsController.createPayment);
 router.get("/", PaymentsController.getAllPaymentsWithDetails);
  router.get("/payments/total-completed-month", PaymentsController.getTotalCompletedPayments);
 // router.put("/:id", PaymentsController.update);

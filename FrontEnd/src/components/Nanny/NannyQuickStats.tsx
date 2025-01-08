@@ -10,8 +10,6 @@ type NannyQuickStatsProps = {
 };
 
 const NannyQuickStats: React.FC<NannyQuickStatsProps> = ({
-  completedJobs = 0,
-  rating = 0,
   professionalSummary = "No professional summary provided.",
 }) => {
   const [currentPassword, setCurrentPassword] = useState("");
@@ -22,6 +20,7 @@ const NannyQuickStats: React.FC<NannyQuickStatsProps> = ({
   const [nannyProfile, setNannyProfile] = useState<any>(null);
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [completedJobs, setCompletedJobs] = useState("");
 
   // Função para alterar a senha
   const handleSubmit = async (e: React.FormEvent) => {
@@ -70,7 +69,7 @@ const NannyQuickStats: React.FC<NannyQuickStatsProps> = ({
   // Função para buscar o perfil do usuário
   useEffect(() => {
     fetchNannyProfile();
-     // Chama a função ao montar o componente
+    // Chama a função ao montar o componente
   }, []);
 
   const fetchNannyProfile = async () => {
@@ -83,12 +82,19 @@ const NannyQuickStats: React.FC<NannyQuickStatsProps> = ({
     try {
       const response = await axios.get(`http://localhost:3005/user/${idUser}`);
       setNannyProfile(response.data);
-      console.log(nannyProfile);
+    } catch (error) {
+      console.error("Erro ao buscar o perfil:", error);
+    }
+
+    try {
+      const response = await axios.get(
+        `http://localhost:3005/reservations/countReservations/${idUser}`
+      );
+      setCompletedJobs(response.data);
     } catch (error) {
       console.error("Erro ao buscar o perfil:", error);
     }
   };
-
 
   if (!nannyProfile) {
     return <div>Perfil não encontrado.</div>;
@@ -106,13 +112,8 @@ const NannyQuickStats: React.FC<NannyQuickStatsProps> = ({
           <div className="space-y-3">
             <div className="flex justify-between items-center">
               <span className="text-gray-600">Completed Jobs</span>
-              <span className="font-bold text-gray-800">{completedJobs}</span>
-            </div>
-
-            <div className="flex justify-between items-center">
-              <span className="text-gray-600">Rating</span>
-              <span className="font-bold text-blue-600">
-                {rating.toFixed(1)}/5
+              <span className="font-bold text-gray-800">
+                {completedJobs.count || 0}
               </span>
             </div>
 
@@ -125,7 +126,7 @@ const NannyQuickStats: React.FC<NannyQuickStatsProps> = ({
                     <span className="font-bold text-yellow-600">Pending</span>
                   </>
                 )}
-                {nannyProfile.background_check_status.background_check_status === "approved" && (
+                {nannyProfile.background_check_status === "approved" && (
                   <>
                     <CheckCircle className="w-5 h-5 text-green-500 mr-2" />
                     <span className="font-bold text-green-600">Approved</span>
