@@ -249,7 +249,7 @@ const ReservationList = () => {
 
                 <div className="text-right">
                   <p className="text-3xl font-bold text-blue-600">
-                    ${reservation.value}
+                    ${reservation.value*0.95}
                   </p>
                 </div>
 
