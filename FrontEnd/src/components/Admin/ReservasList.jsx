@@ -41,7 +41,7 @@ const ReservationList = () => {
 
   useEffect(() => {
     let filtered = reservations.filter(
-      (reservation) => reservation.status === activeTab
+      (reservation) => reservation.status === activeTab || reservation.status == 'booked' 
     );
     if (startDate) {
       filtered = filtered.filter(
@@ -193,6 +193,17 @@ const ReservationList = () => {
                           {reservation.serviceRequest.notes}
                         </span>
                       </p>
+
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-600 flex items-start gap-2">
+                        <FileText className="w-4 h-4 text-blue-500 mt-1" />
+                        <span className="flex-1">
+                          <span className="font-medium">Status:</span>{" "}
+                          {reservation.status}
+                        </span>
+                      </p>
+                      
                     </div>
                   </div>
                 </div>
