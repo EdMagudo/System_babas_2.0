@@ -194,6 +194,26 @@ const cancelReservation = async (req, res) => {
   }
 };
 
+const PayReservationtoClient = async (req, res) => {
+  
+  try {
+    // Encontre a reserva pelo ID e atualize o status para 'cancelled'
+    const updatedRows = await Reservations.update(
+      { status: "completed" },
+      { where: { reservation_id: req.params.id_reservation } }
+    );
+
+    if (updatedRows[0] === 0) {
+      return res.status(404).json({ message: "Reservation not found" });
+    }
+
+    res.status(200).json({ message: "Reservation completed successfully" });
+  } catch (error) {
+    console.error("Error canceling reservation:", error);
+    res.status(500).json({ message: "Error canceling reservation" });
+  }
+};
+
 const countConfirmedAndBookedReservations = async (req, res) => {
   try {
     console.log("Counting confirmed and booked reservations");
@@ -325,5 +345,6 @@ export default {
   countConfirmedAndBookedReservations,
   payReservation,
   countCompletedForNanny,
-  countBookedForClient
+  countBookedForClient,
+  PayReservationtoClient
 };

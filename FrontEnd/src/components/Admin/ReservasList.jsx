@@ -57,7 +57,7 @@ const ReservationList = () => {
         );
       }
       if (activeTab === "completed") {
-        return reservation.status === "completed";
+        return reservation.status === "completed"; // Exibir apenas reservas pagas
       }
       return false;
     });
@@ -84,8 +84,30 @@ const ReservationList = () => {
     currentPage * itemsPerPage
   );
 
-  const handlePayment = (reservationId) => {
-    alert(`Payment processed for reservation ${reservationId}`);
+  const handlePayment = async (reservation_id) => {
+    const confirm = window.confirm(
+      "Are you sure you want to confirm this reservation?"
+    );
+    if (!confirm) return;
+
+    try {
+      const response = await fetch(
+        `http://localhost:3005/reservations/payClient/reservation/${reservation_id}`,
+        { method: "PUT" } // Use "PUT" em maiúsculas
+      );
+
+      if (response.ok) {
+        setReservations(
+          reservations.filter((res) => res.reservation_id !== reservation_id)
+        );
+        alert("Reservation confirmed successfully!");
+      } else {
+        alert("Error confirming the reservation.");
+      }
+    } catch (error) {
+      console.error("Error confirming the reservation:", error);
+      alert("An unexpected error occurred.");
+    }
   };
 
   const clearFilters = () => {
@@ -232,7 +254,6 @@ const ReservationList = () => {
                           {reservation.serviceRequest.client.email}
                         </span>
                       </p>
-
                     </div>
 
                     <div>
@@ -249,17 +270,19 @@ const ReservationList = () => {
 
                 <div className="text-right">
                   <p className="text-3xl font-bold text-blue-600">
-                    ${reservation.value*0.95}
+                    ${reservation.value * 0.95}
                   </p>
                 </div>
 
                 <div>
-                  <button
-                    onClick={() => handlePayment(reservation.reservation_id)}
-                    className="w-full px-4 py-3 rounded-lg text-sm font-medium bg-blue-500 text-white hover:bg-blue-600 transition-all duration-200"
-                  >
-                    Process Payment
-                  </button>
+                  {activeTab !== "completed" && (
+                    <button
+                      onClick={() => handlePayment(reservation.reservation_id)}
+                      className="w-full px-4 py-3 rounded-lg text-sm font-medium bg-blue-500 text-white hover:bg-blue-600 transition-all duration-200"
+                    >
+                      Process Payment
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
