@@ -1,10 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { Calendar, Clock, CreditCard, FileText, RefreshCw, User } from "lucide-react";
+import {
+  Calendar,
+  Clock,
+  CreditCard,
+  FileText,
+  RefreshCw,
+  User,
+} from "lucide-react";
 
 const ReservationList = () => {
   const [reservations, setReservations] = useState([]);
   const [filteredReservations, setFilteredReservations] = useState([]);
   const [nannyNames, setNannyNames] = useState({});
+  const [emailNannyNames, setEmailNannyNames] = useState({});
   const [activeTab, setActiveTab] = useState("confirmed");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
@@ -23,6 +31,7 @@ const ReservationList = () => {
 
   const fetchNannyNames = async (reservations) => {
     const names = {};
+    const emails = {}; // For storing nanny emails
     for (const reservation of reservations) {
       const nannyId = reservation.nanny_id;
       if (!names[nannyId]) {
@@ -30,22 +39,31 @@ const ReservationList = () => {
           const response = await fetch(`http://localhost:3005/user/${nannyId}`);
           const data = await response.json();
           names[nannyId] = `${data.first_name} ${data.last_name}`;
-
+          emails[nannyId] = data.email;
         } catch (error) {
           console.error(`Error fetching nanny name for ID ${nannyId}:`, error);
         }
       }
     }
     setNannyNames(names);
+    setEmailNannyNames(emails);
   };
 
   useEffect(() => {
-    let filtered = reservations.filter(
-      (reservation) => reservation.status === activeTab || reservation.status == 'booked' 
-    );
+    let filtered = reservations.filter((reservation) => {
+      if (activeTab === "confirmed") {
+        return reservation.status === "confirmed" || reservation.status === "booked";
+      }
+      if (activeTab === "completed") {
+        return reservation.status === "completed";
+      }
+      return false;
+    });
+
     if (startDate) {
       filtered = filtered.filter(
-        (reservation) => new Date(reservation.booking_date) >= new Date(startDate)
+        (reservation) =>
+          new Date(reservation.booking_date) >= new Date(startDate)
       );
     }
     if (endDate) {
@@ -53,6 +71,7 @@ const ReservationList = () => {
         (reservation) => new Date(reservation.booking_date) <= new Date(endDate)
       );
     }
+
     setFilteredReservations(filtered);
     setCurrentPage(1);
   }, [reservations, activeTab, startDate, endDate]);
@@ -164,7 +183,7 @@ const ReservationList = () => {
                     </div>
                     <div>
                       <h3 className="text-xl font-bold text-gray-900">
-                        {nannyNames[reservation.reservation_id] || "Loading..."}
+                        {nannyNames[reservation.nanny_id] || "Loading..."}
                       </h3>
                       <p className="text-sm text-gray-500">
                         Client: {reservation.serviceRequest.client.first_name}{" "}
@@ -177,7 +196,9 @@ const ReservationList = () => {
                       <p className="text-sm text-gray-600 flex items-center gap-2">
                         <Calendar className="w-4 h-4 text-blue-500" />
                         <span className="font-medium">Start:</span>{" "}
-                        {new Date(reservation.booking_date).toLocaleDateString()}
+                        {new Date(
+                          reservation.booking_date
+                        ).toLocaleDateString()}
                       </p>
                       <p className="text-sm text-gray-600 flex items-center gap-2">
                         <Clock className="w-4 h-4 text-blue-500" />
@@ -193,40 +214,32 @@ const ReservationList = () => {
                           {reservation.serviceRequest.notes}
                         </span>
                       </p>
-
+                      <p className="text-sm text-gray-600 flex items-start gap-2 mt-2">
+                        <FileText className="w-4 h-4 text-blue-500 mt-1" />
+                        <span className="flex-1">
+                          <span className="font-medium">Nanny's e-mail:</span>{" "}
+                          {emailNannyNames[reservation.nanny_id] || "Loading..."}
+                        </span>
+                      </p>
                     </div>
                     <div>
-                      <p className="text-sm text-gray-600 flex items-start gap-2">
+                      <p className="text-sm text-gray-600 flex items-start gap-2 mt-2">
                         <FileText className="w-4 h-4 text-blue-500 mt-1" />
                         <span className="flex-1">
                           <span className="font-medium">Status:</span>{" "}
                           {reservation.status}
                         </span>
                       </p>
-                      
                     </div>
                   </div>
                 </div>
-                <div className="flex flex-col items-end justify-between gap-4 min-w-[200px]">
-                  <div className="text-right">
-                    <p className="text-3xl font-bold text-blue-600">
-                      ${reservation.value}
-                    </p>
-                  </div>
-                  {activeTab === "confirmed" ? (
-                    <button
-                      onClick={() => handlePayment(reservation.reservation_id)}
-                      className="w-full px-6 py-3 rounded-xl text-sm font-medium text-white bg-blue-500 hover:bg-blue-600 transition-colors duration-200 flex items-center justify-center gap-2 shadow-md"
-                    >
-                      <CreditCard className="w-4 h-4" />
-                      Process Payment
-                    </button>
-                  ) : (
-                    <span className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl text-sm font-medium text-green-700 bg-green-50 w-full">
-                      <CreditCard className="w-4 h-4" />
-                      Paid
-                    </span>
-                  )}
+                <div>
+                  <button
+                    onClick={() => handlePayment(reservation.reservation_id)}
+                    className="w-full px-4 py-3 rounded-lg text-sm font-medium bg-blue-500 text-white hover:bg-blue-600 transition-all duration-200"
+                  >
+                    Process Payment
+                  </button>
                 </div>
               </div>
             </div>
@@ -235,21 +248,23 @@ const ReservationList = () => {
       </div>
 
       {/* Pagination */}
-      <div className="flex justify-between items-center pt-8">
+      <div className="flex items-center justify-between mt-8">
         <button
-          onClick={() => currentPage > 1 && setCurrentPage(currentPage - 1)}
-          className="flex items-center gap-2 px-6 py-3 text-sm font-medium text-gray-700 bg-white rounded-xl hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-md"
           disabled={currentPage === 1}
+          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+          className="px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           Previous
         </button>
-        <span className="text-sm font-medium text-gray-600">
+        <p className="text-sm text-gray-600">
           Page {currentPage} of {totalPages}
-        </span>
+        </p>
         <button
-          onClick={() => currentPage < totalPages && setCurrentPage(currentPage + 1)}
-          className="flex items-center gap-2 px-6 py-3 text-sm font-medium text-gray-700 bg-white rounded-xl hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-md"
           disabled={currentPage === totalPages}
+          onClick={() =>
+            setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+          }
+          className="px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           Next
         </button>
