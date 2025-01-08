@@ -41,7 +41,7 @@ const ReservationList = () => {
 
   useEffect(() => {
     let filtered = reservations.filter(
-      (reservation) => reservation.status === activeTab
+      (reservation) => reservation.status === activeTab || reservation.status == 'booked'
     );
     if (startDate) {
       filtered = filtered.filter(
