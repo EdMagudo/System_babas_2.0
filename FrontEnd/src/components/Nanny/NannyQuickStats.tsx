@@ -116,6 +116,30 @@ const NannyQuickStats: React.FC<NannyQuickStatsProps> = ({
                 {completedJobs.count || 0}
               </span>
             </div>
+            <div className="flex justify-between items-center">
+              <span className="text-gray-600">Currency</span>
+              <span className="font-bold text-gray-800">
+              {nannyProfile.nannyProfile.currency}
+              </span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-gray-600">Monthly Salary </span>
+              <span className="font-bold text-gray-800">
+              {nannyProfile.nannyProfile.mounthly_Salary}
+              </span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-gray-600">Daily Salary</span>
+              <span className="font-bold text-gray-800">
+              {nannyProfile.nannyProfile.daily_salary}
+              </span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-gray-600">Phone Number</span>
+              <span className="font-bold text-gray-800">
+                {nannyProfile.contact_phone}
+              </span>
+            </div>
 
             <div className="flex justify-between items-center">
               <span className="text-gray-600">Availability</span>

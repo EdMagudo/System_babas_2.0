@@ -25,55 +25,6 @@ const getAllProfiles = async (req, res) => {
   }
 };
 
-const getNannyDetails = async (req, res) => {
-  try {
-    // Pegando os parâmetros passados na query string
-    const { province_name, job_type } = req.query;
-console.log(province_name, job_type);
-    // Construir a query base
-    let query = `
-     SELECT DISTINCT
-    u.first_name, 
-    u.email, 
-    np.nanny_id, 
-    np.education_level, 
-    u.province_name, 
-    np.date_of_birth, 
-    f.file_path
-FROM Users u
-JOIN Nanny_Profiles np ON u.user_id = np.user_id
-LEFT JOIN Files f ON u.user_id = f.user_id
-WHERE u.role = 'nanny'
-
-    `;
-
-    // Adicionar o filtro para province_name, se fornecido
-    if (province_name) {
-      query += ` AND np.province_name = :province_name`;
-    }
-
-    // Adicionar o filtro para job_type, se fornecido
-    if (job_type) {
-      query += ` AND np.job_type = :job_type`;
-    }
-
-    // Executar a query com os parâmetros
-    const [nannies, metadata] = await db.sequelize.query(query, {
-      replacements: {
-        province_name: province_name,
-        job_type: job_type,
-      }
-    });
-
-    // Retornar os dados no formato desejado
-    res.status(200).json(nannies);
-  } catch (error) {
-    console.error('Erro ao buscar os detalhes das nannies:', error);
-    res.status(500).json({ error: error.message });
-  }
-};
-
-
 
 // Obter perfil de nanny por ID
 const getProfileById = async (req, res) => {
@@ -106,6 +57,40 @@ const updateProfile = async (req, res) => {
   }
 };
 
+const saveBusiness = async (req, res) => {
+  console.log(req.body);
+  try {
+    // Busca o perfil do usuário no banco de dados
+    const user = await NannyProfiles.findOne({ where: { user_id: req.params.id_user } });
+
+    if (!user) {
+      return res.status(404).json({ message: 'Usuário não encontrado.' });
+    }
+
+    // Atualiza somente os campos que foram enviados na requisição
+    if (req.body.currency !== undefined) {
+      user.currency = req.body.currency;
+    }
+    if (req.body.monthlySalary !== undefined) {
+      user.mounthly_Salary = req.body.monthlySalary; // Mantendo typo para consistência com o modelo
+    }
+    if (req.body.dailySalary !== undefined) {
+      user.daily_salary = req.body.dailySalary; // Corrigido caso necessário
+    }
+
+    await user.save(); // Salva as alterações no banco de dados
+
+    res.status(200).json({ message: 'Perfil atualizado com sucesso!', user });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Erro ao atualizar o perfil.' });
+  }
+};
+
+
+
+
+
 // Deletar perfil de nanny
 const deleteProfile = async (req, res) => {
   try {
@@ -125,8 +110,8 @@ const deleteProfile = async (req, res) => {
 export default {
   createProfile,
   getAllProfiles,
-  getNannyDetails,
   getProfileById,
   updateProfile,
   deleteProfile,
+  saveBusiness
 };
