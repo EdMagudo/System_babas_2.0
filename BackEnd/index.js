@@ -370,10 +370,36 @@ app.post('/convert', async (req, res) => {
 });
 
 
+//Mpesa 
+import mpesaService from './services/mpesa.js';
 
+// M-Pesa Payment Route
+app.post("/mpesa/pay", async (req, res) => {
+  try {
+    const { amount, phoneNumber } = req.body;
+    console.log(req.body);
+    // Validação básica dos dados
+    if (!amount || !phoneNumber) {
+      return res.status(400).json({ error: "Missing required payment information" });
+    }
 
+    // Processa o pagamento via M-Pesa
+    const result = await mpesaService.pagamentoMpesa(amount, `258`+phoneNumber);
 
-
+    // Retorna a resposta com a referência e status da transação
+    res.status(200).json({
+      message: "M-Pesa payment initiated successfully",
+      reference: result.reference,
+      response: result.response,
+    });
+  } catch (error) {
+    console.error("Error processing M-Pesa payment:", error);
+    res.status(500).json({
+      error: "Error processing M-Pesa payment",
+      details: error.message,
+    });
+  }
+});
 
 
 

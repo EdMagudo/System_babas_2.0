@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Calendar, Clock, FileText, Mail, DollarSign, Tag } from "lucide-react";
-
+import MpesaPaymentModal from '../Estrutura/MpesaPaymentModal';
 const Reservations = () => {
   const [reservations, setReservations] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -9,6 +9,8 @@ const Reservations = () => {
   const [message, setMessage] = useState({ text: "", type: "" });
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
+  const [mpesaModalOpen, setMpesaModalOpen] = useState(false);
+  const [selectedReservation, setSelectedReservation] = useState(null);
 
   const fetchReservations = async () => {
     const clientId = localStorage.getItem("idUser");
@@ -25,6 +27,11 @@ const Reservations = () => {
       console.error("Error fetching reservations:", error);
       setMessage({ text: "Error fetching reservations", type: "error" });
     }
+  };
+
+  const handleMpesaPayment = (reservation) => {
+    setSelectedReservation(reservation);
+    setMpesaModalOpen(true);
   };
 
   const handleCancel = async (reservation_id) => {
@@ -202,22 +209,26 @@ const Reservations = () => {
                         Pay with PayPal
                       </button>
                     </form>
-                    <form action="http://localhost:3005/mpesa/pay" method="post">
-                      <input
-                        type="hidden"
-                        name="reservationId"
-                        value={reservation.reservation_id}
-                      />
-                      <button className="px-4 py-2 bg-green-600 text-white rounded-md shadow hover:bg-green-700">
-                        Pay with M-Pesa
-                      </button>
-                    </form>
+                   
+                          <button
+        onClick={() => handleMpesaPayment(reservation)}
+        className="px-4 py-2 bg-green-600 text-white rounded-md shadow hover:bg-green-700"
+      >
+        Pay with M-Pesa
+      </button>
+                
                   </>
                 )}
               </div>
             </div>
           ))
         )}
+          <MpesaPaymentModal
+    isOpen={mpesaModalOpen}
+    onClose={() => setMpesaModalOpen(false)}
+    reservationId={selectedReservation?.reservation_id}
+    amount={selectedReservation?.value}
+  />
 
         {/* Paginação */}
         <div className="flex justify-between items-center mt-6">

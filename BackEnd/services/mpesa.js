@@ -3,7 +3,7 @@ import mpesa from 'mpesa-node-api';
 // Função para gerar uma referência aleatória
 const transactionReference = () => {
     // Gera uma string alfanumérica de 11 caracteres aleatórios após "nanny"
-    return 'ref1sdasdsadvgf';
+    return 'ref1sdasdsadn15';
   };
   
   
