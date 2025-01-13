@@ -301,36 +301,6 @@ app.get("/payment-error", (req, res) => {
   res.send("Payment failed. Please try again.");
 });
 
-//Mpesa 
-import mpesaService from './services/mpesa.js';
-
-// M-Pesa Payment Route
-app.post("/mpesa/pay", async (req, res) => {
-  try {
-    const { amount, phoneNumber } = req.body;
-
-    // Validação básica dos dados
-    if (!amount || !phoneNumber) {
-      return res.status(400).json({ error: "Missing required payment information" });
-    }
-
-    // Processa o pagamento via M-Pesa
-    const result = await mpesaService.pagamentoMpesa(amount, phoneNumber);
-
-    // Retorna a resposta com a referência e status da transação
-    res.status(200).json({
-      message: "M-Pesa payment initiated successfully",
-      reference: result.reference,
-      response: result.response,
-    });
-  } catch (error) {
-    console.error("Error processing M-Pesa payment:", error);
-    res.status(500).json({
-      error: "Error processing M-Pesa payment",
-      details: error.message,
-    });
-  }
-});
 
 
 
