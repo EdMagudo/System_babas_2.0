@@ -187,11 +187,17 @@ const Reservations = () => {
                 {reservation.status === "confirmed" && (
                   <>
                     <form action="http://localhost:3005/sam/pay" method="post">
-                      <input
-                        type="hidden"
-                        name="reservationId"
-                        value={reservation.reservation_id}
-                      />
+                    <input
+                          type="hidden"
+                          name="reservationId"
+                          value={reservation.reservation_id}
+                        />
+                        <input
+                          type="hidden"
+                          name="amount"
+                          value={reservation.value}
+                        />
+                      
                       <button className="px-4 py-2 bg-blue-600 text-white rounded-md shadow hover:bg-blue-700">
                         Pay with PayPal
                       </button>
