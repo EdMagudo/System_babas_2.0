@@ -227,27 +227,38 @@ const getAllNannyWithRequirement = async (req, res) => {
     }
 
     // Montar a resposta com os dados dos usuários
-    const userResponses = users.map((user) => ({
-      user_id: user.user_id,
-      first_name: user.first_name,
-      email: user.email,
-      country: user.country_name,
-      province: user.province_name,
-      dob: user.dob,
-      nannyProfile: user.nannyProfile
-        ? {
-            education_level: user.nannyProfile.education_level,
-            dob: user.nannyProfile.date_of_birth,
-            job_type: user.nannyProfile.job_type,
-            workPreferences: user.nannyProfile.workPreferences.map(
-              (wp) => wp.work_preference
-            ),
-          }
-        : null,
-      files: user.files.map((file) => ({
-        path: file.file_path,
-      })),
-    }));
+    const userResponses = [];
+
+    for (const user of users) {
+      // Consulta direta para buscar as linguagens associadas a cada nanny_id
+      const languages = await user_language.findAll({
+        where: { user_id: user.nannyProfile.user_id }, // Considerando que `nannyProfile.id` é o identificador correto
+        attributes: ["language"],
+      });
+
+      userResponses.push({
+        user_id: user.user_id,
+        first_name: user.first_name,
+        email: user.email,
+        country: user.country_name,
+        province: user.province_name,
+        dob: user.dob,
+        nannyProfile: user.nannyProfile
+          ? {
+              education_level: user.nannyProfile.education_level,
+              dob: user.nannyProfile.date_of_birth,
+              job_type: user.nannyProfile.job_type,
+              currency: user.nannyProfile.currency,
+              daily_salary: user.nannyProfile.daily_salary,
+              monthly_salary: user.nannyProfile.mounthly_Salary,
+            }
+          : null,
+        files: user.files.map((file) => ({
+          path: file.file_path,
+        })),
+        languages: languages.map((lang) => lang.language), // Adiciona as linguagens encontradas
+      });
+    }
 
     res.status(200).json(userResponses);
   } catch (error) {
@@ -258,6 +269,7 @@ const getAllNannyWithRequirement = async (req, res) => {
     });
   }
 };
+
 
 const updateUser = async (req, res) => {
   try {
