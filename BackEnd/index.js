@@ -27,7 +27,6 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-//Rotas
 // Rotas
 import routerAdmin from "./Routes/adminRoutes.js";
 import routerUser from "./Routes/usersRouter.js";
@@ -301,6 +300,81 @@ app.get("/payment-error", (req, res) => {
   res.send("Payment failed. Please try again.");
 });
 
+const EXCHANGE_RATE_API_URL = 'https://api.exchangerate-api.com/v4/latest/MZN';
+
+// Route to fetch all currencies
+app.get('/currencies', async (req, res) => {
+    try {
+        const response = await axios.get(EXCHANGE_RATE_API_URL);
+        const { rates } = response.data;
+
+        // Prepare data for response
+        const currencies = Object.entries(rates).map(([currency, rate]) => ({
+            currency,
+            rate,
+        }));
+
+        res.json({
+            success: true,
+            base: response.data.base,
+            date: response.data.date,
+            currencies,
+        });
+    } catch (error) {
+        console.error('Error fetching currencies:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Unable to fetch currency data',
+        });
+    }
+});
+
+// Route to convert between two currencies
+app.post('/convert', async (req, res) => {
+    const { from, to, amount } = req.body;
+
+    if (!from || !to || !amount) {
+        return res.status(400).json({
+            success: false,
+            message: 'Please provide valid query parameters: from, to, and amount',
+        });
+    }
+
+    try {
+        const response = await axios.get(EXCHANGE_RATE_API_URL);
+        const { rates } = response.data;
+
+        if (!rates[from] || !rates[to]) {
+            return res.status(400).json({
+                success: false,
+                message: 'Invalid currency codes provided',
+            });
+        }
+
+        const convertedAmount = (amount / rates[from]) * rates[to];
+
+        res.json({
+            success: true,
+            from,
+            to,
+            amount: parseFloat(amount),
+            convertedAmount: parseFloat(convertedAmount.toFixed(2)),
+        });
+    } catch (error) {
+        console.error('Error converting currencies:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Unable to perform currency conversion',
+        });
+    }
+});
+
+
+
+
+
+
+
 
 
 
@@ -310,7 +384,6 @@ const startServer = async () => {
     await initializeDatabase();
     AdminController.initializeAdmin();
 
-    // Start the server
     const PORT = process.env.PORT || 3005;
     app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
   } catch (error) {

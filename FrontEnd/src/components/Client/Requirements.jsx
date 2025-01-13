@@ -6,7 +6,7 @@ const Favorites = () => {
   const [requests, setRequests] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(5);
-  const [message, setMessage] = useState({ text: '', type: '' }); // Novo estado para mensagens
+  const [message, setMessage] = useState({ text: '', type: '' });
 
   const fetchRequests = async () => {
     const idUser = localStorage.getItem('idUser');
@@ -27,21 +27,16 @@ const Favorites = () => {
   };
 
   const handleDelete = async (request_id) => {
-    // Ask the user if they are sure they want to delete
     const confirmDelete = window.confirm('Are you sure you want to delete this request?');
-    
-    if (!confirmDelete) {
-      return; // If the user cancels, do nothing
-    }
-  
+    if (!confirmDelete) return;
+
     try {
       const response = await axios.delete(
         `http://localhost:3005/requestServices/${request_id}`
       );
       if (response.status === 204) {
         setMessage({ text: 'Request deleted successfully!', type: 'success' });
-        // Update the requests list by removing the deleted request
-        setRequests(requests.filter(request => request.request_id !== request_id));
+        setRequests(requests.filter((req) => req.request_id !== request_id));
       } else {
         setMessage({ text: 'Error deleting the request', type: 'error' });
       }
@@ -51,14 +46,9 @@ const Favorites = () => {
     }
   };
 
-  // Clear the message after 3 seconds
   useEffect(() => {
     if (message.text) {
-      const timer = setTimeout(() => {
-        setMessage({ text: '', type: '' });
-      }, 3000); // 3000ms = 3 seconds
-
-      // Clean up the timer when the component unmounts or when the message changes
+      const timer = setTimeout(() => setMessage({ text: '', type: '' }), 3000);
       return () => clearTimeout(timer);
     }
   }, [message]);
@@ -78,10 +68,11 @@ const Favorites = () => {
         <h2 className="text-2xl font-bold text-indigo-800">Client Requests</h2>
       </div>
 
-      {/* Exibição da mensagem */}
       {message.text && (
         <div
-          className={`p-4 my-4 text-center text-white font-semibold ${message.type === 'success' ? 'bg-green-500' : 'bg-red-500'}`}
+          className={`p-4 my-4 text-center text-white font-semibold ${
+            message.type === 'success' ? 'bg-green-500' : 'bg-red-500'
+          }`}
         >
           {message.text}
         </div>
@@ -105,7 +96,7 @@ const Favorites = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-600">
                   <div className="flex items-center gap-2">
                     <MapPin size={18} />
-                    <span>{request.address} </span>
+                    <span>{request.address}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Users size={18} />

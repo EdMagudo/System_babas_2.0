@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Home, User, Briefcase } from "lucide-react";
+import { Home, User, Briefcase,Loader } from "lucide-react";
 import axios from "axios";
 import UserQualifications from "../components/Nanny/UserQualifications";
 import NannyQuickyStats from "../components/Nanny/NannyQuickStats";
@@ -56,8 +56,13 @@ const NannyDashboard = () => {
 
   // Se o perfil ou idiomas não foram carregados ainda
   if (!nannyProfile || languagesList.length === 0) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex items-center justify-center h-64">
+        <Loader className="w-12 h-12 animate-spin text-blue-500" />
+      </div>
+    );
   }
+  
 
   const handleChange = (e) => {
     const { name, value } = e.target;

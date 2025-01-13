@@ -1,3 +1,5 @@
+import { type } from "os";
+
 export default (sequelize, DataTypes) => {
     return sequelize.define('Nanny_Profiles', {
         nanny_id: {
@@ -44,7 +46,20 @@ export default (sequelize, DataTypes) => {
         additional_info: {
             type: DataTypes.TEXT,
             allowNull: true
+        },
+        currency:{
+            type: DataTypes.STRING,
+            allowNull: true
+        },
+        mounthly_Salary:{
+            type: DataTypes.DOUBLE,
+            allowNull: true
+        },
+        daily_salary:{
+            type: DataTypes.DOUBLE,
+            allowNull: true
         }
+
     }, {
         tableName: 'Nanny_Profiles',
         timestamps: true

@@ -16,7 +16,6 @@ const Reservations = () => {
       console.error("Client ID not found in localStorage");
       return;
     }
-    console.log("Id cliente: ", clientId);
     try {
       const response = await axios.get(
         `http://localhost:3005/reservations/getAll/reservations/client/${clientId}`
@@ -55,37 +54,6 @@ const Reservations = () => {
     }
   };
 
-  const handlePayment = (reservation_id) => {
-    // Create a hidden form and submit it programmatically
-    const form = document.createElement("form");
-    form.method = "post";
-    form.action = "http://localhost:3005/sam/pay";
-
-    // Add reservation_id as hidden input
-    const hiddenField = document.createElement("input");
-    hiddenField.type = "hidden";
-    hiddenField.name = "reservationId";
-    hiddenField.value = reservation_id;
-    form.appendChild(hiddenField);
-
-    document.body.appendChild(form);
-    form.submit();
-    document.body.removeChild(form);
-  };
-
-  useEffect(() => {
-    if (message.text) {
-      const timer = setTimeout(() => {
-        setMessage({ text: "", type: "" });
-      }, 3000);
-      return () => clearTimeout(timer);
-    }
-  }, [message]);
-
-  useEffect(() => {
-    fetchReservations();
-  }, []);
-
   const handleFilter = () => {
     if (!startDate || !endDate) return reservations;
 
@@ -99,6 +67,10 @@ const Reservations = () => {
     });
   };
 
+  useEffect(() => {
+    fetchReservations();
+  }, []);
+
   const filteredReservations = handleFilter();
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -109,11 +81,9 @@ const Reservations = () => {
   const totalPages = Math.ceil(filteredReservations.length / itemsPerPage);
 
   return (
-    <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
-      <div className="p-6 border-b border-gray-100">
-        <h2 className="text-2xl font-bold text-indigo-800">
-          Client Reservations
-        </h2>
+    <div className="max-w-5xl mx-auto bg-gray-50 rounded-lg shadow-lg overflow-hidden">
+      <div className="p-6 bg-indigo-700 text-white">
+        <h2 className="text-2xl font-bold">Client Reservations</h2>
       </div>
 
       {message.text && (
@@ -126,9 +96,10 @@ const Reservations = () => {
         </div>
       )}
 
-      <div className="p-6 space-y-4">
-        <div className="flex flex-col md:flex-row md:items-end gap-4">
-          <div className="w-full md:w-1/2">
+      <div className="p-6">
+        {/* Filtros */}
+        <div className="flex flex-col md:flex-row gap-4 mb-6">
+          <div className="flex-1">
             <label className="block text-sm font-medium text-gray-700">
               Start Date
             </label>
@@ -136,10 +107,10 @@ const Reservations = () => {
               type="date"
               value={startDate}
               onChange={(e) => setStartDate(e.target.value)}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
             />
           </div>
-          <div className="w-full md:w-1/2">
+          <div className="flex-1">
             <label className="block text-sm font-medium text-gray-700">
               End Date
             </label>
@@ -147,7 +118,7 @@ const Reservations = () => {
               type="date"
               value={endDate}
               onChange={(e) => setEndDate(e.target.value)}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
             />
           </div>
         </div>
@@ -160,106 +131,114 @@ const Reservations = () => {
           currentItems.map((reservation) => (
             <div
               key={reservation.reservation_id}
-              className="bg-white rounded-lg border border-gray-100 shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden"
+              className="bg-white p-6 rounded-lg shadow-md mb-4"
             >
-              <div className="p-6 space-y-4">
-                <div className="flex items-center gap-2 text-indigo-800">
-                  <Mail size={20} />
-                  <span className="font-medium">
+              {/* Informações principais */}
+              <div className="flex justify-between items-center mb-4">
+                <div>
+                  <h3 className="text-lg font-bold text-indigo-700">
                     {reservation.serviceRequest.client.email}
+                  </h3>
+                  <p className="text-sm text-gray-500">
+                    Status: {reservation.status}
+                  </p>
+                </div>
+                <div>
+                  <span className="px-3 py-1 bg-indigo-100 text-indigo-700 text-sm rounded-full">
+                    ${reservation.value}
                   </span>
                 </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-600">
-                  <div className="flex items-center gap-2">
-                    <Calendar size={18} />
-                    <span>
-                      Start:{" "}
-                      {new Date(
-                        reservation.serviceRequest.start_date
-                      ).toLocaleDateString()}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Clock size={18} />
-                    <span>
-                      End:{" "}
-                      {new Date(
-                        reservation.serviceRequest.end_date
-                      ).toLocaleDateString()}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <DollarSign size={18} />
-                    <span>{reservation.value}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Tag size={18} />
-                    <span>Status: {reservation.status}</span>
-                  </div>
+              </div>
+              <div className="flex gap-4 mb-4">
+                <div className="flex items-center gap-2">
+                  <Calendar className="text-gray-500" size={18} />
+                  <span>
+                    {new Date(
+                      reservation.serviceRequest.start_date
+                    ).toLocaleDateString()}
+                  </span>
                 </div>
-
-                <div className="flex items-center gap-2 text-gray-600">
-                  <FileText size={18} />
-                  <p>{reservation.serviceRequest.notes}</p>
+                <div className="flex items-center gap-2">
+                  <Clock className="text-gray-500" size={18} />
+                  <span>
+                    {new Date(
+                      reservation.serviceRequest.end_date
+                    ).toLocaleDateString()}
+                  </span>
                 </div>
+              </div>
 
-                <div className="flex items-center justify-between pt-4">
-                  {reservation.status !== "cancelled" && (
-                    <button
-                      onClick={() => handleCancel(reservation.reservation_id)}
-                      className="px-4 py-2 text-sm font-medium text-red-600 hover:text-red-700 hover:bg-red-50 rounded-md transition-colors duration-200"
-                    >
-                      Cancel Reservation
-                    </button>
-                  )}
-                  {reservation.status === "confirmed" && (
-                    <form
-                      action="http://localhost:3005/sam/pay"
-                      method="post"
-                      style={{ display: "inline" }}
-                    >
+              {/* Notas */}
+              <div className="flex items-center gap-2 text-gray-600 mb-4">
+                <FileText className="text-gray-500" size={18} />
+                <p>{reservation.serviceRequest.notes}</p>
+              </div>
+
+              {/* Botões */}
+              <div className="flex justify-end gap-4">
+                {reservation.status !== "cancelled" && (
+                  <button
+                    onClick={() => handleCancel(reservation.reservation_id)}
+                    className="px-4 py-2 bg-red-600 text-white rounded-md shadow hover:bg-red-700"
+                  >
+                    Cancel Reservation
+                  </button>
+                )}
+                {reservation.status === "confirmed" && (
+                  <>
+                    <form action="http://localhost:3005/sam/pay" method="post">
                       <input
                         type="hidden"
                         name="reservationId"
                         value={reservation.reservation_id}
                       />
-                      <input
-                        type="hidden"
-                        name="amount"
-                        value={reservation.value}
-                      />
-                      <button
-                        type="submit"
-                        className="px-4 py-2 text-sm font-medium text-green-600 hover:text-green-700 hover:bg-green-50 rounded-md transition-colors duration-200"
-                      >
-                        Pay Now
+                      <button className="px-4 py-2 bg-blue-600 text-white rounded-md shadow hover:bg-blue-700">
+                        Pay with PayPal
                       </button>
                     </form>
-                  )}
-                </div>
+                    <form action="http://localhost:3005/mpesa/pay" method="post">
+                      <input
+                        type="hidden"
+                        name="reservationId"
+                        value={reservation.reservation_id}
+                      />
+                      <button className="px-4 py-2 bg-green-600 text-white rounded-md shadow hover:bg-green-700">
+                        Pay with M-Pesa
+                      </button>
+                    </form>
+                  </>
+                )}
               </div>
             </div>
           ))
         )}
 
-        <div className="flex justify-between items-center pt-6">
+        {/* Paginação */}
+        <div className="flex justify-between items-center mt-6">
           <button
-            onClick={() => currentPage > 1 && setCurrentPage(currentPage - 1)}
-            className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
             disabled={currentPage === 1}
+            className={`px-4 py-2 text-sm font-medium rounded-md shadow ${
+              currentPage === 1
+                ? "bg-gray-300 text-gray-500"
+                : "bg-indigo-600 text-white hover:bg-indigo-700"
+            }`}
           >
             Previous
           </button>
-          <span className="text-sm text-gray-600">
+          <span className="text-gray-500">
             Page {currentPage} of {totalPages}
           </span>
           <button
             onClick={() =>
-              currentPage < totalPages && setCurrentPage(currentPage + 1)
+              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
             }
-            className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
             disabled={currentPage === totalPages}
+            className={`px-4 py-2 text-sm font-medium rounded-md shadow ${
+              currentPage === totalPages
+                ? "bg-gray-300 text-gray-500"
+                : "bg-indigo-600 text-white hover:bg-indigo-700"
+            }`}
           >
             Next
           </button>

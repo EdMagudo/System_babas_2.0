@@ -1,52 +1,96 @@
 import React, { useEffect, useState } from "react";
+import { Phone, DollarSign, Languages, Loader, Save, Map } from "lucide-react";
 import axios from "axios";
 
-type UserQualificationsProps = {
-  idUser: string;
-};
-
-const UserQualifications: React.FC<UserQualificationsProps> = ({ idUser }) => {
+const UserQualifications = ({ idUser }) => {
   const [formData, setFormData] = useState({
-    work_preference: [] as string[],
-    preference_age: [] as string[],
-    languages: [] as string[],
+    languages: [],
+    phone: "",
+    currency: "",
+    monthlySalary: "",
+    dailySalary: "",
+    country: "",
+    province: "",
   });
 
-  const [languagesList, setLanguagesList] = useState<string[]>([]);
-  const [message, setMessage] = useState({ type: "", text: "" });
-  const [selectedWorkPreference, setSelectedWorkPreference] = useState("");
-  const [selectedAgeExperience, setSelectedAgeExperience] = useState("");
+  const [countries, setCountries] = useState([]);
+  const [provinces, setProvinces] = useState([]);
+  const [languagesList, setLanguagesList] = useState([]);
+  const [currenciesList, setCurrenciesList] = useState([]);
   const [selectedLanguage, setSelectedLanguage] = useState("");
+  const [message, setMessage] = useState({ type: "", text: "" });
   const [loading, setLoading] = useState(true);
-  const [selectedWorkPreferenceA, setSelectedWorkPreferenceA] =
-    useState<string>("");
+  const [saving, setSaving] = useState({
+    contact: false,
+    salary: false,
+  });
 
-  const showMessage = (type: "success" | "error", text: string) => {
+  useEffect(() => {
+    const fetchCountries = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get("http://localhost:3005/countries");
+        setCountries(response.data);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching countries:", error);
+        setLoading(false);
+      }
+    };
+
+    fetchCountries();
+  }, []);
+
+  useEffect(() => {
+    if (formData.country) {
+      const fetchProvinces = async () => {
+        try {
+          const response = await axios.get(
+            `http://localhost:3005/provinces/${formData.country}`
+          );
+          setProvinces(response.data);
+        } catch (error) {
+          console.error("Error fetching provinces:", error);
+        }
+      };
+
+      fetchProvinces();
+    }
+  }, [formData.country]);
+
+  const showMessage = (type, text) => {
     setMessage({ type, text });
     setTimeout(() => setMessage({ type: "", text: "" }), 3000);
   };
 
-  // Fetch initial data
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [userRes, languagesRes] = await Promise.all([
-          axios.get(`http://localhost:3005/user/${idUser}`),
-          axios.get("http://localhost:3005/languages"),
+        const [userRes, languagesRes, currenciesRes] = await Promise.all([
+          fetch(`http://localhost:3005/user/${idUser}`).then((res) =>
+            res.json()
+          ),
+          fetch("http://localhost:3005/languages").then((res) => res.json()),
+          fetch("http://localhost:3005/currencies").then((res) => res.json()),
         ]);
 
         setFormData({
-          work_preference:
-          userRes.data.nannyProfile?.workPreferences.map((wp) => wp.work_preference) || [],
-          preference_age: userRes.data.ageExperiences || [],
-          languages: userRes.data.languages || [],
+          ...formData,
+          languages: userRes.languages || [],
+          phone: userRes.phone || "",
+          currency: userRes.currency || "",
+          monthlySalary: userRes.monthlySalary || "",
+          dailySalary: userRes.dailySalary || "",
         });
 
-        setLanguagesList(languagesRes.data.languages);
-        
+        setLanguagesList(languagesRes.languages || []);
+        setCurrenciesList(
+          currenciesRes.currencies.map((curr) =>
+            typeof curr === "string" ? curr : curr.currency
+          ) || []
+        );
       } catch (error) {
-        showMessage("error", "Failed to load data. Please try again later.");
-        console.error(error);
+        showMessage("error", "Failed to load data");
       } finally {
         setLoading(false);
       }
@@ -55,300 +99,355 @@ const UserQualifications: React.FC<UserQualificationsProps> = ({ idUser }) => {
     fetchData();
   }, [idUser]);
 
-  const handleAdd = async (type: string, value: string) => {
+  const handleSave = async (section, data) => {
+    setSaving((prev) => ({ ...prev, [section]: true }));
     try {
-      const endpoints = {
-        work_preference: `http://localhost:3005/experienceWork/${idUser}`,
-        preference_age: `http://localhost:3005/experienceAge/${idUser}`,
-        languages: `http://localhost:3005/lang/${idUser}`,
-      };
+      const response = await fetch(`http://localhost:3005/user/saveLocation/${idUser}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
 
-      await axios.post(endpoints[type], { [type]: value });
+      if (!response.ok) throw new Error("Failed to update information");
+
+      showMessage("success", "Information updated successfully");
+    } catch (error) {
+      showMessage("error", "Failed to update information");
+    } finally {
+      setSaving((prev) => ({ ...prev, [section]: false }));
+    }
+  };
+
+  const handleSaveM = async (section, data) => {
+    setSaving((prev) => ({ ...prev, [section]: true }));
+    try {
+      const response = await fetch(`http://localhost:3005/nanny/saveBusiness/${idUser}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) throw new Error("Failed to update information");
+
+      showMessage("success", "Information updated successfully");
+    } catch (error) {
+      showMessage("error", "Failed to update information");
+    } finally {
+      setSaving((prev) => ({ ...prev, [section]: false }));
+    }
+  };
+
+  const handleSaveP = async (section, data) => {
+    setSaving((prev) => ({ ...prev, [section]: true }));
+    try {
+      const response = await fetch(`http://localhost:3005/user/save/Phone/${idUser}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) throw new Error("Failed to update information");
+
+      showMessage("success", "Information updated successfully");
+    } catch (error) {
+      showMessage("error", "Failed to update information");
+    } finally {
+      setSaving((prev) => ({ ...prev, [section]: false }));
+    }
+  };
+
+  const handleAdd = async (type, value) => {
+    try {
+      const response = await fetch(`http://localhost:3005/lang/${idUser}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ [type]: value }),
+      });
+
+      if (!response.ok) throw new Error(`Failed to add ${value}`);
+
       setFormData((prev) => ({
         ...prev,
         [type]: [...prev[type], value],
       }));
-      showMessage("success", `${value} added successfully.`);
+      setSelectedLanguage("");
+      showMessage("success", `${value} added successfully`);
     } catch (error) {
-      showMessage("error", `Failed to add ${value}.`);
-      console.error(error);
+      showMessage("error", `Failed to add ${value}`);
     }
   };
 
-  const handleRemove = async (type: string, value: string) => {
+  const handleRemove = async (type, value) => {
     try {
-      const endpoints = {
-        work_preference: `http://localhost:3005/experienceWork/${idUser}/${value}`,
-        preference_age: `http://localhost:3005/experienceAge/${idUser}/${value}`,
-        languages: `http://localhost:3005/lang/${idUser}/${value}`,
-      };
+      const response = await fetch(
+        `http://localhost:3005/lang/${idUser}/${value}`,
+        {
+          method: "DELETE",
+        }
+      );
 
-      await axios.delete(endpoints[type]);
+      if (!response.ok) throw new Error(`Failed to remove ${value}`);
+
       setFormData((prev) => ({
         ...prev,
         [type]: prev[type].filter((item) => item !== value),
       }));
-      showMessage("success", `${value} removed successfully.`);
+      showMessage("success", `${value} removed successfully`);
     } catch (error) {
-      showMessage("error", `Failed to remove ${value}.`);
-      console.error(error);
+      showMessage("error", `Failed to remove ${value}`);
     }
   };
 
-  if (loading) return <div>Loading...</div>;
+  const handleInputChange = (e) => {
+    const { id, value } = e.target;
+    setFormData((prev) => ({ ...prev, [id]: value }));
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <Loader className="w-12 h-12 animate-spin text-blue-500" />
+      </div>
+    );
+  }
 
   return (
-    <div>
-    {message.text && (
-      <div
-        className={`${
-          message.type === "success"
-            ? "bg-green-100 text-green-800 border border-green-500"
-            : "bg-red-100 text-red-800 border border-red-500"
-        } p-4 rounded-lg shadow-md mb-4`}
-      >
-        {message.text}
+    <div className="max-w-3xl mx-auto space-y-8">
+      {message.text && (
+        <div
+          className={`p-4 rounded-lg shadow-sm ${
+            message.type === "success"
+              ? "bg-green-100 text-green-800 border border-green-500"
+              : "bg-red-100 text-red-800 border border-red-500"
+          }`}
+        >
+          {message.text}
+        </div>
+      )}
+
+      {/* Contact Information */}
+      <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6">
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
+            <Phone className="w-5 h-5 text-blue-500" />
+            Contact Information
+          </h2>
+          <button
+            onClick={() => handleSaveP("contact", { phone: formData.phone })}
+            disabled={saving.contact}
+            className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors disabled:opacity-50"
+          >
+            {saving.contact ? (
+              <Loader className="w-4 h-4 animate-spin" />
+            ) : (
+              <Save className="w-4 h-4" />
+            )}
+            Save
+          </button>
+        </div>
+        <input
+          type="tel"
+          id="phone"
+          value={formData.phone}
+          onChange={handleInputChange}
+          className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-shadow"
+          placeholder="+1 (555) 000-0000"
+        />
       </div>
-    )}
-  
-  
 
-      {/* Work Preferences */}
-      <div>
-  <h2 className="text-xl font-semibold text-blue-700 mb-4">
-    Work Preferences
-  </h2>
-  <div className="grid grid-cols-2 gap-4">
-    {/* Assigned Work Preferences */}
-    <div>
-      <label className="block mb-2">Assigned Work Preferences</label>
-      <select
-        value={selectedWorkPreference}
-        onChange={(e) => setSelectedWorkPreference(e.target.value)}
-        className="w-full px-3 py-2 border rounded"
-      >
-        <option value="" disabled>
-          Select a preference to remove
-        </option>
-        {formData.work_preference.map((pref, index) => (
-          <option key={index} value={pref}>
-            {pref.charAt(0).toUpperCase() + pref.slice(1)}
-          </option>
-        ))}
-      </select>
-      <button
-        className="mt-2 bg-red-500 text-white p-2 rounded"
-        onClick={() => {
-          if (selectedWorkPreference) {
-            handleRemove("work_preference", selectedWorkPreference);
-            showMessage("success", "Work preference removed successfully.");
-          } else {
-            showMessage("error", "Please select a work preference to remove.");
-          }
-        }}
-      >
-        Remove Work Preference
-      </button>
-    </div>
-
-    {/* Available Work Preferences */}
-    <div>
-      <label className="block mb-2">Available Work Preferences</label>
-      <select
-        value={selectedWorkPreference}
-        onChange={(e) => setSelectedWorkPreference(e.target.value)}
-        className="w-full px-3 py-2 border rounded"
-      >
-        <option value="" disabled>
-          Select a work preference to add
-        </option>
-        {["morning", "afternoon", "evening", "overnight"]
-          .filter((pref) => !formData.work_preference.includes(pref))
-          .map((pref, index) => (
-            <option key={index} value={pref}>
-              {pref.charAt(0).toUpperCase() + pref.slice(1)}
-            </option>
-          ))}
-      </select>
-      <button
-        className="mt-2 bg-green-500 text-white p-2 rounded"
-        onClick={() => {
-          if (
-            selectedWorkPreference &&
-            !formData.work_preference.includes(selectedWorkPreference)
-          ) {
-            handleAdd("work_preference", selectedWorkPreference);
-            showMessage("success", "Work preference added successfully.");
-          } else {
-            showMessage("error", "Please select a valid work preference to add.");
-          }
-        }}
-      >
-        Add Work Preference
-      </button>
-    </div>
-  </div>
-</div>
-
-
-
-      {/* Age Preferences */}
-      <div>
-        <h2 className="text-xl font-semibold text-blue-700 mb-4">
-          Age Experiences
-        </h2>
-        <div className="grid grid-cols-2 gap-4">
-          {/* Assigned Age Experiences */}
-          <div>
-            <label className="block mb-2">Assigned Age Experiences</label>
+      {/* Country and Province */}
+      <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6">
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
+            <Map className="w-5 h-5 text-blue-500" />
+            Location
+          </h2>
+          <button
+            onClick={() =>
+              handleSave("location", {
+                country: formData.country,
+                province: formData.province,
+              })
+            }
+            disabled={saving.contact}
+            className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors disabled:opacity-50"
+          >
+            {saving.contact ? (
+              <Loader className="w-4 h-4 animate-spin" />
+            ) : (
+              <Save className="w-4 h-4" />
+            )}
+            Save
+          </button>
+        </div>
+        <div className="flex gap-4">
+          <div className="w-full">
+            <label className="block mb-2">Country</label>
             <select
-              value=""
-              onChange={(e) => setSelectedAgeExperience(e.target.value)}
+              id="country"
+              value={formData.country}
+              onChange={handleInputChange}
               className="w-full px-3 py-2 border rounded"
+              required
             >
               <option value="" disabled>
-                Select an age experience to remove
+                Select Country
               </option>
-              {formData.preference_age.map((age, index) => (
-                <option key={index} value={age}>
-                  {age.charAt(0).toUpperCase() + age.slice(1)}
+              {countries.map((country, index) => (
+                <option key={index} value={country}>
+                  {country}
                 </option>
               ))}
             </select>
-            <button
-              className="mt-2 bg-red-500 text-white p-2 rounded"
-              onClick={() => {
-                if (selectedAgeExperience) {
-                    handleRemove("preference_age", selectedAgeExperience);
-                  showMessage(
-                    "success",
-                    "Age experience removed successfully."
-                  );
-                } else {
-                  showMessage(
-                    "error",
-                    "Please select an age experience to remove."
-                  );
-                }
-              }}
-            >
-              Remove Age Experience
-            </button>
           </div>
-
-          {/* Available Age Experiences */}
-          <div>
-            <label className="block mb-2">Available Age Experiences</label>
+          <div className="w-full">
+            <label className="block mb-2">Province</label>
             <select
-              value={selectedAgeExperience}
-              onChange={(e) => setSelectedAgeExperience(e.target.value)}
+              id="province"
+              value={formData.province}
+              onChange={handleInputChange}
               className="w-full px-3 py-2 border rounded"
+              required
             >
               <option value="" disabled>
-                Select an age experience to add
+                Select Province
               </option>
-              {["babies", "toddlers", "children", "teenagers"]
-                .filter((age) => !formData.preference_age.includes(age))
-                .map((age, index) => (
-                  <option key={index} value={age}>
-                    {age.charAt(0).toUpperCase() + age.slice(1)}
-                  </option>
-                ))}
+              {provinces.map((province, index) => (
+                <option key={index} value={province}>
+                  {province}
+                </option>
+              ))}
             </select>
-            <button
-              className="mt-2 bg-green-500 text-white p-2 rounded"
-              onClick={() => {
-                if (
-                  selectedAgeExperience &&
-                  !formData.preference_age.includes(selectedAgeExperience)
-                ) {
-                    handleAdd("preference_age", selectedAgeExperience);
-                  showMessage("success", "Age experience added successfully.");
-                } else {
-                  showMessage(
-                    "error",
-                    "Please select a valid age experience to add."
-                  );
-                }
-              }}
-            >
-              Add Age Experience
-            </button>
           </div>
         </div>
       </div>
 
-      {/* Languages */}
-      <div>
-        <h2 className="text-xl font-semibold text-blue-700 mb-4">Languages</h2>
-        <div className="grid grid-cols-2 gap-4">
-          {/* Assigned Languages */}
+      {/* Salary Information */}
+      <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6">
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
+            <DollarSign className="w-5 h-5 text-blue-500" />
+            Salary Information
+          </h2>
+          <button 
+            onClick={() =>
+              handleSaveM("salary", {
+                currency: formData.currency,
+                monthlySalary: formData.monthlySalary,
+                dailySalary: formData.dailySalary,
+              })
+            }
+            disabled={saving.salary}
+            className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors disabled:opacity-50"
+          >
+            {saving.salary ? (
+              <Loader className="w-4 h-4 animate-spin" />
+            ) : (
+              <Save className="w-4 h-4" />
+            )}
+            Save
+          </button>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
-            <label className="block mb-2">Assigned Languages</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Currency
+            </label>
             <select
-              value=""
-              onChange={(e) => setSelectedLanguage(e.target.value)}
-              className="w-full px-3 py-2 border rounded"
+              id="currency"
+              value={formData.currency}
+              onChange={handleInputChange}
+              className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-shadow"
             >
-              <option value="" disabled>
-                Select a language to remove
-              </option>
-              {formData.languages.map((language, index) => (
-                <option key={index} value={language}>
-                  {language.charAt(0).toUpperCase() + language.slice(1)}
+              <option value="">Select currency</option>
+              {currenciesList.map((currency, index) => (
+                <option key={`${currency}-${index}`} value={currency}>
+                  {currency}
                 </option>
               ))}
             </select>
-            <button
-              className="mt-2 bg-red-500 text-white p-2 rounded"
-              onClick={() => {
-                if (selectedLanguage) {
-                    handleRemove("languages", selectedLanguage);
-                  showMessage("success", "Language removed successfully.");
-                } else {
-                  showMessage("error", "Please select a language to remove.");
-                }
-              }}
-            >
-              Remove Language
-            </button>
           </div>
-
-          {/* Available Languages */}
           <div>
-            <label className="block mb-2">Available Languages</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Monthly Salary
+            </label>
+            <input
+              type="number"
+              id="monthlySalary"
+              value={formData.monthlySalary}
+              onChange={handleInputChange}
+              className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-shadow"
+              placeholder="Enter amount"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Daily salary
+            </label>
+            <input
+              type="number"
+              id="dailySalary"
+              value={formData.dailySalary}
+              onChange={handleInputChange}
+              className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-shadow"
+              placeholder="Enter amount"
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Languages Section */}
+      <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6">
+        <h2 className="text-xl font-semibold text-gray-800 flex items-center gap-2 mb-6">
+          <Languages className="w-5 h-5 text-blue-500" />
+          Languages
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Assigned Languages
+            </label>
+            <ul className="list-disc pl-5 space-y-1">
+              {formData.languages.map((language, index) => (
+                <li
+                  key={`${language}-${index}`}
+                  className="flex items-center justify-between"
+                >
+                  {language}
+                  <button
+                    onClick={() => handleRemove("languages", language)}
+                    className="text-red-500 hover:underline text-sm"
+                  >
+                    Remove
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Add Language
+            </label>
             <select
               value={selectedLanguage}
               onChange={(e) => setSelectedLanguage(e.target.value)}
-              className="w-full px-3 py-2 border rounded"
+              className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-shadow"
             >
-              <option value="" disabled>
-                Select a language to add
-              </option>
+              <option value="">Select language</option>
               {languagesList
-                .filter((language) => !formData.languages.includes(language))
+                .filter((lang) => !formData.languages.includes(lang))
                 .map((language, index) => (
-                  <option key={index} value={language}>
-                    {language.charAt(0).toUpperCase() + language.slice(1)}
+                  <option key={`${language}-${index}`} value={language}>
+                    {language}
                   </option>
                 ))}
             </select>
             <button
-              className="mt-2 bg-green-500 text-white p-2 rounded"
-              onClick={() => {
-                if (
-                  selectedLanguage &&
-                  !formData.languages.includes(selectedLanguage)
-                ) {
-                    handleAdd("languages", selectedLanguage);
-                  showMessage("success", "Language added successfully.");
-                } else {
-                  showMessage(
-                    "error",
-                    "Please select a valid language to add."
-                  );
-                }
-              }}
+              onClick={() =>
+                selectedLanguage && handleAdd("languages", selectedLanguage)
+              }
+              disabled={!selectedLanguage}
+              className="mt-3 w-full px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors disabled:opacity-50"
             >
               Add Language
             </button>

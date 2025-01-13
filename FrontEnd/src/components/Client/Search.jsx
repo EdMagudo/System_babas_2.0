@@ -1,5 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { MapPin, Award, Mail, Calendar } from "lucide-react";
+import {
+  MapPin,
+  Award,
+  Mail,
+  Calendar,
+  DollarSign,
+  Clock,
+  CalendarClock,
+  Users,
+  Languages,
+} from "lucide-react";
 import axios from "axios";
 
 const Search = () => {
@@ -37,53 +47,52 @@ const Search = () => {
   };
 
   const handleSearch = async () => {
-  try {
-    if (!client.country || !client.province || !availability) {
-      alert("Please select country, province, and availability.");
-      return;
+    try {
+      if (!client.country || !client.province || !availability) {
+        alert("Please select country, province, and availability.");
+        return;
+      }
+
+      // Criando o corpo da requisição com os parâmetros
+      const requestBody = {
+        province: client.province,
+        jobType: availability,
+      };
+
+      console.log(requestBody);
+
+      const url = "http://localhost:3005/user/getAllNannyWith/Requirement";
+
+      // Fazendo a requisição POST com os parâmetros no corpo
+      const response = await axios.post(url, requestBody);
+
+      // Verificar se a resposta contém resultados
+      if (response.status === 200 && response.data.length === 0) {
+        alert("Não encontramos resultados para a sua pesquisa.");
+      } else {
+        const nannies = response.data.map((nanny) => {
+          const filePath = nanny.files?.[0]?.path;
+          const fileName = filePath ? filePath.split("\\").pop() : null;
+          const profilePictureUrl = fileName
+            ? `http://localhost:3005/uploads/${fileName}`
+            : "/default-profile.png";
+
+          return { ...nanny, profilePictureUrl };
+        });
+
+        setSearchResults(nannies);
+        setCurrentPage(1);
+      }
+    } catch (error) {
+      // Verificar se o erro é um 404
+      if (error.response && error.response.status === 404) {
+        alert("Não encontramos resultados para a sua pesquisa.");
+      } else {
+        console.error("Error fetching nannies:", error);
+        alert("Ocorreu um erro ao buscar as babás. Tente novamente.");
+      }
     }
-
-    // Criando o corpo da requisição com os parâmetros
-    const requestBody = {
-      province: client.province,
-      jobType: availability,
-    };
-
-    console.log(requestBody)
-
-    const url = "http://localhost:3005/user/getAllNannyWith/Requirement";
-
-    // Fazendo a requisição POST com os parâmetros no corpo
-    const response = await axios.post(url, requestBody);
-
-    // Verificar se a resposta contém resultados
-    if (response.status === 200 && response.data.length === 0) {
-      alert("Não encontramos resultados para a sua pesquisa.");
-    } else {
-      const nannies = response.data.map((nanny) => {
-        const filePath = nanny.files?.[0]?.path;
-        const fileName = filePath ? filePath.split("\\").pop() : null;
-        const profilePictureUrl = fileName
-          ? `http://localhost:3005/uploads/${fileName}`
-          : "/default-profile.png";
-
-        return { ...nanny, profilePictureUrl };
-      });
-
-      setSearchResults(nannies);
-      setCurrentPage(1);
-    }
-  } catch (error) {
-    // Verificar se o erro é um 404
-    if (error.response && error.response.status === 404) {
-      alert("Não encontramos resultados para a sua pesquisa.");
-    } else {
-      console.error("Error fetching nannies:", error);
-      alert("Ocorreu um erro ao buscar as babás. Tente novamente.");
-    }
-  }
-};
-
+  };
 
   const handleSubmitRequest = async (nannyId) => {
     try {
@@ -93,13 +102,13 @@ const Search = () => {
       const country = localStorage.getItem("userCountry");
       const province = localStorage.getItem("userProvice");
       const address = `${country}, ${province}`;
-  
+
       // Validando campos obrigatórios
       if (!clientId || !email || !address || !startDate || !endDate) {
         alert("Please ensure all required fields are filled.");
         return;
       }
-  
+
       const requestData = {
         client_id: parseInt(clientId),
         nanny_id: nannyId,
@@ -108,12 +117,15 @@ const Search = () => {
         address: address,
         start_date: startDate,
         end_date: endDate,
-        notes: notes || '',  // Garantindo que 'notes' não seja undefined
+        notes: notes || "", // Garantindo que 'notes' não seja undefined
       };
-  
-      const response = await axios.post("http://localhost:3005/requestServices", requestData);
-  
-      if (response.status === 200|| response.status ===201) {
+
+      const response = await axios.post(
+        "http://localhost:3005/requestServices",
+        requestData
+      );
+
+      if (response.status === 200 || response.status === 201) {
         alert("Service request sent successfully!");
         // Resetando o estado após o envio
         setChildren(1);
@@ -129,7 +141,6 @@ const Search = () => {
       alert("Failed to send service request. Please try again.");
     }
   };
-  
 
   useEffect(() => {
     const fetchCountries = async () => {
@@ -270,33 +281,91 @@ const Search = () => {
               </div>
 
               <div className="p-6">
-                <div className="mb-4">
-                  <h3 className="text-xl font-semibold text-indigo-600 mb-1">
-                    {nanny.first_name}
-                  </h3>
-                  <span className="text-sm text-gray-500">
-                    {nanny.nannyProfile.education_level
-                      .replace(/_/g, " ")
-                      .replace(/\b\w/g, (l) => l.toUpperCase())}
-                  </span>
-                </div>
 
-                <div className="space-y-3">
-                  <div className="flex items-center gap-2 text-sm text-gray-700">
-                    <Award className="w-5 h-5 text-indigo-500" />
-                    {nanny.nannyProfile.education_level
-                      .replace(/_/g, " ")
-                      .replace(/\b\w/g, (l) => l.toUpperCase())}
-                  </div>
-                  <div className="flex items-center gap-2 text-sm text-gray-700">
-                    <Mail className="w-5 h-5 text-indigo-500" />
-                    {nanny.email}
-                  </div>
-                  <div className="flex items-center gap-2 text-sm text-gray-700">
-                    <MapPin className="w-5 h-5 text-indigo-500" />
-                    {nanny.province},{nanny.country}
-                  </div>
-                </div>
+              <div className="mb-4">
+  <h3 className="text-xl font-semibold text-indigo-600 mb-1">
+    {nanny.first_name}
+  </h3>
+  <span className="text-sm text-gray-500">
+    {nanny.nannyProfile.education_level
+      .replace(/_/g, " ")
+      .replace(/\b\w/g, (l) => l.toUpperCase())}
+  </span>
+</div>
+
+<div className="space-y-4">
+  {/* Education Level */}
+  <div className="flex items-center gap-2 text-sm text-gray-700">
+    <Award className="w-5 h-5 text-indigo-500" />
+    {nanny.nannyProfile.education_level
+      .replace(/_/g, " ")
+      .replace(/\b\w/g, (l) => l.toUpperCase())}
+  </div>
+
+  {/* Currency and Salaries */}
+  <div className="flex flex-wrap gap-4">
+    <div className="flex items-center gap-2 text-sm text-gray-700">
+      <DollarSign className="w-4 h-4 text-indigo-600" />
+      <p className="font-medium">
+        Currency:{" "}
+        <span className="text-indigo-600">{nanny.nannyProfile.currency}</span>
+      </p>
+    </div>
+    <div className="flex items-center gap-2 text-sm text-gray-700">
+      <Clock className="w-4 h-4 text-indigo-600" />
+      <p className="font-medium">
+        Daily:{" "}
+        <span className="text-indigo-600">
+          {nanny.nannyProfile.daily_salary}
+        </span>
+      </p>
+    </div>
+    <div className="flex items-center gap-2 text-sm text-gray-700">
+      <CalendarClock className="w-4 h-4 text-indigo-600" />
+      <p className="font-medium">
+        Monthly:{" "}
+        <span className="text-indigo-600">
+          {nanny.nannyProfile.monthly_salary}
+        </span>
+      </p>
+    </div>
+  </div>
+
+  {/* Age */}
+  <div className="flex items-center gap-2 text-sm text-gray-700">
+    <Users className="w-4 h-4 text-indigo-600" />
+    <p className="font-medium">
+    Date of birth:{" "}
+      <span className="text-indigo-600">{nanny.nannyProfile.dob}</span>
+    </p>
+  </div>
+
+  {/* Languages */}
+  <div className="flex items-center gap-2 text-sm text-gray-700">
+    <Languages className="w-5 h-5 text-indigo-600" />
+    <div className="flex flex-wrap gap-2">
+      {nanny.languages && nanny.languages.length > 0 ? (
+        nanny.languages.map((language, index) => (
+          <span
+            key={index}
+            className="px-3 py-1 text-xs font-medium text-indigo-600 bg-indigo-50 rounded-full"
+          >
+            {language.trim()}
+          </span>
+        ))
+      ) : (
+        <span>No languages available</span>
+      )}
+    </div>
+  </div>
+
+  {/* Location */}
+  <div className="flex items-center gap-2 text-sm text-gray-700">
+    <MapPin className="w-5 h-5 text-indigo-500" />
+    {nanny.province}, {nanny.country}
+  </div>
+</div>
+
 
                 <div className="mt-6">
                   <button

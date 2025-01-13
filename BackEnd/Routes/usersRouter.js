@@ -30,5 +30,8 @@ router.post("/getAllNannyWith/Requirement", usersController.getAllNannyWithRequi
 
 router.post('/changeStatus', usersController.changeStatus);
 
+router.put('/saveLocation/:id_user', usersController.saveLocation);
+
+router.put('/save/Phone/:id_user', usersController.savePhone);
 
 export default router;
