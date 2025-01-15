@@ -384,7 +384,7 @@ app.post("/mpesa/pay", async (req, res) => {
     }
 
     // Processa o pagamento via M-Pesa
-    const result = await mpesaService.pagamentoMpesa(amount, `258`+phoneNumber);
+    const result = await mpesaService.pagamentoMpesa(amount, phoneNumber);
 
     // Retorna a resposta com a referência e status da transação
     res.status(200).json({
