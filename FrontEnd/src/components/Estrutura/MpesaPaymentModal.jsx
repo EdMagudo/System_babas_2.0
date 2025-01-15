@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-
+import mpesa from '../../assets/mpesa.png'
 const MpesaPaymentModal = ({ isOpen, onClose, reservationId, amount }) => {
   const [phoneNumber, setPhoneNumber] = useState('');
 
@@ -59,13 +59,13 @@ const MpesaPaymentModal = ({ isOpen, onClose, reservationId, amount }) => {
         <div style={{ textAlign: 'center', marginBottom: '20px' }}>
           <h2 style={{ fontSize: '20px', fontWeight: 'bold' }}>M-Pesa Payment</h2>
         </div>
-        <div style={{ textAlign: 'center', marginBottom: '20px' }}>
-          <img
-            src="/api/placeholder/200/100"
-            alt="M-Pesa Logo"
-            style={{ maxWidth: '100px' }}
-          />
-        </div>
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+      <img
+        src={mpesa}
+        alt="M-Pesa Logo"
+        style={{ maxWidth: '100px' }}
+      />
+    </div>
         <form onSubmit={handleSubmit}>
           <div style={{ marginBottom: '15px' }}>
             <label
