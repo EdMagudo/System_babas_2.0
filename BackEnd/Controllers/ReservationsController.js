@@ -3,6 +3,7 @@ const Reservations = db.Reservations;
 const ServiceRequest = db.Service_Requests;
 const Payments = db.Payments;
 const Users = db.Users;
+const Reviews = db.Reviews;
 import moment from 'moment'; 
 
 import { Sequelize } from "sequelize";
@@ -151,6 +152,7 @@ const getAllReservationsForClient = async (req, res) => {
               model: Users, // Ensure this matches your Users model name
               as: "client", // Ensure this matches your association name
             },
+            
           ],
         },
       ],
@@ -162,8 +164,6 @@ const getAllReservationsForClient = async (req, res) => {
     if (!reservations || reservations.length === 0) {
       return res.status(404).json({ message: "No reservations found" });
     }
-
-    console.log("Reservations found:", reservations);
 
     // Return reservations with related data
     res.json(reservations);
@@ -333,6 +333,83 @@ const payReservation = async (req, res) => {
 };
 
 
+const rateBook = async (req, res) => {
+  try {
+    console.log("Rating the book with ID:", req.body);
+
+    // Find the reservation by ID
+    const reservation = await Reservations.findOne({
+      where: { reservation_id: req.params.reservationId },
+    });
+
+    if (!reservation) {
+      return res.status(404).json({ message: "Reservation not found" });
+    }
+
+    const reservation_id = reservation.reservation_id;
+    const reviewer_id = reservation.client_id;
+    const reviewee_id = reservation.nanny_id;
+    const rating = req.body.rating;
+    const review_text = req.body.comment;
+
+    // Check if a review already exists
+    const existingReview = await Reviews.findOne({
+      where: { reservation_id: reservation_id },
+    });
+
+    if (existingReview) {
+      console.log("Updating existing review");
+
+      // Update the existing review
+      existingReview.rating = rating;
+      existingReview.review_text = review_text;
+
+      const data = {
+        rating: existingReview.rating,
+        review_text: existingReview.review_text,
+      };
+
+      // Update review in the database
+      const [updated] = await Reviews.update(data, {
+        where: { reservation_id: reservation_id },
+      });
+
+      if (updated) {
+        const updatedReview = await Reviews.findOne({
+          where: { reservation_id: reservation_id },
+        });
+
+        return res.status(201).json({
+          message: "Review updated successfully",
+          review: updatedReview,
+        });
+      } else {
+        return res.status(404).json({ message: "Review not found" });
+      }
+    } else {
+      // Create a new review if it doesn't exist
+      const newReview = await Reviews.create({
+        reservation_id,
+        reviewer_id,
+        reviewee_id,
+        rating,
+        review_text,
+      });
+
+      return res.status(201).json({
+        message: "Review created successfully",
+        review: newReview,
+      });
+    }
+  } catch (error) {
+    console.error("Error rating the book:", error);
+    res.status(500).json({ message: "Error rating the book" });
+  }
+};
+
+
+
+
 export default {
   createReservation,
   getAllReservations,
@@ -346,5 +423,6 @@ export default {
   payReservation,
   countCompletedForNanny,
   countBookedForClient,
-  PayReservationtoClient
+  PayReservationtoClient,
+  rateBook
 };

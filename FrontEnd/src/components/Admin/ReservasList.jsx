@@ -201,7 +201,7 @@ const ReservationList = () => {
             <div className="p-6">
               <div className="flex flex-col md:flex-row justify-between gap-6">
                 <div className="space-y-4 flex-1">
-                  <div className="flex items-center gap-4">
+                <div className="flex items-center gap-4">
                     <div className="h-12 w-12 rounded-full bg-blue-50 flex items-center justify-center group-hover:bg-blue-100 transition-colors duration-200">
                       <User className="w-6 h-6 text-blue-500" />
                     </div>

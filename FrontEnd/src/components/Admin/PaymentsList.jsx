@@ -56,7 +56,7 @@ const PaymentList = () => {
   const formatCurrency = (value) => {
     return new Intl.NumberFormat('pt-BR', {
       style: 'currency',
-      currency: 'BRL',
+      currency: 'USD',
     }).format(value);
   };
 
@@ -78,7 +78,7 @@ const PaymentList = () => {
   }, [payments, startDate, endDate]);
 
   const totalAmount = useMemo(() => {
-    return filteredPayments?.reduce((sum, payment) => sum + Number(payment.amount), 0) || 0;
+    return filteredPayments?.reduce((sum, payment) => sum + Number(payment.amount*0.5), 0) || 0;
   }, [filteredPayments]);
 
   if (loading) {
