@@ -10,4 +10,7 @@ router.get("/user/:user_id", reviewsController.getReviewsByUser); // Busca todas
 router.put("/:review_id", reviewsController.updateReview); // Atualiza uma avaliação pelo ID
 router.delete("/:review_id", reviewsController.deleteReview); // Remove uma avaliação pelo ID
 
+router.get("/averageRating/:user_id", reviewsController.calculateAverageRating); // Calcula a média das avaliações para um usuário
+router.get("/comments/:user_id", reviewsController.getAllComments); // Busca todos os comentários feitos para um usuário
+
 export default router;

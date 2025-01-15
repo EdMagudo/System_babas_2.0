@@ -18,7 +18,6 @@ router.put("/cancel/reservation/:id_reservation", reservationsController.cancelR
 router.put("/payClient/reservation/:id_reservation", reservationsController.PayReservationtoClient)
 
 
-
 router.put("/payReservation/reservation/:id_reservation", reservationsController.payReservation)
 
 router.get("/getAll/reservations",reservationsController.countConfirmedAndBookedReservations)
@@ -26,6 +25,9 @@ router.get("/getAll/reservations",reservationsController.countConfirmedAndBooked
 router.get("/countReservations/:nanny_id",reservationsController.countCompletedForNanny);
 
 router.get("/countReservationsC/:client_id",reservationsController.countBookedForClient);
+
+
+router.post("/:reservationId/feedback", reservationsController.rateBook);
 
 
 

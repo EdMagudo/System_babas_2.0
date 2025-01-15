@@ -88,6 +88,7 @@ const ClientDashboard = () => {
               />
               <h2 className="text-2xl font-bold text-indigo-700">{clientProfile.first_name} {clientProfile.last_name}</h2>
               <p className="text-gray-600">{clientProfile.province_name}, {clientProfile.country_name}</p>
+              <p className='text-gray-600'>{clientProfile.contact_phone}</p>
             </div>
             <nav className="space-y-4">
               <button 

@@ -16,9 +16,9 @@ const createRequest = async (req, res) => {
 const createRequest = async (req, res) => {
   try {
     // Verificando os campos obrigatórios
-    const { client_id, nanny_id, number_of_people, email, address, start_date, end_date, notes } = req.body;
+    const { client_id, nanny_id, number_of_people, email, address, start_date, end_date, notes, nanny_email } = req.body;
 
-    if (!client_id || !number_of_people || !email || !address || !start_date || !end_date) {
+    if (!client_id || !number_of_people || !email || !address || !start_date || !end_date)  {
       return res.status(400).json({
         error: 'Campos obrigatórios ausentes: client_id, number_of_people, email, address, start_date e end_date.',
       });
@@ -43,6 +43,7 @@ const createRequest = async (req, res) => {
       client_id: client_id,
       nanny_id: nanny_id || null,
       number_of_people: number_of_people,
+      nanny_email: nanny_email || null,
       email: email,
       address: address,
       start_date: startDate,

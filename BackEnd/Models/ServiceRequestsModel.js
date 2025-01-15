@@ -84,6 +84,10 @@ export default (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: false
         },
+        nanny_email: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
         address: {
             type: DataTypes.STRING,
             allowNull: false

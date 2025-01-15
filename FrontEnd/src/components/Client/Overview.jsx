@@ -9,48 +9,53 @@ const Overview = ({ clientProfile, idUser }) => {
   } = clientProfile;
 
   const [email, setEmail] = useState("");
-  
+  const [phone, setPhone] = useState("");
   const [currentPassword, setCurrentPassword] = useState("");
-  const [completedJobs, setCompletedJobs] = useState("");
   const [newPassword, setNewPassword] = useState("");
-  const [feedbackMessage, setFeedbackMessage] = useState(""); // Novo estado para feedback
-  const [feedbackType, setFeedbackType] = useState(""); // Novo estado para definir o tipo de feedback (sucesso ou erro)
+  const [completedJobs, setCompletedJobs] = useState("");
   const [showPassword, setShowPassword] = useState({
     current: false,
     new: false,
-    confirm: false,
   });
+  const [saving, setSaving] = useState({ phone: false });
+  const [message, setMessage] = useState({ type: "", text: "" });
 
-  
-
-  // Carregar o email ao montar o componente
   useEffect(() => {
     const fetchUserProfile = async () => {
       const idUser = localStorage.getItem("idUser");
       try {
         const response = await axios.get(`http://localhost:3005/client/${idUser}`);
-        setEmail(response.data.email); // Definir o email no estado
+        setEmail(response.data.email);
+        setPhone(response.data.phone);
       } catch (error) {
         console.error("Error fetching user profile:", error);
-        setFeedbackMessage("Error loading user profile.");
-        setFeedbackType("error"); // Definir tipo de feedback como erro
+        setMessage({ type: "error", text: "Error loading user profile." });
       }
     };
 
-    fetchCompletedJobs()
+    const fetchCompletedJobs = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:3005/reservations/countReservationsC/${idUser}`
+        );
+        setCompletedJobs(response.data.count || 0);
+      } catch (error) {
+        console.error("Error fetching completed jobs:", error);
+      }
+    };
+
     fetchUserProfile();
+    fetchCompletedJobs();
   }, [idUser]);
 
-  const fetchCompletedJobs = async () => {
-    const idUser = localStorage.getItem("idUser");
-    try {
-      const response = await axios.get(`http://localhost:3005/reservations/countReservationsC/${idUser}`);
-      setCompletedJobs(response.data);
-    } catch (error) {
-      console.error("Error fetching completed jobs:", error);
+  useEffect(() => {
+    if (message.text) {
+      const timer = setTimeout(() => {
+        setMessage({ type: "", text: "" });
+      }, 5000); // Clear the message after 5 seconds
+      return () => clearTimeout(timer); // Cleanup timer on component unmount
     }
-  };
-
+  }, [message]);
 
   const togglePasswordVisibility = (field) => {
     setShowPassword((prevState) => ({
@@ -59,31 +64,55 @@ const Overview = ({ clientProfile, idUser }) => {
     }));
   };
 
+  const handlePhoneChange = (e) => {
+    setPhone(e.target.value);
+  };
+
+  const handleSavePhone = async () => {
+    const idUser = localStorage.getItem("idUser");
+    setSaving((prev) => ({ ...prev, phone: true }));
+    try {
+      const response = await axios.put(
+        `http://localhost:3005/user/save/Phone/${idUser}`,
+        { phone }
+      );
+  
+      if (response.status === 200) {
+        setMessage({ type: "success", text: "Phone number updated successfully!" });
+        setPhone(""); // Limpa o campo de telefone após o sucesso
+      } else {
+        throw new Error("Failed to update phone number");
+      }
+    } catch (error) {
+      console.error("Error updating phone number:", error);
+      setMessage({ type: "error", text: "Failed to update phone number." });
+    } finally {
+      setSaving((prev) => ({ ...prev, phone: false })); // Restaura o estado do botão
+    }
+  };
+  
+
   const handlePasswordChange = async (e) => {
     e.preventDefault();
 
     if (!currentPassword || !newPassword) {
-      setFeedbackMessage("Please fill in all fields.");
-      setFeedbackType("error"); // Tipo de feedback erro
+      setMessage({ type: "error", text: "Please fill in all fields." });
       return;
     }
 
     try {
-      // Realizar a requisição para mudar a senha
       const response = await axios.put("http://localhost:3005/user/upd/Pas", {
-        email: email, // Passar o email do estado
-        currentPassword: currentPassword, // Passar a senha atual
-        newPassword: newPassword, // Passar a nova senha
+        email,
+        currentPassword,
+        newPassword,
       });
-      
+
       if (response.status === 200) {
-        setFeedbackMessage("Password updated successfully!");
-        setFeedbackType("success"); // Tipo de feedback sucesso
+        setMessage({ type: "success", text: "Password updated successfully!" });
       }
     } catch (error) {
       console.error("Error updating password:", error);
-      setFeedbackMessage("There was an error updating the password.");
-      setFeedbackType("error"); // Tipo de feedback erro
+      setMessage({ type: "error", text: "There was an error updating the password." });
     }
   };
 
@@ -91,18 +120,12 @@ const Overview = ({ clientProfile, idUser }) => {
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
       {/* Quick Stats Section */}
       <div className="bg-white p-6 rounded-lg shadow-lg">
-        <h3 className="text-xl font-semibold mb-4 text-indigo-700">
-          Quick Stats
-        </h3>
-        <div className="space-y-4">
-          <p>
+        <h3 className="text-xl font-semibold mb-4 text-indigo-700">Quick Stats</h3>
+        <p>
           Total of paid reservations:{" "}
-            <span className="font-bold text-gray-800">{completedJobs.count}</span>
-          </p>
-        </div>
+          <span className="font-bold text-gray-800">{completedJobs}</span>
+        </p>
       </div>
-
-      {/* Recent Activity Section */}
 
       {/* Change Password Section */}
       <div className="lg:col-span-2 bg-white p-6 rounded-lg shadow-lg">
@@ -110,12 +133,8 @@ const Overview = ({ clientProfile, idUser }) => {
           Change Email and Password
         </h3>
         <form onSubmit={handlePasswordChange} className="space-y-6">
-          {/* Email field */}
           <div>
-            <label
-              htmlFor="email"
-              className="block text-sm font-medium text-gray-700 mb-2"
-            >
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
               Email
             </label>
             <input
@@ -123,13 +142,11 @@ const Overview = ({ clientProfile, idUser }) => {
               id="email"
               value={email}
               disabled
-              onChange={(e) => setEmail(e.target.value)}
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
-              placeholder="Enter your email"
+              placeholder="Your email address"
             />
           </div>
 
-          {/* Current Password field */}
           <div>
             <label
               htmlFor="current-password"
@@ -144,7 +161,7 @@ const Overview = ({ clientProfile, idUser }) => {
                 value={currentPassword}
                 onChange={(e) => setCurrentPassword(e.target.value)}
                 className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
-                placeholder="Enter current password"
+                placeholder="Enter your current password"
               />
               <button
                 type="button"
@@ -156,7 +173,6 @@ const Overview = ({ clientProfile, idUser }) => {
             </div>
           </div>
 
-          {/* New Password field */}
           <div>
             <label
               htmlFor="new-password"
@@ -171,7 +187,7 @@ const Overview = ({ clientProfile, idUser }) => {
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
                 className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
-                placeholder="Enter new password"
+                placeholder="Enter your new password"
               />
               <button
                 type="button"
@@ -183,17 +199,6 @@ const Overview = ({ clientProfile, idUser }) => {
             </div>
           </div>
 
-          {/* Feedback message */}
-          {feedbackMessage && (
-            <div
-              className={`text-sm mt-8 ${
-                feedbackType === "success" ? "text-green-500" : "text-red-500"
-              }`}
-            >
-              {feedbackMessage}
-            </div>
-          )}
-
           <div className="flex justify-end">
             <button
               type="submit"
@@ -204,6 +209,45 @@ const Overview = ({ clientProfile, idUser }) => {
           </div>
         </form>
       </div>
+
+      {/* Contact Information */}
+      <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6">
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-xl font-semibold text-gray-800">Contact Information</h2>
+          <button
+            onClick={handleSavePhone}
+            disabled={saving.phone}
+            className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors disabled:opacity-50"
+          >
+            {saving.phone ? "Saving..." : "Save"}
+          </button>
+        </div>
+        <p className="text-sm text-gray-600 mb-4">
+          Please update your contact number below. Ensure the format includes the country code.
+        </p>
+        <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
+          Phone Number
+        </label>
+        <input
+          type="tel"
+          id="phone"
+          value={phone}
+          onChange={handlePhoneChange}
+          className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-shadow"
+          placeholder="E.g., +1 (555) 000-0000"
+        />
+      </div>
+
+      {/* Feedback message */}
+      {message.text && (
+        <div
+          className={`mt-4 text-sm ${
+            message.type === "success" ? "text-green-500" : "text-red-500"
+          }`}
+        >
+          {message.text}
+        </div>
+      )}
     </div>
   );
 };

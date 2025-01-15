@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Search, UserCheck, CheckCircle2, AlertCircle, FileText, Mail, MapPin, CreditCard, X } from "lucide-react";
+import { Search, UserCheck, CheckCircle2, AlertCircle, FileText, Mail, MapPin, CreditCard, X ,Phone} from "lucide-react";
 
 const MainComponent = () => {
   const [activeTab, setActiveTab] = useState("babas");
@@ -65,13 +65,14 @@ const MainComponent = () => {
 
     const {
       first_name = '',
+      contact_phone ='',
       last_name = '',
       province_name = '',
       country_name = '',
       email = '',
       id_number = '',
-      background_check_status = 'pending',
-      user_id,
+      background_check_status = 'pending',  
+      user_id, 
       files = []
     } = user;
 
@@ -142,6 +143,10 @@ const MainComponent = () => {
                 <p className="flex items-center gap-2">
                   <CreditCard className="h-4 w-4 text-gray-400" />
                   {id_number}
+                </p>
+                <p className="flex items-center gap-2">
+                  <Phone className="h-4 w-4 text-gray-400" />
+                  {contact_phone}
                 </p>
               </div>
             </div>
