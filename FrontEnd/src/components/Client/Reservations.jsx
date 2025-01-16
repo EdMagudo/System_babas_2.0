@@ -78,7 +78,7 @@ const Reservations = () => {
       const response = await axios.put(
         `http://localhost:3005/reservations/cancel/reservation/${reservation_id}`
       );
-      if (response.status === 204) {
+      if (response.status === 200) {
         setMessage({
           text: "Reservation cancelled successfully!",
           type: "success",
@@ -91,7 +91,7 @@ const Reservations = () => {
       }
     } catch (error) {
       console.error("Error cancelling reservation:", error);
-      //setMessage({ text: "Error cancelling the reservation", type: "error" });
+      setMessage({ text: "Error cancelling the reservation", type: "error" });
     }
   };
 

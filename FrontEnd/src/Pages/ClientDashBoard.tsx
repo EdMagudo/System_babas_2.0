@@ -26,9 +26,6 @@ const ClientDashboard = () => {
     const handlePaymentSuccess = async () => {
       const reservationId = searchParams.get('reservationId');
       if (reservationId) {
-        alert(`Payment successfully completed for reservation ID: ${reservationId}`);
-  
-        // Remove the parameter from the URL after payment
         window.history.replaceState({}, document.title, '/client-dashboard');
       }
     };

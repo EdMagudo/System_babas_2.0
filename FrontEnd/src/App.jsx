@@ -4,7 +4,7 @@ import Header from './components/Estrutura/Header';
 import Footer from './components/Estrutura/Footer';
 import Logout from './components/Estrutura/Logout';
 import HomePage from './Pages/HomePage';
-import ClientForm from './components/ClientForm';
+import ClientForm from './components/Client/ClientForm';
 import NannyForm from './components/Nanny/NannyForm';
 import ContactUs from './components/Estrutura/contactUs';
 import FindNanny from './components/FindNanny';
