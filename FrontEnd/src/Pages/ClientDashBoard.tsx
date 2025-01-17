@@ -7,6 +7,7 @@ import {
   Star 
 } from 'lucide-react';
 import { useSearchParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next'; // Importando o hook useTranslation
 import Overview from '../components/Client/Overview'; 
 import Search from '../components/Client/Search';
 import Favorites from '../components/Client/Requirements';
@@ -14,6 +15,7 @@ import ProfilePictureUploader from '../components/Nanny/ProfilePictureUploader';
 import Reservations from '../components/Client/Reservations';
 
 const ClientDashboard = () => {
+  const { t } = useTranslation(); // Usando o hook useTranslation
   const [activeSection, setActiveSection] = useState('overview');
   const [clientProfile, setClientProfile] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -33,8 +35,6 @@ const ClientDashboard = () => {
   
     handlePaymentSuccess();
   }, [searchParams]);
-
-  
 
   // Função para buscar os dados do cliente
   useEffect(() => {
@@ -85,7 +85,7 @@ const ClientDashboard = () => {
                 uploadEndpoint={`http://localhost:3005/user/uploadProfile/Picture/${clientProfile.user_id}`}
                 fetchImageEndpoint={`http://localhost:3005/user/${clientProfile.user_id}/profile-picture`}
                 onUploadSuccess={(newImageUrl) => {
-                  console.log("Foto atualizada com sucesso:", newImageUrl);
+                  console.log(t("ClientDashboard.profile_picture_uploader.upload_success_message"), newImageUrl);
                 }}
               />
               <h2 className="text-2xl font-bold text-indigo-700">{clientProfile.first_name} {clientProfile.last_name}</h2>
@@ -97,33 +97,33 @@ const ClientDashboard = () => {
                 onClick={() => setActiveSection('overview')}
                 className={`w-full flex items-center p-3 rounded-lg ${activeSection === 'overview' ? 'bg-indigo-100 text-indigo-700' : 'hover:bg-gray-100'}`}
               >
-                <Home className="mr-3" /> Dashboard
+                <Home className="mr-3" /> {t("ClientDashboard.section_buttons.dashboard")}
               </button>
               <button 
                 onClick={() => setActiveSection('search')}
                 className={`w-full flex items-center p-3 rounded-lg ${activeSection === 'search' ? 'bg-indigo-100 text-indigo-700' : 'hover:bg-gray-100'}`}
               >
-                <SearchIcon className="mr-3" /> Find a Nanny
+                <SearchIcon className="mr-3" /> {t("ClientDashboard.section_buttons.find_a_nanny")}
               </button>
               <button 
                 onClick={() => setActiveSection('favorites')}
                 className={`w-full flex items-center p-3 rounded-lg ${activeSection === 'favorites' ? 'bg-indigo-100 text-indigo-700' : 'hover:bg-gray-100'}`}
               >
-                <Star className="mr-3" /> Requeriments
+                <Star className="mr-3" /> {t("ClientDashboard.section_buttons.requeriments")}
               </button>
               <button 
                 onClick={() => setActiveSection('reservations')}
                 className={`w-full flex items-center p-3 rounded-lg ${activeSection === 'reservations' ? 'bg-indigo-100 text-indigo-700' : 'hover:bg-gray-100'}`}
               >
-                <Star className="mr-3" /> Reservations
+                <Star className="mr-3" /> {t("ClientDashboard.section_buttons.reservations")}
               </button>
             </nav>
           </div>
 
           <div className="col-span-3">
             <div className="bg-white rounded-lg p-6 shadow-md mb-6">
-              <h1 className="text-3xl font-bold text-indigo-700">Welcome, {clientProfile.first_name}!</h1>
-              <p className="text-gray-600">Explore and find the perfect nanny for your family.</p>
+              <h1 className="text-3xl font-bold text-indigo-700">{t("ClientDashboard.welcome_message", { first_name: clientProfile.first_name })}</h1>
+              <p className="text-gray-600">{t("ClientDashboard.error_message")}</p>
             </div>
 
             {renderSection()}

@@ -71,7 +71,114 @@
       "map": {
         "title": "Our Location"
       }
+    },
+    "loginPage": {
+      "title": "Login",
+      "email": {
+        "label": "Email",
+        "placeholder": "your@email.com"
+      },
+      "password": {
+        "label": "Password",
+        "placeholder": "********"
+      },
+      "button": "Log In",
+      "forgotPassword": "Forgot your password?",
+      "error": "An error occurred during login"
+    },
+    "form": {
+    "registrationTitle": "Client Registration Form",
+    "registrationSubtitle": "Fill out the form to start your search",
+    "personalInformation": "Personal Information",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "email": "Email",
+    "idNumber": "ID Number",
+    "country": "Country",
+    "province": "Province",
+    "uploadId": "Upload ID Copy",
+    "selectFile": "Select a file",
+    "namePattern": "Name must contain at least 3 letters and only alphabetic characters.",
+    "idPattern": "ID must have 12 digits followed by a letter (BI) or 2 letters followed by 7 digits (Passport).",
+    "selectCountry": "Select a country",
+    "selectProvince": "Select a province",
+    "loadingProvinces": "Loading provinces...",
+    "uploadError": "Please upload a file.",
+    "registrationSuccess": "Client successfully registered!",
+    "registrationError": "Error registering client. Please try again later.",
+    "register": "Register"
+  },
+  "expressNannies": {
+    "heroTitle": "Express Nannies",
+    "heroDescription": "Welcome to Express Nannies, your trusted platform for finding reliable temporary nannies in Mozambique. Whether you're a tourist enjoying a night out, an expat in need of temporary support, or a parent whose nanny is unavailable, we're here to provide peace of mind with vetted, experienced caregivers.",
+    "trustedCaregiversTitle": "Our Trusted Caregivers",
+    "trustedCaregiversDescription": "Discover our diverse community of experienced nannies ready to provide exceptional care for your children."
+  },
+  "NannyRegistrationForm": {
+    "title": "Join Our Trusted Nanny Team",
+    "personal_info": "Personal Information",
+    "first_name": "First Name",
+    "last_name": "Last Name",
+    "first_name_placeholder": "First Name",
+    "last_name_placeholder": "Last Name",
+    "first_name_title": "The first name must contain at least 3 letters and only alphabetic characters.",
+    "last_name_title": "The last name must contain at least 3 letters and only alphabetic characters.",
+    "date_of_birth": "Date of Birth",
+    "email": "Email",
+    "select_country": "Select Country",
+    "select_province": "Select Province",
+    "id_number": "ID/Passport",
+    "id_number_placeholder": "ID or Passport Number",
+    "id_number_title": "The ID must contain 12 digits followed by a letter (BI) or 2 letters followed by 7 digits (Passport).",
+    "id_copy": "ID Copy",
+    "education": "Education & Qualifications",
+    "education_level": "Education Level",
+    "select_education": "Select Education Level",
+    "none": "None",
+    "high_school_student": "High School Student",
+    "high_school_incomplete": "High School Incomplete",
+    "high_school_complete": "High School Graduate",
+    "technical_student": "Technical or University Student",
+    "technical_graduate": "Technical Graduate",
+    "university_graduate": "University Graduate",
+    "submit_button": "Submit Application",
+    "age_error": "You must be 18 years or older to register.",
+    "submit_error": "Failed to submit registration. Please try again.",
+    "success_message": "Registration successful!"
+  },
+  "ClientDashboard": {
+    "welcome_message": "Welcome, {{first_name}}!",
+    "overview": "Overview",
+    "search": "Find a Nanny",
+    "favorites": "Requirements",
+    "reservations": "Reservations",
+    "loading_message": "Loading client profile...",
+    "error_message": "Error loading client data. Please try again.",
+    "section_buttons": {
+      "dashboard": "Home",
+      "find_a_nanny": "Find a Nanny",
+      "requeriments": "Requirements",
+      "reservations": "Reservations"
+    },
+    "profile_picture_uploader": {
+      "title": "Update Your Profile Picture",
+      "upload_success_message": "Profile picture updated successfully!"
     }
-  
+  },
+  "dashboard": {
+    "welcome": "Welcome, {{name}}!",
+    "overview": "Dashboard",
+    "profile": "Profile",
+    "jobs": "Jobs",
+    "qualifications": "Qualifications",
+    "submit": "Submit",
+    "personal_details": "Personal Details",
+    "availability_experience": "Availability & Experience",
+    "background_check": "Background Check",
+    "work_preferences": "Work Preferences",
+    "languages": "Languages & Additional Information",
+    "additional_information": "Please share any other relevant information",
+    "file_upload": "Please upload a copy of your police clearance:"
+  }
   
 }

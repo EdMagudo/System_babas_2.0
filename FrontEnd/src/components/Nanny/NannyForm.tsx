@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios"; 
+import axios from "axios";
+import { useTranslation } from "react-i18next"; 
 
 const NannyRegistrationForm = () => {
+  const { t } = useTranslation(); // Hook de tradução
   const [client, setClient] = useState({
     firstName: "",
     lastName: "",
@@ -11,7 +13,7 @@ const NannyRegistrationForm = () => {
     province: "",
     idNumber: "",
     idCopy: null,
-   education_level: null,
+    education_level: null,
   });
 
   const [languages, setLanguages] = useState([]);
@@ -84,7 +86,7 @@ const NannyRegistrationForm = () => {
     }
 
     if (age < 18) {
-      setError("Você precisa ter 18 anos ou mais para se registrar.");
+      setError(t('NannyRegistrationForm.age_error')); // Tradução para erro de idade
       setSuccessMessage(""); // Limpa a mensagem de sucesso
       return;
     }
@@ -99,14 +101,11 @@ const NannyRegistrationForm = () => {
       formData.append('province', client.province || '');
       formData.append('idNumber', client.idNumber || '');
   
-      
-
-
       if (client.idCopy) {
         formData.append('idCopy', client.idCopy);
       }
 
-      const  educationLevel= document.querySelector('select[name="education_level"]')?.value || '';
+      const educationLevel = document.querySelector('select[name="education_level"]')?.value || '';
       formData.append('education_level', educationLevel);
 
       // Envia ao backend
@@ -115,11 +114,11 @@ const NannyRegistrationForm = () => {
       });
 
       setError(""); // Limpa a mensagem de erro
-      setSuccessMessage("Cadastro realizado com sucesso!");
+      setSuccessMessage(t('NannyRegistrationForm.success_message')); // Tradução de sucesso
       console.log('Backend response:', response.data);
     } catch (error) {
       console.error('Submission error:', error.response?.data || error.message);
-      setError("Falha ao enviar cadastro. Tente novamente.");
+      setError(t('NannyRegistrationForm.submit_error')); // Tradução de erro ao submeter
       setSuccessMessage(""); // Limpa a mensagem de sucesso
     }
   };
@@ -127,7 +126,7 @@ const NannyRegistrationForm = () => {
   return (
     <div className="max-w-4xl mx-auto p-6 bg-white shadow-2xl rounded-2xl mt-16 mb-8">
       <h1 className="text-3xl font-bold text-center text-blue-600 mb-8">
-        Join Our Trusted Nanny Team
+        {t('NannyRegistrationForm.title')}
       </h1>
 
       {/* Mensagens de erro ou sucesso */}
@@ -142,51 +141,51 @@ const NannyRegistrationForm = () => {
         {/* Personal Information */}
         <div className="bg-gray-50 p-6 rounded-lg">
           <h2 className="text-xl font-semibold text-blue-700 mb-4">
-            Personal Information
+            {t('NannyRegistrationForm.personal_info')}
           </h2>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block mb-2">First Name</label>
+              <label className="block mb-2">{t('NannyRegistrationForm.first_name')}</label>
               <input
                 type="text"
                 id="firstName"
-                placeholder="First Name"
+                placeholder={t('NannyRegistrationForm.first_name_placeholder')}
                 value={client.firstName}
                 onChange={handleInputChange}
                 className="w-full px-3 py-2 border rounded"
                 required
-                pattern="[A-Za-z]{3,}" // Aceita apenas letras com 3 ou mais caracteres
-                title="O nome deve conter pelo menos 3 letras e apenas caracteres alfabéticos."
+                pattern="[A-Za-z]{3,}"
+                title={t('NannyRegistrationForm.first_name_title')}
               />
             </div>
             <div>
-              <label className="block mb-2">Last Name</label>
+              <label className="block mb-2">{t('NannyRegistrationForm.last_name')}</label>
               <input
                 type="text"
                 id="lastName"
-                placeholder="Last Name"
+                placeholder={t('NannyRegistrationForm.last_name_placeholder')}
                 value={client.lastName}
                 onChange={handleInputChange}
                 className="w-full px-3 py-2 border rounded"
                 required
-                pattern="[A-Za-z]{3,}" // Aceita apenas letras com 3 ou mais caracteres
-                title="O nome deve conter pelo menos 3 letras e apenas caracteres alfabéticos."
+                pattern="[A-Za-z]{3,}"
+                title={t('NannyRegistrationForm.last_name_title')}
               />
             </div>
             <div>
-              <label className="block mb-2">Date of Birth</label>
+              <label className="block mb-2">{t('NannyRegistrationForm.date_of_birth')}</label>
               <input
                 type="date"
                 id="date_of_birth"
                 value={client.date_of_birth}
                 onChange={handleInputChange}
                 className="w-full px-3 py-2 border rounded"
-                max={maxDate} // Impede a seleção de datas para menores de 18 anos
+                max={maxDate}
                 required
               />
             </div>
             <div>
-              <label className="block mb-2">Email</label>
+              <label className="block mb-2">{t('NannyRegistrationForm.email')}</label>
               <input
                 type="email"
                 id="email"
@@ -198,7 +197,7 @@ const NannyRegistrationForm = () => {
               />
             </div>
             <div>
-              <label className="block mb-2">Country</label>
+              <label className="block mb-2">{t('NannyRegistrationForm.country')}</label>
               <select
                 id="country"
                 value={client.country}
@@ -206,14 +205,14 @@ const NannyRegistrationForm = () => {
                 className="w-full px-3 py-2 border rounded"
                 required
               >
-                <option value="" disabled>Select Country</option>
+                <option value="" disabled>{t('NannyRegistrationForm.select_country')}</option>
                 {countries.map((country, index) => (
                   <option key={index} value={country}>{country}</option>
                 ))}
               </select>
             </div>
             <div>
-              <label className="block mb-2">Province</label>
+              <label className="block mb-2">{t('NannyRegistrationForm.province')}</label>
               <select
                 id="province"
                 value={client.province}
@@ -221,28 +220,28 @@ const NannyRegistrationForm = () => {
                 className="w-full px-3 py-2 border rounded"
                 required
               >
-                <option value="" disabled>Select Province</option>
+                <option value="" disabled>{t('NannyRegistrationForm.select_province')}</option>
                 {provinces.map((province, index) => (
                   <option key={index} value={province}>{province}</option>
                 ))}
               </select>
             </div>
             <div>
-              <label className="block mb-2">ID/Passport</label>
+              <label className="block mb-2">{t('NannyRegistrationForm.id_number')}</label>
               <input
                 type="text"
                 id="idNumber"
-                placeholder="ID or Passport Number"
+                placeholder={t('NannyRegistrationForm.id_number_placeholder')}
                 value={client.idNumber}
                 onChange={handleInputChange}
                 className="w-full px-3 py-2 border rounded"
                 required
-                pattern="\d{12}[A-Za-z]|[A-Za-z]{2}\d{7}" // Aceita BI ou passaporte
-                title="O ID deve ter 12 dígitos seguidos de uma letra (BI) ou 2 letras seguidas de 7 números (Passaporte)."
+                pattern="\d{12}[A-Za-z]|[A-Za-z]{2}\d{7}"
+                title={t('NannyRegistrationForm.id_number_title')}
               />
             </div>
             <div>
-              <label className="block mb-2">ID Copy</label>
+              <label className="block mb-2">{t('NannyRegistrationForm.id_copy')}</label>
               <input
                 type="file"
                 id="idCopy"
@@ -258,26 +257,25 @@ const NannyRegistrationForm = () => {
         {/* Education & Qualifications */}
         <div className="bg-gray-50 p-6 rounded-lg">
           <h2 className="text-xl font-semibold text-blue-700 mb-4">
-            Education & Qualifications
+            {t('NannyRegistrationForm.education')}
           </h2>
           <div>
-            <label className="block mb-2">Education Level</label>
+            <label className="block mb-2">{t('NannyRegistrationForm.education_level')}</label>
             <select 
               name="education_level"
               value={client.education_level} 
               id="education-level"
               onChange={handleInputChange}
               className="w-full px-3 py-2 border rounded"
-             
             >
-              <option value="">Select Education Level</option>
-              <option value="none">None</option>
-              <option value="high_school_student">High School Student</option>
-              <option value="high_school_incomplete">High School Incomplete</option>
-              <option value="high_school_complete">High School Graduate</option>
-              <option value="technical_student">Technical or University Student</option>
-              <option value="technical_graduate">Technical Graduate</option>
-              <option value="university_graduate">University Graduate</option>
+              <option value="">{t('NannyRegistrationForm.select_education')}</option>
+              <option value="none">{t('NannyRegistrationForm.none')}</option>
+              <option value="high_school_student">{t('NannyRegistrationForm.high_school_student')}</option>
+              <option value="high_school_incomplete">{t('NannyRegistrationForm.high_school_incomplete')}</option>
+              <option value="high_school_complete">{t('NannyRegistrationForm.high_school_complete')}</option>
+              <option value="technical_student">{t('NannyRegistrationForm.technical_student')}</option>
+              <option value="technical_graduate">{t('NannyRegistrationForm.technical_graduate')}</option>
+              <option value="university_graduate">{t('NannyRegistrationForm.university_graduate')}</option>
             </select>
           </div>
         </div>
@@ -288,7 +286,7 @@ const NannyRegistrationForm = () => {
             type="submit"
             className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition duration-300 text-lg font-semibold"
           >
-            Submit Application
+            {t('NannyRegistrationForm.submit_button')}
           </button>
         </div>
       </form>
