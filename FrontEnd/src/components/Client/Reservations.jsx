@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { 
+import {
   ChevronDown,
   ChevronUp,
   Calendar,
   Clock,
   FileText,
   User,
-  DollarSign
+  DollarSign,
 } from "lucide-react";
+
+import axios from "axios";
 
 const Reservations = () => {
   const [reservations, setReservations] = useState([]);
@@ -42,13 +44,13 @@ const Reservations = () => {
         `http://localhost:3005/reservations/getAll/reservations/client/${clientId}`
       );
       if (!response.ok) {
-        throw new Error('Network response was not ok');
+        throw new Error("Network response was not ok");
       }
       const data = await response.json();
       setReservations(data);
     } catch (error) {
       console.error("Error fetching reservations:", error);
-      setMessage({ text: "Error fetching reservations", type: "error" });
+      //setMessage({ text: "Error fetching reservations", type: "error" });
     }
   };
 
@@ -66,19 +68,49 @@ const Reservations = () => {
     }));
   };
 
+  const handleCancel = async (reservation_id) => {
+    const confirmCancel = window.confirm(
+      "Are you sure you want to cancel this reservation?"
+    );
+    if (!confirmCancel) return;
+
+    try {
+      const response = await axios.put(
+        `http://localhost:3005/reservations/cancel/reservation/${reservation_id}`
+      );
+      if (response.status === 204) {
+        setMessage({
+          text: "Reservation cancelled successfully!",
+          type: "success",
+        });
+        setReservations(
+          reservations.filter((res) => res.reservation_id !== reservation_id)
+        );
+      } else {
+        setMessage({ text: "Error cancelling the reservation", type: "error" });
+      }
+    } catch (error) {
+      console.error("Error cancelling reservation:", error);
+      //setMessage({ text: "Error cancelling the reservation", type: "error" });
+    }
+  };
+
   const handleFeedbackSubmit = async (reservationId) => {
     const feedback = feedbacks[reservationId];
     if (!feedback || !feedback.comment || !feedback.rating) {
-      setMessage({ text: "Please provide both a comment and a rating.", type: "error" });
+      setMessage({
+        text: "Please provide both a comment and a rating.",
+        type: "error",
+      });
       return;
     }
     try {
       const response = await fetch(
         `http://localhost:3005/reservations/${reservationId}/feedback`,
         {
-          method: 'POST',
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
           body: JSON.stringify(feedback),
         }
@@ -102,9 +134,9 @@ const Reservations = () => {
   };
 
   const formatCurrency = (value) => {
-    return new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: 'USD',
+    return new Intl.NumberFormat("pt-BR", {
+      style: "currency",
+      currency: "USD",
     }).format(value);
   };
 
@@ -125,7 +157,9 @@ const Reservations = () => {
 
       {message.text && (
         <div
-          className={`p-4 my-4 text-center font-semibold text-white transition-opacity duration-300 ${message.type === "success" ? "bg-green-500" : "bg-red-500"}`}
+          className={`p-4 my-4 text-center font-semibold text-white transition-opacity duration-300 ${
+            message.type === "success" ? "bg-green-500" : "bg-red-500"
+          }`}
         >
           {message.text}
         </div>
@@ -152,7 +186,8 @@ const Reservations = () => {
                       Nanny's e-mail: {reservation.serviceRequest.nanny_email}
                     </p>
                     <p className="text-sm text-gray-500">
-                      Status: <span className="font-medium">{reservation.status}</span>
+                      Status:{" "}
+                      <span className="font-medium">{reservation.status}</span>
                     </p>
                     {reservation.status === "completed" && (
                       <p className="text-sm text-gray-500 flex items-center">
@@ -179,17 +214,32 @@ const Reservations = () => {
                   <p className="text-sm text-gray-600">
                     <Calendar className="inline-block w-4 h-4 mr-2 text-blue-500" />
                     <span className="font-medium">Start:</span>{" "}
-                    {new Date(reservation.serviceRequest.start_date).toLocaleDateString()}
+                    {new Date(
+                      reservation.serviceRequest.start_date
+                    ).toLocaleDateString()}
                   </p>
                   <p className="text-sm text-gray-600">
                     <Clock className="inline-block w-4 h-4 mr-2 text-blue-500" />
                     <span className="font-medium">End:</span>{" "}
-                    {new Date(reservation.serviceRequest.end_date).toLocaleDateString()}
+                    {new Date(
+                      reservation.serviceRequest.end_date
+                    ).toLocaleDateString()}
                   </p>
                   <p className="text-sm text-gray-600">
                     <FileText className="inline-block w-4 h-4 mr-2 text-blue-500" />
-                    <span className="font-medium">Status:</span> {reservation.status}
+                    <span className="font-medium">Status:</span>{" "}
+                    {reservation.status}
                   </p>
+
+                  {reservation.status !== "cancelled" &&
+                    reservation.status !== "completed" && (
+                      <button
+                        onClick={() => handleCancel(reservation.reservation_id)}
+                        className="px-4 py-2 bg-red-600 text-white mt-6 font-semibold text-sm rounded-md shadow-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-all duration-200"
+                      >
+                        Cancel Reservation
+                      </button>
+                    )}
 
                   {reservation.status === "confirmed" && (
                     <div className="mt-4 bg-gray-100 p-4 rounded-lg shadow-sm">
@@ -198,20 +248,30 @@ const Reservations = () => {
                       </h3>
                       <div className="flex flex-col gap-4">
                         {/* PayPal Payment Button */}
-                        <form action="http://localhost:3005/sam/pay" method="post">
+                        <form
+                          action="http://localhost:3005/sam/pay"
+                          method="post"
+                        >
                           <input
                             type="hidden"
                             name="reservationId"
                             value={reservation.reservation_id}
                           />
-                          <input type="hidden" name="amount" value={reservation.value} />
+                          <input
+                            type="hidden"
+                            name="amount"
+                            value={reservation.value}
+                          />
                           <button className="w-full px-4 py-2 bg-blue-600 text-white rounded-md shadow hover:bg-blue-700 transition-colors">
                             Pay with PayPal
                           </button>
                         </form>
 
                         {/* M-Pesa Payment Button */}
-                        <form action="http://localhost:3005/mpesa/pay" method="post">
+                        <form
+                          action="http://localhost:3005/mpesa/pay"
+                          method="post"
+                        >
                           <input
                             type="hidden"
                             name="reservationId"
@@ -226,7 +286,9 @@ const Reservations = () => {
                   )}
 
                   <div className="flex items-center bg-gray-50 px-4 py-2 rounded-xl mt-4">
-                    <span className="text-sm font-medium text-gray-600 mr-2">Total:</span>
+                    <span className="text-sm font-medium text-gray-600 mr-2">
+                      Total:
+                    </span>
                     <span className="text-lg font-bold text-gray-800">
                       {formatCurrency(reservation.value)}
                     </span>
@@ -237,7 +299,9 @@ const Reservations = () => {
                       <h3 className="text-lg font-semibold">Leave Feedback</h3>
                       <textarea
                         placeholder="Write your comment here..."
-                        value={feedbacks[reservation.reservation_id]?.comment || ""}
+                        value={
+                          feedbacks[reservation.reservation_id]?.comment || ""
+                        }
                         onChange={(e) =>
                           handleFeedbackChange(
                             reservation.reservation_id,
@@ -250,7 +314,9 @@ const Reservations = () => {
                       <div className="mt-2 flex items-center">
                         <label className="mr-4">Rating:</label>
                         <select
-                          value={feedbacks[reservation.reservation_id]?.rating || ""}
+                          value={
+                            feedbacks[reservation.reservation_id]?.rating || ""
+                          }
                           onChange={(e) =>
                             handleFeedbackChange(
                               reservation.reservation_id,
@@ -288,7 +354,11 @@ const Reservations = () => {
           <button
             onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
             disabled={currentPage === 1}
-            className={`px-4 py-2 text-sm font-medium rounded-md shadow ${currentPage === 1 ? "bg-gray-300 text-gray-500" : "bg-indigo-600 text-white hover:bg-indigo-700"}`}
+            className={`px-4 py-2 text-sm font-medium rounded-md shadow ${
+              currentPage === 1
+                ? "bg-gray-300 text-gray-500"
+                : "bg-indigo-600 text-white hover:bg-indigo-700"
+            }`}
           >
             Previous
           </button>
@@ -296,9 +366,15 @@ const Reservations = () => {
             Page {currentPage} of {totalPages}
           </span>
           <button
-            onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+            onClick={() =>
+              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+            }
             disabled={currentPage === totalPages}
-            className={`px-4 py-2 text-sm font-medium rounded-md shadow ${currentPage === totalPages ? "bg-gray-300 text-gray-500" : "bg-indigo-600 text-white hover:bg-indigo-700"}`}
+            className={`px-4 py-2 text-sm font-medium rounded-md shadow ${
+              currentPage === totalPages
+                ? "bg-gray-300 text-gray-500"
+                : "bg-indigo-600 text-white hover:bg-indigo-700"
+            }`}
           >
             Next
           </button>

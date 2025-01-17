@@ -174,25 +174,32 @@ const getAllReservationsForClient = async (req, res) => {
 };
 
 const cancelReservation = async (req, res) => {
-  console.log("Canceling reservation with ID:", req.params.id_reservation);
-
   try {
-    // Encontre a reserva pelo ID e atualize o status para 'cancelled'
-    const updatedRows = await Reservations.update(
+    const reservationId = req.params.id_reservation;
+
+    // Validação inicial para verificar se o ID foi fornecido
+    if (!reservationId) {
+      return res.status(400).json({ message: "Reservation ID is required" });
+    }
+
+    // Atualize o status da reserva para 'cancelled'
+    const [updatedRows] = await Reservations.update(
       { status: "cancelled" },
-      { where: { reservation_id: req.params.id_reservation } }
+      { where: { reservation_id: reservationId } }
     );
 
-    if (updatedRows[0] === 0) {
-      return res.status(404).json({ message: "Reservation not found" });
+    // Verifique se a reserva foi encontrada e atualizada
+    if (updatedRows === 0) {
+      return res.status(404).json({ message: "Reservation not found or already cancelled" });
     }
 
     res.status(200).json({ message: "Reservation cancelled successfully" });
   } catch (error) {
     console.error("Error canceling reservation:", error);
-    res.status(500).json({ message: "Error canceling reservation" });
+    res.status(500).json({ message: "Error canceling reservation", error: error.message });
   }
 };
+
 
 const PayReservationtoClient = async (req, res) => {
   
