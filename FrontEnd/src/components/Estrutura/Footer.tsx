@@ -1,7 +1,10 @@
 import React from 'react';
 import { Facebook, Instagram, Twitter } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const Footer = () => {
+  const { t } = useTranslation();
+
   return (
     <footer className="bg-gradient-to-r from-slate-50 to-slate-100 py-12 px-6">
       <div className="max-w-6xl mx-auto">
@@ -12,32 +15,32 @@ const Footer = () => {
               <ul className="grid grid-cols-2 gap-4">
                 <li>
                   <a href="/contact" className="text-slate-600 hover:text-slate-900 transition-colors duration-200 text-sm">
-                    Contact Us
+                    {t('footer.contactUs')}
                   </a>
                 </li>
                 <li>
                   <a href="/terms" className="text-slate-600 hover:text-slate-900 transition-colors duration-200 text-sm">
-                    Terms & Conditions
+                    {t('footer.terms')}
                   </a>
                 </li>
                 <li>
                   <a href="/faqs" className="text-slate-600 hover:text-slate-900 transition-colors duration-200 text-sm">
-                    FAQs
+                    {t('footer.faqs')}
                   </a>
                 </li>
                 <li>
                   <a href="/service-fee" className="text-slate-600 hover:text-slate-900 transition-colors duration-200 text-sm">
-                    Service Fee
+                    {t('footer.serviceFee')}
                   </a>
                 </li>
                 <li>
                   <a href="/places-to-visit" className="text-slate-600 hover:text-slate-900 transition-colors duration-200 text-sm">
-                    Places to Visit
+                    {t('footer.placesToVisit')}
                   </a>
                 </li>
                 <li>
                   <a href="/travel-tips" className="text-slate-600 hover:text-slate-900 transition-colors duration-200 text-sm">
-                    Travel Tips
+                    {t('footer.travelTips')}
                   </a>
                 </li>
               </ul>
@@ -60,7 +63,9 @@ const Footer = () => {
           {/* Copyright */}
           <div className="text-center md:text-right">
             <p className="text-sm text-slate-500">
-              &copy; 2024 Express Nanny.<br />All Rights Reserved.
+              {t('footer.copyright.text')}
+              <br />
+              {t('footer.copyright.allRightsReserved')}
             </p>
           </div>
         </div>

@@ -5,11 +5,10 @@ import { useTranslation } from 'react-i18next';
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [userRole, setUserRole] = useState(null);
-  const { i18n } = useTranslation();
+  const { i18n, t } = useTranslation();
   const [currentLang, setCurrentLang] = useState(i18n.language);
 
   useEffect(() => {
-    // Obtendo a role do usuário do localStorage
     const storedRole = localStorage.getItem('userRole');
     setUserRole(storedRole);
   }, []);
@@ -20,32 +19,30 @@ const Header = () => {
     setCurrentLang(newLang);
   };
 
-  // Defina os itens de navegação para diferentes tipos de usuários
   const navigationItems = {
     guest: [
-      { name: 'home', path: '/' },
-      { name: 'joinAsNanny', path: '/register-nanny' },
-      { name: 'joinAsClient', path: '/register-client' },
-      { name: 'contactUs', path: '/contact-us' },
-      { name: 'signIn', path: '/sign-in' },
+      { name: t('header.home'), path: '/' },
+      { name: t('header.joinAsNanny'), path: '/register-nanny' },
+      { name: t('header.joinAsClient'), path: '/register-client' },
+      { name: t('header.contactUs'), path: '/contact-us' },
+      { name: t('header.signIn'), path: '/sign-in' },
     ],
     client: [
-      { name: 'home', path: '/' },
-      { name: 'dashboard', path: '/client-dashboard' },
-      { name: 'logout', path: '/logout' },
+      { name: t('header.home'), path: '/' },
+      { name: t('header.dashboard'), path: '/client-dashboard' },
+      { name: t('header.logout'), path: '/logout' },
     ],
     nanny: [
-      { name: 'home', path: '/' },
-      { name: 'dashboard', path: '/nanny-dashboard' },
-      { name: 'logout', path: '/logout' },
+      { name: t('header.home'), path: '/' },
+      { name: t('header.dashboard'), path: '/nanny-dashboard' },
+      { name: t('header.logout'), path: '/logout' },
     ],
     admin: [
-      { name: 'home', path: '/' },
-      { name: 'logout', path: '/logout' },
+      { name: t('header.home'), path: '/' },
+      { name: t('header.logout'), path: '/logout' },
     ],
   };
 
-  // Determine o menu baseado no tipo de usuário
   const menuItems = navigationItems[userRole] || navigationItems.guest;
 
   return (
@@ -76,7 +73,6 @@ const Header = () => {
             </ul>
           </nav>
 
-          {/* Toggle Language Button */}
           <div className="flex items-center space-x-4">
             <button
               onClick={toggleLanguage}
@@ -86,7 +82,6 @@ const Header = () => {
             </button>
           </div>
 
-          {/* Mobile menu button */}
           <div className="md:hidden">
             <button
               onClick={() => setIsOpen(!isOpen)}
@@ -104,7 +99,6 @@ const Header = () => {
           </div>
         </div>
 
-        {/* Mobile menu */}
         {isOpen && (
           <div className="md:hidden">
             <div className="px-2 pt-2 pb-3 space-y-1">
