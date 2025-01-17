@@ -179,6 +179,54 @@
     "languages": "Languages & Additional Information",
     "additional_information": "Please share any other relevant information",
     "file_upload": "Please upload a copy of your police clearance:"
+  },
+  "reservation":{
+  "clientReservations": "Client Reservations",
+  "noReservations": "No reservations available",
+  "nannyEmail": "Nanny's e-mail: ",
+  "status": "Status: ",
+  "paidAmount": "Paid Amount: $",
+  "cancelReservation": "Cancel Reservation",
+  "choosePaymentMethod": "Choose Payment Method",
+  "payWithPaypal": "Pay with PayPal",
+  "payWithMpesa": "Pay with M-Pesa",
+  "total": "Total:",
+  "leaveFeedback": "Leave Feedback",
+  "writeComment": "Write your comment here...",
+  "rating": "Rating:",
+  "submitFeedback": "Submit Feedback",
+  "previous": "Previous",
+  "next": "Next",
+  "page": "Page",
+  "start": "Start",
+    "end": "End"
+},
+  "favorites": {
+    "clientRequests": "Client Requests",
+    "noRequests": "No requests available",
+    "start": "Start",
+    "end": "End",
+    "notes": "Notes:",
+    "noNotes": "No notes",
+    "cancelRequest": "Cancel Request",
+    "previous": "Previous",
+    "next": "Next",
+    "pageOf": "Page {{currentPage}} of {{totalPages}}"
+  },
+  "search": {
+    "findANanny": "Find a Nanny",
+    "country": "Country",
+    "selectCountry": "Select Country",
+    "province": "Province",
+    "selectProvince": "Select Province",
+    "availability": "Availability",
+    "selectAvailability": "Select Availability",
+    "fullTime": "Full-time",
+    "temporary": "Temporary",
+    "searchNannies": "Search Nannies",
+    "previous": "Previous",
+    "next": "Next",
+    "errorFetchingData":"No nanny found with these characteristics",
+    "pleaseSelectFields":"Please select all fields"
   }
-  
 }

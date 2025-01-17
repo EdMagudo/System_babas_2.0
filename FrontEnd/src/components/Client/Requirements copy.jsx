@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useTranslation } from 'react-i18next';
 import axios from "axios";
 import {
   Calendar,
@@ -12,7 +11,6 @@ import {
 } from "lucide-react";
 
 const Favorites = () => {
-  const { t } = useTranslation(); // Utiliza o carregamento dinâmico
   const [requests, setRequests] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(5);
@@ -77,7 +75,7 @@ const Favorites = () => {
   return (
     <div className="max-w-5xl mx-auto bg-gray-50 rounded-lg shadow-lg overflow-hidden">
       <div className="p-6 border-b border-gray-200 bg-indigo-50">
-        <h2 className="text-2xl font-bold text-indigo-800">{t('favorites.clientRequests')}</h2>
+        <h2 className="text-2xl font-bold text-indigo-800">Client Requests</h2>
       </div>
 
       {message.text && (
@@ -95,7 +93,7 @@ const Favorites = () => {
       <div className="p-6 space-y-6">
         {currentItems.length === 0 ? (
           <div className="text-center py-8 text-gray-500">
-            {t('favorites.noRequests')}
+            No requests available
           </div>
         ) : (
           currentItems.map((request) => (
@@ -123,18 +121,18 @@ const Favorites = () => {
 
                     <p className="text-sm text-gray-600 flex items-center gap-2">
                       <Calendar className="w-4 h-4 text-blue-500" />
-                      <span className="font-medium">{t('favorites.start')}:</span>{" "}
+                      <span className="font-medium">Start:</span>{" "}
                       {new Date(request.start_date).toLocaleDateString()}
                     </p>
                     <p className="text-sm text-gray-600 flex items-center gap-2">
                       <Clock className="w-4 h-4 text-blue-500" />
-                      <span className="font-medium">{t('favorites.end')}:</span>{" "}
+                      <span className="font-medium">End:</span>{" "}
                       {new Date(request.end_date).toLocaleDateString()}
                     </p>
                     <p className="text-sm text-gray-600 flex items-center gap-2">
                       <FileText className="w-4 h-4 text-blue-600" />
-                      <span className="font-medium">{t('favorites.notes')}:</span>{" "}
-                      {request.notes || t('favorites.noNotes')}
+                      <span className="font-medium">Notes:</span>{" "}
+                      {request.notes || "No notes"}
                     </p>
                   </div>
 
@@ -145,7 +143,7 @@ const Favorites = () => {
                       className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-red-600 bg-red-50 hover:bg-red-100 rounded-md transition-colors duration-200"
                     >
                       <Trash2 size={16} />
-                      {t('favorites.cancelRequest')}
+                      Cancel Request
                     </button>
                   </div>
                 </div>
@@ -160,10 +158,10 @@ const Favorites = () => {
             className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
             disabled={currentPage === 1}
           >
-            {t('favorites.previous')}
+            Previous
           </button>
           <span className="text-sm text-gray-600">
-            {t('favorites.pageOf', { currentPage, totalPages })}
+            Page {currentPage} of {totalPages}
           </span>
           <button
             onClick={() =>
@@ -172,7 +170,7 @@ const Favorites = () => {
             className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
             disabled={currentPage === totalPages}
           >
-            {t('favorites.next')}
+            Next
           </button>
         </div>
       </div>
