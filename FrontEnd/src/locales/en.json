@@ -1,0 +1,77 @@
+{
+  "header": {
+    "home": "Home",
+    "dashboard": "My Dashboard",
+    "logout": "Logout",
+    "joinAsNanny": "Join as Nanny",
+    "joinAsClient": "Join as Client",
+    "contactUs": "Contact Us",
+    "signIn": "Sign in"
+  },
+  "footer": {
+    "contactUs": "Contact Us",
+    "terms": "Terms & Conditions",
+    "faqs": "FAQs",
+    "serviceFee": "Service Fee",
+    "placesToVisit": "Places to Visit",
+    "travelTips": "Travel Tips",
+    "copyright": {
+      "text": "&copy; 2024 Express Nanny.",
+      "allRightsReserved": "All Rights Reserved."
+    }
+  },
+    "contactPage": {
+      "header": {
+        "title": "Contact Us",
+        "description": "Have questions about our nanny services in Mozambique? We're here to help you find the perfect childcare solution."
+      },
+      "contactInfo": {
+        "title": "Get in Touch",
+        "phone": {
+          "label": "Phone",
+          "numbers": [
+            "+258 84 123 4567",
+            "+258 86 987 6543"
+          ]
+        },
+        "email": {
+          "label": "Email",
+          "addresses": [
+            "info@expressnannies.co.mz",
+            "support@expressnannies.co.mz"
+          ]
+        },
+        "location": {
+          "label": "Office Location",
+          "details": [
+            "Av. Julius Nyerere, 257",
+            "Maputo, Mozambique"
+          ]
+        },
+        "hours": {
+          "label": "Business Hours",
+          "details": [
+            "Monday - Friday: 8:00 AM - 6:00 PM",
+            "Saturday: 9:00 AM - 2:00 PM"
+          ]
+        }
+      },
+      "form": {
+        "title": "Send Us a Message",
+        "fields": {
+          "name": "Your Name",
+          "email": "Email Address",
+          "subject": "Subject",
+          "message": "Message"
+        },
+        "submitButton": "Send Message",
+        "successMessage": "Email sent successfully!",
+        "errorMessage": "Error sending the email. Please try again."
+      },
+      "map": {
+        "title": "Our Location"
+      }
+    }
+  
+  
+}

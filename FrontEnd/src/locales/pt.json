@@ -1,0 +1,75 @@
+{
+  "header": {
+    "home": "Início",
+    "dashboard": "Meu Painel",
+    "logout": "Sair",
+    "joinAsNanny": "Juntar-se como Babá",
+    "joinAsClient": "Juntar-se como Cliente",
+    "contactUs": "Fale Conosco",
+    "signIn": "Entrar"
+  },
+  "footer": {
+    "contactUs": "Fale Conosco",
+    "terms": "Termos e Condições",
+    "faqs": "Perguntas Frequentes",
+    "serviceFee": "Taxa de Serviço",
+    "placesToVisit": "Lugares para Visitar",
+    "travelTips": "Dicas de Viagem",
+    "copyright": {
+      "text": "&copy; 2024 Express Nanny.",
+      "allRightsReserved": "Todos os Direitos Reservados."
+    }
+  },
+  "contactPage": {
+    "header": {
+      "title": "Fale Conosco",
+      "description": "Tem perguntas sobre nossos serviços de babá em Moçambique? Estamos aqui para ajudá-lo a encontrar a solução perfeita para o cuidado infantil."
+    },
+    "contactInfo": {
+      "title": "Entre em Contato",
+      "phone": {
+        "label": "Telefone",
+        "numbers": [
+          "+258 84 123 4567",
+          "+258 86 987 6543"
+        ]
+      },
+      "email": {
+        "label": "Email",
+        "addresses": [
+          "info@expressnannies.co.mz",
+          "support@expressnannies.co.mz"
+        ]
+      },
+      "location": {
+        "label": "Localização do Escritório",
+        "details": [
+          "Av. Julius Nyerere, 257",
+          "Maputo, Moçambique"
+        ]
+      },
+      "hours": {
+        "label": "Horário de Funcionamento",
+        "details": [
+          "Segunda - Sexta: 8:00 - 18:00",
+          "Sábado: 9:00 - 14:00"
+        ]
+      }
+    },
+    "form": {
+      "title": "Envie-nos uma Mensagem",
+      "fields": {
+        "name": "Seu Nome",
+        "email": "Endereço de Email",
+        "subject": "Assunto",
+        "message": "Mensagem"
+      },
+      "submitButton": "Enviar Mensagem",
+      "successMessage": "Email enviado com sucesso!",
+      "errorMessage": "Erro ao enviar o email. Por favor, tente novamente."
+    },
+    "map": {
+      "title": "Nossa Localização"
+    }
+  }
+}

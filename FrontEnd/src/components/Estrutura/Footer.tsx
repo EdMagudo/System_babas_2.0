@@ -1,7 +1,10 @@
 import React from 'react';
 import { Facebook, Instagram, Twitter } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const Footer = () => {
+  const { t } = useTranslation();
+
   return (
     <footer className="bg-gradient-to-r from-slate-50 to-slate-100 py-12 px-6">
       <div className="max-w-6xl mx-auto">
@@ -17,7 +20,7 @@ const Footer = () => {
                 </li>
                 <li>
                   <a href="/terms" className="text-slate-600 hover:text-slate-900 transition-colors duration-200 text-sm">
-                    Terms & Conditions
+                    {t('footer.terms')}
                   </a>
                 </li>
               </ul>
@@ -40,7 +43,9 @@ const Footer = () => {
           {/* Copyright */}
           <div className="text-center md:text-right">
             <p className="text-sm text-slate-500">
-              &copy; 2024 Express Nanny.<br />All Rights Reserved.
+              {t('footer.copyright.text')}
+              <br />
+              {t('footer.copyright.allRightsReserved')}
             </p>
           </div>
         </div>
