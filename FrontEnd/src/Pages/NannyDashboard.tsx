@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Home, User, Briefcase,Loader } from "lucide-react";
+import { Home, User, Briefcase, Loader } from "lucide-react";
 import axios from "axios";
 import UserQualifications from "../components/Nanny/UserQualifications";
 import NannyQuickyStats from "../components/Nanny/NannyQuickStats";
 import ProfilePictureUploader from "../components/Nanny/ProfilePictureUploader";
 import BabysittingRequestManager from "../components/Nanny/BabysittingRequestManager";
-
 
 const NannyDashboard = () => {
   const [activeSection, setActiveSection] = useState("overview");
@@ -62,7 +61,6 @@ const NannyDashboard = () => {
       </div>
     );
   }
-  
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -75,14 +73,13 @@ const NannyDashboard = () => {
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
-  
+
       setFormData((prev) => ({
         ...prev,
         policeClearanceFile: file, // Armazena o arquivo de polícia no estado
       }));
     }
   };
-  
 
   const handleUploadSuccess = (newImageUrl: string) => {
     console.log("Nova URL da imagem:", newImageUrl);
@@ -91,25 +88,34 @@ const NannyDashboard = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     const submitFormData = new FormData();
     const id_user = localStorage.getItem("idUser");
-  
+
     submitFormData.append("id", id_user);
     submitFormData.append("jobType", formData.jobType);
     submitFormData.append("experience", formData.experience);
     submitFormData.append("policeClearance", formData.policeClearance);
-  
+
     // Envia o arquivo de polícia se houver
     if (formData.policeClearanceFile) {
-      submitFormData.append("policeClearanceFile", formData.policeClearanceFile);
+      submitFormData.append(
+        "policeClearanceFile",
+        formData.policeClearanceFile
+      );
     }
-  
-    submitFormData.append("work_preference", JSON.stringify(formData.work_preference));
-    submitFormData.append("preference_age", JSON.stringify(formData.preference_age));
+
+    submitFormData.append(
+      "work_preference",
+      JSON.stringify(formData.work_preference)
+    );
+    submitFormData.append(
+      "preference_age",
+      JSON.stringify(formData.preference_age)
+    );
     submitFormData.append("languages", JSON.stringify(formData.languages));
     submitFormData.append("additionalInfo", formData.additionalInfo);
-  
+
     try {
       const response = await axios.put(
         `http://localhost:3005/user/updatenannyProfiles/${id_user}`,
@@ -118,7 +124,7 @@ const NannyDashboard = () => {
           headers: { "Content-Type": "multipart/form-data" },
         }
       );
-  
+
       console.log("Perfil atualizado com sucesso:", response.data);
       alert("Perfil atualizado com sucesso!");
     } catch (error) {
@@ -126,7 +132,6 @@ const NannyDashboard = () => {
       alert("Falha ao atualizar perfil. Tente novamente.");
     }
   };
-  
 
   const formatEducationLevel = (level: string) => {
     return level
@@ -145,7 +150,7 @@ const NannyDashboard = () => {
             <h3 className="text-xl font-semibold mb-4 text-blue-700">
               Personal Details
             </h3>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <p className="font-medium">
                   Name: {nannyProfile.first_name} {nannyProfile.last_name}
@@ -242,117 +247,6 @@ const NannyDashboard = () => {
                 </div>
               </div>
 
-              {/* Renderiza Work Preferences, Preferred Age Group e Languages apenas se education_level for null */}
-              {!nannyProfile.nannyProfile.education_level && (
-                <>
-                  <h2 className="text-xl font-semibold text-blue-700">
-                    Work Preferences
-                  </h2>
-                  <div className="space-y-2">
-                    <label className="block mb-2">
-                      Preferred Working Hours
-                    </label>
-                    <div className="grid grid-cols-2 gap-2">
-                      {["morning", "afternoon", "evening", "overnight"].map(
-                        (time, index) => (
-                          <label
-                            key={index}
-                            className="inline-flex items-center"
-                          >
-                            <input
-                              type="checkbox"
-                              className="form-checkbox"
-                              value={time}
-                              checked={formData.work_preference.includes(time)}
-                              onChange={(e) => {
-                                setFormData((prev) => ({
-                                  ...prev,
-                                  work_preference: e.target.checked
-                                    ? [...prev.work_preference, time]
-                                    : prev.work_preference.filter(
-                                        (t) => t !== time
-                                      ),
-                                }));
-                              }}
-                            />
-                            <span className="ml-2">
-                              {time.charAt(0).toUpperCase() + time.slice(1)}
-                            </span>
-                          </label>
-                        )
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <h2 className="text-xl font-semibold text-blue-700">
-                      Preferred Age Group
-                    </h2>
-                    <div className="grid grid-cols-2 gap-2">
-                      {["babies", "toddlers", "children", "teenagers"].map(
-                        (group, index) => (
-                          <label
-                            key={index}
-                            className="inline-flex items-center"
-                          >
-                            <input
-                              type="checkbox"
-                              className="form-checkbox"
-                              value={group}
-                              checked={formData.preference_age.includes(group)}
-                              onChange={(e) => {
-                                setFormData((prev) => ({
-                                  ...prev,
-                                  preference_age: e.target.checked
-                                    ? [...prev.preference_age, group]
-                                    : prev.preference_age.filter(
-                                        (g) => g !== group
-                                      ),
-                                }));
-                              }}
-                            />
-                            <span className="ml-2">
-                              {group.charAt(0).toUpperCase() +
-                                group.slice(1).replace("_", " ")}
-                            </span>
-                          </label>
-                        )
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Languages */}
-                  <div className="space-y-4 mt-6">
-                    <h2 className="text-xl font-semibold text-blue-700">
-                      Languages & Additional Information
-                    </h2>
-                    <div className="space-y-2">
-                      <label className="block mb-2">Languages Spoken</label>
-                      <select
-                        multiple
-                        value={formData.languages}
-                        onChange={(e) =>
-                          setFormData({
-                            ...formData,
-                            languages: Array.from(
-                              e.target.selectedOptions,
-                              (opt) => opt.value
-                            ),
-                          })
-                        }
-                        className="w-full px-3 py-2 border rounded"
-                      >
-                        {languagesList.map((language, index) => (
-                          <option key={index} value={language}>
-                            {language}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
-                </>
-              )}
-
               <div className="space-y-2">
                 <label className="block mb-2">Additional Information</label>
                 <textarea
@@ -379,16 +273,16 @@ const NannyDashboard = () => {
         );
 
       case "jobs":
-        return(<BabysittingRequestManager/>);  
+        return <BabysittingRequestManager />;
       default:
         return null;
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-8">
+    <div className="min-h-screen bg-gray-100 p-4 md:p-8">
       <div className="max-w-6xl mx-auto">
-        <div className="grid grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           {/* Sidebar */}
           <div className="bg-white rounded-lg shadow-md p-6">
             <div className="text-center mb-6">
@@ -399,7 +293,6 @@ const NannyDashboard = () => {
                   console.log("Foto atualizada com sucesso:", newImageUrl);
                 }}
               />
-
               <h2 className="text-2xl font-bold text-blue-700">
                 {nannyProfile.first_name} {nannyProfile.last_name}
               </h2>
@@ -456,7 +349,7 @@ const NannyDashboard = () => {
           </div>
 
           {/* Conteúdo Principal */}
-          <div className="col-span-3">
+          <div className="col-span-1 md:col-span-3">
             <div className="bg-white rounded-lg p-6 shadow-md mb-6">
               <h1 className="text-3xl font-bold text-blue-700">
                 Welcome, {nannyProfile.first_name}!
@@ -473,5 +366,4 @@ const NannyDashboard = () => {
     </div>
   );
 };
-
 export default NannyDashboard;

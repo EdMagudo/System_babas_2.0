@@ -130,7 +130,7 @@ const Search = () => {
       const clientId = localStorage.getItem("idUser");
       const email = localStorage.getItem("userEmail");
       const country = localStorage.getItem("userCountry");
-      const province = localStorage.getItem("userProvice");
+      const province = localStorage.getItem("userProvince");
       const address = `${country}, ${province}`;
 
       // Validando campos obrigatórios
