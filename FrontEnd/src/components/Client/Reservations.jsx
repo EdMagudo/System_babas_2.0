@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+
+import MpesaPaymentModal from '../Estrutura/MpesaPaymentModal';
 import {
   ChevronDown,
   ChevronUp,
@@ -18,7 +20,15 @@ const Reservations = () => {
   const [message, setMessage] = useState({ text: "", type: "" });
   const [expanded, setExpanded] = useState({});
   const [feedbacks, setFeedbacks] = useState({});
+   const [startDate, setStartDate] = useState("");
+    const [endDate, setEndDate] = useState("");
+    const [mpesaModalOpen, setMpesaModalOpen] = useState(false);
+    const [selectedReservation, setSelectedReservation] = useState(null);
 
+    const handleMpesaPayment = (reservation) => {
+      setSelectedReservation(reservation);
+      setMpesaModalOpen(true);
+    };
   useEffect(() => {
     let timeoutId;
     if (message.text) {
@@ -269,22 +279,22 @@ const Reservations = () => {
                         </form>
 
                         {/* M-Pesa Payment Button */}
-                        <form
-                          action="http://localhost:3005/mpesa/pay"
-                          method="post"
-                        >
-                          <input
-                            type="hidden"
-                            name="reservationId"
-                            value={reservation.reservation_id}
-                          />
-                          <button className="w-full px-4 py-2 bg-green-600 text-white rounded-md shadow hover:bg-green-700 transition-colors">
-                            Pay with M-Pesa
-                          </button>
-                        </form>
+                        <button
+        onClick={() => handleMpesaPayment(reservation)}
+        className="px-4 py-2 bg-green-600 text-white rounded-md shadow hover:bg-green-700"
+      >
+        Pay with M-Pesa
+      </button>
                       </div>
                     </div>
                   )}
+
+<MpesaPaymentModal
+    isOpen={mpesaModalOpen}
+    onClose={() => setMpesaModalOpen(false)}
+    reservationId={selectedReservation?.reservation_id}
+    amount={selectedReservation?.value}
+  />
 
                   <div className="flex items-center bg-gray-50 px-4 py-2 rounded-xl mt-4">
                     <span className="text-sm font-medium text-gray-600 mr-2">
