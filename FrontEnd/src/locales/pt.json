@@ -228,5 +228,47 @@
     "next": "Próximo",
     "errorFetchingData":"Nenhuma babá encontrada com essas caracteristicas",
     "pleaseSelectFields":"Por favor selecione todos campos"
+  },
+    "nannyCard": {
+      "viewComments": "Ver Todos os Comentários e Avaliações",
+      "contact": "Contato",
+      "noLanguagesAvailable": "Nenhum idioma disponível",
+      "noCommentsAvailable": "Nenhum comentário disponível.",
+      "close": "Fechar",
+      "numberOfChildren": "Número de Crianças",
+      "startDate": "Data de Início",
+      "endDate": "Data de Término",
+      "notes": "Notas",
+      "submitRequest": "Enviar Solicitação",
+      "rate": "Avaliar",
+      "currency": "Moeda",
+      "dailySalary": "Diária",
+      "monthlySalary": "Mensal",
+      "dateOfBirth": "Data de Nascimento"
+    },
+    "overview": {
+    "quickStats": "Estatísticas Rápidas",
+    "totalPaidReservations": "Total de reservas pagas",
+    "changeEmailPassword": "Alterar Email e Senha",
+    "email": "Email",
+    "emailPlaceholder": "Seu endereço de email",
+    "currentPassword": "Senha Atual",
+    "currentPasswordPlaceholder": "Digite sua senha atual",
+    "newPassword": "Nova Senha",
+    "newPasswordPlaceholder": "Digite sua nova senha",
+    "updatePassword": "Atualizar Senha",
+    "contactInformation": "Informações de Contato",
+    "save": "Salvar",
+    "saving": "Salvando...",
+    "phoneInstructions": "Por favor, atualize seu número de telefone abaixo. Certifique-se de incluir o código do país.",
+    "phoneNumber": "Número de Telefone",
+    "phonePlaceholder": "Ex: +55 (11) 99999-9999",
+    "errorLoadingProfile": "Erro ao carregar perfil do usuário.",
+    "fillAllFields": "Por favor, preencha todos os campos.",
+    "passwordUpdateSuccess": "Senha atualizada com sucesso!",
+    "passwordUpdateError": "Houve um erro ao atualizar a senha.",
+    "phoneUpdateSuccess": "Número de telefone atualizado com sucesso!",
+    "phoneUpdateError": "Falha ao atualizar número de telefone."
   }
+  
 }

@@ -5,6 +5,7 @@ import axios from 'axios';
 const NannyCard = ({
   nanny
 }) => {
+  // Gerenciamento de estado
   const [showModal, setShowModal] = useState(false);
   const [comments, setComments] = useState([]);
   const [showContactForm, setShowContactForm] = useState(false);
@@ -13,21 +14,25 @@ const NannyCard = ({
   const [endDate, setEndDate] = useState('');
   const [notes, setNotes] = useState('');
 
+  // Método para abrir a modal de comentários
   const openModal = async () => {
     setShowModal(true);
     const response = await axios.get(`http://localhost:3005/Review/comments/${nanny.user_id}`);
     setComments(response.data);
   };
 
+  // Método para fechar a modal
   const closeModal = () => setShowModal(false);
 
+  // Método para abrir o formulário de contato
   const handleContactClick = () => {
     setShowContactForm(!showContactForm);
   };
 
+  // Método para enviar a solicitação
   const handleSubmitRequest = async (nannyId, em) => {
     try {
-      console.log("Nanny email:", em);
+      console.log("Nanny email:", em);  // Verifique o valor de 'em' antes de usá-lo
   
       const clientId = localStorage.getItem("idUser");
       const email = localStorage.getItem("userEmail");
@@ -38,9 +43,9 @@ const NannyCard = ({
       const nanny_Id = nanny.user_id;
       
       console.log("Nanny email:", nanny_email);
-
+      // Validando campos obrigatórios
       if (!clientId || !email || !address || !startDate || !endDate || !nanny_email) {
-        alert("Por favor, certifique-se de que todos os campos obrigatórios estão preenchidos.");
+        alert("Please ensure all required fields are filled.");
         return;
       }
   
@@ -49,7 +54,7 @@ const NannyCard = ({
         nanny_id: nanny_Id,
         number_of_people: children,
         email: email,
-        nanny_email: nanny_email,
+        nanny_email: nanny_email,  // Certifique-se de que 'em' é um e-mail válido
         address: address,
         start_date: startDate,
         end_date: endDate,
@@ -64,17 +69,18 @@ const NannyCard = ({
       );
   
       if (response.status === 200 || response.status === 201) {
-        alert("Solicitação de serviço enviada com sucesso!");
+        alert("Service request sent successfully!");
+        // Resetando o estado após o envio
         setChildren(1);
         setStartDate("");
         setEndDate("");
         setShowContactForm(false);
       } else {
-        throw new Error("Falha ao enviar solicitação de serviço");
+        throw new Error("Failed to send service request");
       }
     } catch (error) {
-      console.error("Erro ao enviar solicitação de serviço:", error);
-      alert("Falha ao enviar solicitação de serviço. Por favor, tente novamente.");
+      console.error("Error sending service request:", error);
+      alert("Failed to send service request. Please try again.");
     }
   };
   
@@ -84,7 +90,7 @@ const NannyCard = ({
         <div className="relative">
           <img
             src={nanny.profilePictureUrl || "/default-profile.png"}
-            alt={`Perfil de ${nanny.first_name}`}
+            alt={`${nanny.first_name}'s profile`}
             className="w-full h-48 object-cover rounded-t-xl"
           />
         </div>
@@ -103,50 +109,52 @@ const NannyCard = ({
               <div className="flex items-center gap-2 text-sm text-gray-700">
                 <DollarSign className="w-4 h-4 text-indigo-600" />
                 <p className="font-medium">
-                  Moeda: <span className="text-indigo-600">{nanny.nannyProfile.currency}</span>
+                  Currency: <span className="text-indigo-600">{nanny.nannyProfile.currency}</span>
                 </p>
               </div>
               <div className="flex items-center gap-2 text-sm text-gray-700">
                 <Clock className="w-4 h-4 text-indigo-600" />
                 <p className="font-medium">
-                  Diária: <span className="text-indigo-600">{nanny.nannyProfile.daily_salary}</span>
+                  Daily: <span className="text-indigo-600">{nanny.nannyProfile.daily_salary}</span>
                 </p>
               </div>
               <div className="flex items-center gap-2 text-sm text-gray-700">
                 <CalendarClock className="w-4 h-4 text-indigo-600" />
                 <p className="font-medium">
-                  Mensal: <span className="text-indigo-600">{nanny.nannyProfile.monthly_salary}</span>
+                  Monthly: <span className="text-indigo-600">{nanny.nannyProfile.monthly_salary}</span>
                 </p>
               </div>
             </div>
+            
+                              {/* Data de nascimento */}
+                              <div className="flex items-center gap-2 text-sm text-gray-700">
+                                <Users className="w-4 h-4 text-indigo-600" />
+                                <p className="font-medium">
+                                  Date of birth:{" "}
+                                  <span className="text-indigo-600">
+                                    {nanny.nannyProfile.dob}
+                                  </span>
+                                </p>
+                              </div>
 
-            <div className="flex items-center gap-2 text-sm text-gray-700">
-              <Users className="w-4 h-4 text-indigo-600" />
-              <p className="font-medium">
-                Data de Nascimento:{" "}
-                <span className="text-indigo-600">
-                  {nanny.nannyProfile.dob}
-                </span>
-              </p>
-            </div>
-
-            <div className="flex items-center gap-2 text-sm text-gray-700">
-              <Languages className="w-5 h-5 text-indigo-600" />
-              <div className="flex flex-wrap gap-2">
-                {nanny.languages && nanny.languages.length > 0 ? (
-                  nanny.languages.map((language, index) => (
-                    <span
-                      key={index}
-                      className="px-3 py-1 text-xs font-medium text-indigo-600 bg-indigo-50 rounded-full"
-                    >
-                      {language.trim()}
-                    </span>
-                  ))
-                ) : (
-                  <span>Nenhum idioma disponível</span>
-                )}
-              </div>
-            </div>
+                 {/* Idiomas */}
+                              <div className="flex items-center gap-2 text-sm text-gray-700">
+                                <Languages className="w-5 h-5 text-indigo-600" />
+                                <div className="flex flex-wrap gap-2">
+                                  {nanny.languages && nanny.languages.length > 0 ? (
+                                    nanny.languages.map((language, index) => (
+                                      <span
+                                        key={index}
+                                        className="px-3 py-1 text-xs font-medium text-indigo-600 bg-indigo-50 rounded-full"
+                                      >
+                                        {language.trim()}
+                                      </span>
+                                    ))
+                                  ) : (
+                                    <span>No languages available</span>
+                                  )}
+                                </div>
+                              </div>
 
             <div className="flex items-center gap-2 text-sm text-gray-700">
               <MapPin className="w-5 h-5 text-indigo-500" />
@@ -157,18 +165,20 @@ const NannyCard = ({
               onClick={openModal}
               className="bg-indigo-600 mt-4 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors"
             >
-              Ver Todos os Comentários e Avaliações
+              View All Comments and Ratings
             </button>
 
+            {/* Botão de contato */}
             <div className="mt-4">
               <button
                 onClick={handleContactClick}
                 className="w-full bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg transition-colors duration-200"
               >
-                Contato
+                Contact
               </button>
             </div>
 
+            {/* Formulário de contato */}
             {showContactForm && (
               <ContactForm
                 children={children}
@@ -186,15 +196,16 @@ const NannyCard = ({
         </div>
       </div>
 
+      {/* Modal de comentários */}
       {showModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-white p-6 rounded-lg w-2/3 relative">
-            <h3 className="text-xl font-semibold mb-4">Comentários</h3>
+            <h3 className="text-xl font-semibold mb-4">Comments</h3>
 
             <div className="absolute top-4 right-4 bg-yellow-400 text-white px-4 py-2 rounded-lg shadow-lg">
-              <span className="font-semibold">Avaliar: </span>
+              <span className="font-semibold">Rate: </span>
               <span className="text-lg">
-                {comments.averageRating || "Sem Avaliação"}
+                {comments.averageRating || "No Rating"}
               </span>
             </div>
 
@@ -212,7 +223,7 @@ const NannyCard = ({
                   </div>
                 ))
               ) : (
-                <p className="text-gray-500">Nenhum comentário disponível.</p>
+                <p className="text-gray-500">No comments available.</p>
               )}
             </div>
 
@@ -220,7 +231,7 @@ const NannyCard = ({
               onClick={closeModal}
               className="mt-4 bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors"
             >
-              Fechar
+              Close
             </button>
           </div>
         </div>
@@ -229,6 +240,7 @@ const NannyCard = ({
   );
 };
 
+// Formulário de contato
 const ContactForm = ({
   children,
   setChildren,
@@ -244,7 +256,7 @@ const ContactForm = ({
     <div className="mt-6">
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">
-          Número de Crianças
+          Number of Children
         </label>
         <div className="flex items-center bg-gray-100 rounded-lg">
           <button
@@ -265,7 +277,7 @@ const ContactForm = ({
 
       <div className="mt-4">
         <label className="block text-sm font-medium text-gray-700 mb-2">
-          Data de Início
+          Start Date
         </label>
         <input
           type="date"
@@ -277,7 +289,7 @@ const ContactForm = ({
 
       <div className="mt-4">
         <label className="block text-sm font-medium text-gray-700 mb-2">
-          Data de Término
+          End Date
         </label>
         <input
           type="date"
@@ -289,13 +301,13 @@ const ContactForm = ({
 
       <div className="mt-4">
         <label className="block text-sm font-medium text-gray-700 mb-2">
-          Notas
+          Notes
         </label>
         <textarea
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
           className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-          placeholder="Por favor, mencione alergias, pedidos especiais ou outras informações importantes."
+          placeholder="Please mention any allergies, special requests, or other important information."
           rows={3}
         />
       </div>
@@ -304,7 +316,7 @@ const ContactForm = ({
         onClick={onSubmit}
         className="w-full bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition-colors duration-200"
       >
-        Enviar Solicitação
+        Submit Request
       </button>
     </div>
   );
