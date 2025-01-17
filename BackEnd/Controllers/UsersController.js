@@ -398,7 +398,7 @@ const loginUser = async (req, res) => {
         province: user.province_name,
       },
       process.env.JWT_SECRET,
-      { expiresIn: process.env.JWT_EXPIRATION }
+      { expiresIn: 3600 }
     );
 
     res.status(200).json({
