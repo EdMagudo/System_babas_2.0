@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [userRole, setUserRole] = useState(null);
+  const { i18n } = useTranslation();
+  const [currentLang, setCurrentLang] = useState(i18n.language);
 
   useEffect(() => {
     // Obtendo a role do usuário do localStorage
@@ -11,29 +14,35 @@ const Header = () => {
     setUserRole(storedRole);
   }, []);
 
+  const toggleLanguage = () => {
+    const newLang = currentLang === 'en' ? 'pt' : 'en';
+    i18n.changeLanguage(newLang);
+    setCurrentLang(newLang);
+  };
+
   // Defina os itens de navegação para diferentes tipos de usuários
   const navigationItems = {
     guest: [
-      { name: 'Home', path: '/' },
-      { name: 'Join as Nanny', path: '/register-nanny' },
-      { name: 'Join as Client', path: '/register-client' },
-      { name: 'Contact Us', path: '/contact-us' },
-      { name: 'Sign in', path: '/sign-in' },
+      { name: 'home', path: '/' },
+      { name: 'joinAsNanny', path: '/register-nanny' },
+      { name: 'joinAsClient', path: '/register-client' },
+      { name: 'contactUs', path: '/contact-us' },
+      { name: 'signIn', path: '/sign-in' },
     ],
     client: [
-      { name: 'Home', path: '/' },
-      { name: 'My Dashboard', path: '/client-dashboard' },
-      { name: 'Logout', path: '/logout' },
+      { name: 'home', path: '/' },
+      { name: 'dashboard', path: '/client-dashboard' },
+      { name: 'logout', path: '/logout' },
     ],
     nanny: [
-      { name: 'Home', path: '/' },
-      { name: 'My Dashboard', path: '/nanny-dashboard' },
-      { name: 'Logout', path: '/logout' },
+      { name: 'home', path: '/' },
+      { name: 'dashboard', path: '/nanny-dashboard' },
+      { name: 'logout', path: '/logout' },
     ],
-    admin:[
-      { name: 'Home', path: '/' },
-      { name: 'Logout', path: '/logout' },
-    ]
+    admin: [
+      { name: 'home', path: '/' },
+      { name: 'logout', path: '/logout' },
+    ],
   };
 
   // Determine o menu baseado no tipo de usuário
@@ -66,6 +75,16 @@ const Header = () => {
               ))}
             </ul>
           </nav>
+
+          {/* Toggle Language Button */}
+          <div className="flex items-center space-x-4">
+            <button
+              onClick={toggleLanguage}
+              className="text-gray-600 hover:text-purple-600 transition-colors duration-200 ease-in-out px-3 py-2 text-sm font-medium rounded-md hover:bg-purple-50"
+            >
+              {currentLang === 'en' ? 'PT' : 'EN'}
+            </button>
+          </div>
 
           {/* Mobile menu button */}
           <div className="md:hidden">
