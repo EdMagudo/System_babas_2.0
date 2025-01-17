@@ -9,26 +9,46 @@ router.get("/:reservation_id", reservationsController.getReservationById); // Bu
 router.put("/:reservation_id", reservationsController.updateReservation); // Atualiza uma reserva pelo ID
 router.delete("/:reservation_id", reservationsController.deleteReservation); // Remove uma reserva pelo IDget
 
-router.get("/getAll/reservations/:nanny_id", reservationsController.getAllReservationsForNanny )
+router.get(
+  "/getAll/reservations/:nanny_id",
+  reservationsController.getAllReservationsForNanny
+);
 
-router.get("/getAll/reservations/client/:client_id", reservationsController.getAllReservationsForClient )
+router.get(
+  "/getAll/reservations/client/:client_id",
+  reservationsController.getAllReservationsForClient
+);
 
-router.put("/cancel/reservation/:id_reservation", reservationsController.cancelReservation)
+router.put(
+  "/cancel/reservation/:id_reservation",
+  reservationsController.cancelReservation
+);
 
-router.put("/payClient/reservation/:id_reservation", reservationsController.PayReservationtoClient)
+router.put(
+  "/payClient/reservation/:id_reservation",
+  reservationsController.PayReservationtoClient
+);
 
+router.put(
+  "/payReservation/reservation/:id_reservation",
+  reservationsController.payReservation
+);
 
-router.put("/payReservation/reservation/:id_reservation", reservationsController.payReservation)
+router.get(
+  "/getAll/reservations",
+  reservationsController.countConfirmedAndBookedReservations
+);
 
-router.get("/getAll/reservations",reservationsController.countConfirmedAndBookedReservations)
+router.get(
+  "/countReservations/:nanny_id",
+  reservationsController.countCompletedForNanny
+);
 
-router.get("/countReservations/:nanny_id",reservationsController.countCompletedForNanny);
-
-router.get("/countReservationsC/:client_id",reservationsController.countBookedForClient);
-
+router.get(
+  "/countReservationsC/:client_id",
+  reservationsController.countBookedForClient
+);
 
 router.post("/:reservationId/feedback", reservationsController.rateBook);
-
-
 
 export default router;

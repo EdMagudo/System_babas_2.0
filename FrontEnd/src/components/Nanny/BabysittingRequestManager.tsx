@@ -31,7 +31,7 @@ const BabysittingRequestManager: React.FC = () => {
   const [startDateFilter, setStartDateFilter] = useState<string>("");
   const [endDateFilter, setEndDateFilter] = useState<string>("");
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [itemsPerPage] = useState<number>(5); 
+  const [itemsPerPage] = useState<number>(5);
 
   useEffect(() => {
     fetchReservations();
@@ -87,44 +87,34 @@ const BabysittingRequestManager: React.FC = () => {
     }
   };
 
- 
-  
   const fetchAllReservations = async () => {
-     const idUser = localStorage.getItem("idUser");
+    const idUser = localStorage.getItem("idUser");
     try {
       const response = await axios.get(
         `http://localhost:3005/reservations/getAll/reservations/${idUser}`
       );
-      return response.data; // Retorna apenas os dados da resposta
+      return response.data;
     } catch (error) {
       console.error("Error fetching reservations:", error);
       return [];
     }
   };
-  
+
   const handleFilter = async () => {
-    
-    // Limpa o array de reservas antes de recarregar os dados
     setReservations([]);
-  
-    // Sempre busca todas as reservas novamente ao aplicar filtros
-    const allReservations = await fetchAllReservations(); // Recarrega todas as reservas
-     
-    // Se não há filtros definidos, exibe todas as reservas
+    const allReservations = await fetchAllReservations();
+
     if (!startDateFilter && !endDateFilter) {
       setReservations(allReservations);
-          return;
+      return;
     }
-  
-    // Converte os filtros para objetos Date
+
     const startDate = startDateFilter ? new Date(startDateFilter) : null;
     const endDate = endDateFilter ? new Date(endDateFilter) : null;
-  
-    // Aplica o filtro às reservas carregadas
+
     const filtered = allReservations.filter((reservation) => {
-      const bookingDate = new Date(reservation.booking_date); // Converte a data da reserva
-        
-      // Verifica condições de comparação
+      const bookingDate = new Date(reservation.booking_date);
+
       if (startDate && endDate) {
         return bookingDate >= startDate && bookingDate <= endDate;
       } else if (startDate) {
@@ -132,18 +122,13 @@ const BabysittingRequestManager: React.FC = () => {
       } else if (endDate) {
         return bookingDate <= endDate;
       } else {
-        return true; // Sem filtro
+        return true;
       }
     });
-  
-    // Atualiza o estado com as reservas filtradas
+
     setReservations(filtered);
     setCurrentPage(1);
-   
   };
-
-
-
 
   const handleApproveClick = (id: number) => {
     setEditingRequest(id);
@@ -156,7 +141,6 @@ const BabysittingRequestManager: React.FC = () => {
       return;
     }
 
-
     const confirmApprove = window.confirm(
       "Are you sure you want to approve this request?"
     );
@@ -165,7 +149,7 @@ const BabysittingRequestManager: React.FC = () => {
     try {
       await axios.put(
         `http://localhost:3005/requestServices/approvedRequest/${id}`,
-        { value: Number(value), client_id: clientId}
+        { value: Number(value), client_id: clientId }
       );
       setRequests(
         requests.map((req) =>
@@ -224,17 +208,19 @@ const BabysittingRequestManager: React.FC = () => {
   const filteredRequests =
     activeTab === "new"
       ? requests.filter((req) => req.status === "pending")
-      : []; // Exibe apenas as solicitações com status "pending" para a aba "new"
+      : [];
 
   const filteredReservations =
     activeTab === "approved"
       ? reservations.filter((reservation) => reservation.status !== "")
       : [];
 
-  // Pagination Logic
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = filteredReservations.slice(indexOfFirstItem, indexOfLastItem);
+  const currentItems = filteredReservations.slice(
+    indexOfFirstItem,
+    indexOfLastItem
+  );
 
   const totalPages = Math.ceil(filteredReservations.length / itemsPerPage);
 
@@ -246,56 +232,41 @@ const BabysittingRequestManager: React.FC = () => {
     if (currentPage > 1) setCurrentPage(currentPage - 1);
   };
 
-
-  const filteredReserv= reservations.filter((reservation) => {
-        const bookingDate = new Date(reservation.booking_date); // Usando booking_date em vez de startDate
-        const startDate = startDateFilter ? new Date(startDateFilter) : null;
-        const endDate = endDateFilter ? new Date(endDateFilter) : null;
-      
-        // Verifica se está dentro do intervalo de datas
-        return (
-          (!startDate || bookingDate >= startDate) &&
-          (!endDate || bookingDate <= endDate)
-        );
-      });
-      
-
-
   const getStatusBackground = (status: string) => {
     switch (status) {
       case "pending":
-        return "bg-yellow-300 text-yellow-800";
+        return "bg-yellow-100 text-yellow-800 border border-yellow-200";
       case "approved":
-        return "bg-green-300 text-green-800";
+        return "bg-green-100 text-green-800 border border-green-200";
       case "rejected":
-        return "bg-red-300 text-red-800";
+        return "bg-red-100 text-red-800 border border-red-200";
       default:
-        return "bg-gray-300 text-gray-800";
+        return "bg-gray-100 text-gray-800 border border-gray-200";
     }
   };
 
   return (
-    <div className="max-w-3xl mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-6 text-center text-gray-800">
+    <div className="max-w-4xl mx-auto p-8 bg-gray-50">
+      <h1 className="text-3xl font-bold mb-8 text-gray-900 text-center">
         Babysitting Service Requests
       </h1>
 
-      <div className="flex justify-center mb-6 space-x-4">
+      <div className="flex justify-center mb-8 gap-4">
         <button
-          className={`px-4 py-2 rounded-md font-medium ${
+          className={`px-6 py-2.5 rounded-full font-medium transition-all duration-200 ${
             activeTab === "new"
-              ? "bg-blue-500 text-white"
-              : "bg-gray-200 text-gray-700"
+              ? "bg-blue-600 text-white shadow-lg shadow-blue-200"
+              : "bg-white text-gray-600 hover:bg-gray-100 border border-gray-200"
           }`}
           onClick={() => setActiveTab("new")}
         >
           New Requests
         </button>
         <button
-          className={`px-4 py-2 rounded-md font-medium ${
+          className={`px-6 py-2.5 rounded-full font-medium transition-all duration-200 ${
             activeTab === "approved"
-              ? "bg-green-500 text-white"
-              : "bg-gray-200 text-gray-700"
+              ? "bg-green-600 text-white shadow-lg shadow-green-200"
+              : "bg-white text-gray-600 hover:bg-gray-100 border border-gray-200"
           }`}
           onClick={() => setActiveTab("approved")}
         >
@@ -303,204 +274,244 @@ const BabysittingRequestManager: React.FC = () => {
         </button>
       </div>
 
-      {/* Filtro de Data (somente para reservas) */}
       {activeTab === "approved" && (
-        <div className="flex gap-4 mb-6">
-        <div className="flex items-center">
-          <label htmlFor="startDateFilter" className="mr-2">
-            Start Date:
-          </label>
-          <input
-            type="date"
-            id="startDateFilter"
-            className="border border-gray-300 rounded-md p-2"
-            value={startDateFilter}
-            onChange={(e) => setStartDateFilter(e.target.value)}
-          />
-        </div>
-        <div className="flex items-center">
-          <label htmlFor="endDateFilter" className="mr-2">
-            End Date:
-          </label>
-          <input
-            type="date"
-            id="endDateFilter"
-            className="border border-gray-300 rounded-md p-2"
-            value={endDateFilter}
-            onChange={(e) => setEndDateFilter(e.target.value)}
-          />
-        </div>
-      
-        <div className="flex items-center">
+        <div className="flex flex-wrap gap-4 mb-8 bg-white p-6 rounded-xl shadow-sm">
+          <div className="flex items-center gap-3">
+            <label
+              htmlFor="startDateFilter"
+              className="text-gray-700 font-medium"
+            >
+              Start Date
+            </label>
+            <input
+              type="date"
+              id="startDateFilter"
+              className="border border-gray-200 rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              value={startDateFilter}
+              onChange={(e) => setStartDateFilter(e.target.value)}
+            />
+          </div>
+          <div className="flex items-center gap-3">
+            <label
+              htmlFor="endDateFilter"
+              className="text-gray-700 font-medium"
+            >
+              End Date
+            </label>
+            <input
+              type="date"
+              id="endDateFilter"
+              className="border border-gray-200 rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              value={endDateFilter}
+              onChange={(e) => setEndDateFilter(e.target.value)}
+            />
+          </div>
           <button
-             onClick={handleFilter}
-            className="bg-blue-500 text-white rounded-md px-6 py-2 font-semibold hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+            onClick={handleFilter}
+            className="px-6 py-2.5 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 
+                     transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
           >
-            Filter
+            Apply Filter
           </button>
         </div>
-      </div>
-      
       )}
 
-      {activeTab === "new" && filteredRequests.length === 0 ? (
-        <div className="text-center text-gray-500">No new requests</div>
-      ) : (
-        filteredRequests.map((request) => (
-          <div
-          key={request.id}
-          className="border border-gray-300 rounded-lg p-4 mb-4 shadow-md bg-white"
-        >
-          <h2 className="text-lg font-semibold mb-3">
-            Request for {request.startDate}
-          </h2>
-          <div className="mb-4 space-y-2">
-            <p className="flex items-center gap-2">
-              <Users className="w-5 h-5 text-pink-500" />
-              <strong className="font-medium">Number of People:</strong>{" "}
-              {request.numberOfPeople}
-            </p>
-            <p className="flex items-center gap-2">
-              <MapPin className="w-5 h-5 text-green-500" />
-              <strong className="font-medium">Address:</strong> {request.address}
-            </p>
-            <p className="flex items-center gap-2">
-              <Mail className="w-5 h-5 text-blue-500" />
-              <strong className="font-medium">Email:</strong> {request.email}
-            </p>
-            <p className="flex items-center gap-2 text-gray-700 mt-2">
-              <strong className="font-medium text-blue-600">Note:</strong>
-              <span className="text-sm text-gray-600 italic">{request.notes}</span>
-            </p>
+      <div className="space-y-6">
+        {activeTab === "new" && filteredRequests.length === 0 ? (
+          <div className="text-center py-12 bg-white rounded-xl shadow-sm">
+            <p className="text-gray-500 text-lg">No new requests available</p>
           </div>
-          <div className="mt-4">
-            {editingRequest === request.id ? (
-              <div className="space-y-2">
+        ) : (
+          filteredRequests.map((request) => (
+            <div
+              key={request.id}
+              className="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow duration-200"
+            >
+              <h2 className="text-xl font-semibold mb-4 text-gray-900">
+                Request for {request.startDate}
+              </h2>
+              <div className="space-y-3 mb-6">
+                <p className="flex items-center gap-3 text-gray-700">
+                  <Users className="w-5 h-5 text-pink-500" />
+                  <span className="font-medium">Number of People:</span>
+                  <span>{request.numberOfPeople}</span>
+                </p>
+                <p className="flex items-center gap-3 text-gray-700">
+                  <MapPin className="w-5 h-5 text-green-500" />
+                  <span className="font-medium">Address:</span>
+                  <span>{request.address}</span>
+                </p>
+                <p className="flex items-center gap-3 text-gray-700">
+                  <Mail className="w-5 h-5 text-blue-500" />
+                  <span className="font-medium">Email:</span>
+                  <span>{request.email}</span>
+                </p>
+                <div className="mt-4 bg-gray-50 p-4 rounded-lg">
+                  <p className="text-gray-900 font-medium">Note:</p>
+                  <p className="text-gray-600 italic mt-1">{request.notes}</p>
+                </div>
+              </div>
+
+              {editingRequest === request.id ? (
                 <div className="flex items-center gap-4">
                   <input
                     type="number"
                     placeholder="Enter service value"
                     value={value}
                     onChange={(e) => setValue(e.target.value)}
-                    className="border border-gray-300 rounded-md p-2 flex-1"
+                    className="flex-1 border border-gray-200 rounded-lg p-2.5 focus:ring-2 focus:ring-green-500 focus:border-transparent"
                   />
                   <button
-                    onClick={() => handleFinalize(request.id,request.client)}
-                    className="px-4 py-2 rounded-md text-white bg-green-500 hover:bg-green-600 font-medium"
+                    onClick={() => handleFinalize(request.id, request.client)}
+                    className="px-6 py-2.5 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 
+                             transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
                   >
                     Finalize
                   </button>
                 </div>
-              </div>
-            ) : (
-              <div className="flex items-center gap-4">
-                <button
-                  onClick={() => handleApproveClick(request.id)}
-                  className="px-4 py-2 rounded-md text-white bg-blue-500 hover:bg-blue-600 font-medium"
-                >
-                  Approve
-                </button>
-                <button
-                  onClick={() => handleReject(request.id)}
-                  className="px-4 py-2 rounded-md text-white bg-red-500 hover:bg-red-600 font-medium"
-                >
-                  Reject
-                </button>
-              </div>
-            )}
-          </div>
-        </div>
-        
-
-        ))
-      )}
-
-       {activeTab === "approved" && currentItems.length === 0 ? (
-        <div className="text-center text-gray-500">No approved reservations</div>
-      ) : (
-        currentItems.map((reservation) => (
-          <div
-            key={reservation.reservation_id}
-            className="border border-gray-300 rounded-lg p-4 mb-4 shadow-md bg-white"
-          >
-            <h2 className="text-lg font-semibold mb-3 flex items-center gap-2">
-              Reservation for {reservation.serviceRequest.client.first_name}{" "}
-              {reservation.serviceRequest.client.last_name}
-            </h2>
-            <div className="mb-4 space-y-2">
-              <p className="flex items-center gap-2">
-                <Users className="w-5 h-5 text-pink-500" />
-                <strong className="font-medium">Number of People:</strong>{" "}
-                {reservation.serviceRequest.number_of_people}
-              </p>
-              <p className="flex items-center gap-2">
-                <MapPin className="w-5 h-5 text-green-500" />
-                <strong className="font-medium">Address:</strong>{" "}
-                {reservation.serviceRequest.address}
-              </p>
-              <p className="flex items-center gap-2">
-                <Mail className="w-5 h-5 text-blue-500" />
-                <strong className="font-medium">Email:</strong>{" "}
-                {reservation.serviceRequest.client.email}
-              </p>
-              <p className="flex items-center gap-2 text-gray-700 mt-2">
-                <strong className="font-medium text-blue-600">Note:</strong>
-                <span className="text-sm text-gray-600 italic">
-                  {reservation.serviceRequest.notes}
-                </span>
-              </p>
-              {reservation.status === "confirmed" && (
-                <p className="flex items-center gap-2 text-green-700 mt-2">
-                  <DollarSign className="w-5 h-5 text-green-500" />
-                  <strong className="font-medium">Service Value:</strong> $
-                  {parseFloat(reservation.value).toFixed(2)}
-                </p>
+              ) : (
+                <div className="flex items-center gap-4">
+                  <button
+                    onClick={() => handleApproveClick(request.id)}
+                    className="px-6 py-2.5 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 
+                             transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                  >
+                    Approve
+                  </button>
+                  <button
+                    onClick={() => handleReject(request.id)}
+                    className="px-6 py-2.5 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 
+                             transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+                  >
+                    Reject
+                  </button>
+                </div>
               )}
             </div>
-            <div className="flex items-center gap-4">
-              <div
-                className={`px-4 py-2 rounded-md ${getStatusBackground(
-                  reservation.status
-                )}`}
-              >
-                Reservation Status:{" "}
-                {reservation.status.charAt(0).toUpperCase() +
-                  reservation.status.slice(1)}
-              </div>
-              {reservation.status !== "cancelled" &&
-                reservation.status !== "completed" && (
-                  <button
-                    onClick={() =>
-                      handleCancelReservation(reservation.reservation_id)
-                    }
-                    className="px-4 py-2 rounded-md text-white bg-red-500 hover:bg-red-600 font-medium flex items-center gap-2"
-                  >
-                    <X className="w-4 h-4" /> Cancel
-                  </button>
-                )}
+          ))
+        )}
+
+        {activeTab === "approved" &&
+          (currentItems.length === 0 ? (
+            <div className="text-center py-12 bg-white rounded-xl shadow-sm">
+              <p className="text-gray-500 text-lg">No approved reservations</p>
             </div>
-          </div>
-        ))
-      )}
-      <div className="flex justify-center mt-6 gap-4">
-        <button
-          onClick={handlePrevious}
-          className="px-4 py-2 bg-gray-300 text-gray-700 rounded-md"
-          disabled={currentPage === 1}
-        >
-          Previous
-        </button>
-        <span>
-          Page {currentPage} of {totalPages}
-        </span>
-        <button
-          onClick={handleNext}
-          className="px-4 py-2 bg-gray-300 text-gray-700 rounded-md"
-          disabled={currentPage === totalPages}
-        >
-          Next
-        </button>
+          ) : (
+            currentItems.map((reservation) => (
+              <div
+                key={reservation.reservation_id}
+                className="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow duration-200"
+              >
+                <h2 className="text-xl font-semibold mb-4 text-gray-900">
+                  Reservation for {reservation.serviceRequest.client.first_name}{" "}
+                  {reservation.serviceRequest.client.last_name}
+                </h2>
+                <div className="space-y-3 mb-6">
+                  <p className="flex items-center gap-3 text-gray-700">
+                    <Users className="w-5 h-5 text-pink-500" />
+                    <span className="font-medium">Number of People:</span>
+                    <span>{reservation.serviceRequest.number_of_people}</span>
+                  </p>
+                  <p className="flex items-center gap-3 text-gray-700">
+                    <MapPin className="w-5 h-5 text-green-500" />
+                    <span className="font-medium">Address:</span>
+                    <span>{reservation.serviceRequest.address}</span>
+                  </p>
+                  <p className="flex items-center gap-3 text-gray-700">
+                    <Mail className="w-5 h-5 text-blue-500" />
+                    <span className="font-medium">Email:</span>
+                    <span>{reservation.serviceRequest.client.email}</span>
+                  </p>
+                  <div className="mt-4 bg-gray-50 p-4 rounded-lg">
+                    <p className="text-gray-900 font-medium">Note:</p>
+                    <p className="text-gray-600 italic mt-1">
+                      {reservation.serviceRequest.notes}
+                    </p>
+                  </div>
+                  {reservation.status === "confirmed" && (
+                    <p className="flex items-center gap-3 text-gray-700 bg-green-50 p-4 rounded-lg">
+                      <DollarSign className="w-5 h-5 text-green-500" />
+                      <span className="font-medium">Service Value:</span>
+                      <span className="text-green-700">
+                        ${parseFloat(reservation.value).toFixed(2)}
+                      </span>
+                    </p>
+                  )}
+                </div>
+                <div className="flex items-center gap-4 flex-wrap">
+                  <div
+                    className={`px-4 py-2 rounded-lg font-medium ${getStatusBackground(
+                      reservation.status
+                    )}`}
+                  >
+                    Status:{" "}
+                    <span className="font-semibold">
+                      {reservation.status.charAt(0).toUpperCase() +
+                        reservation.status.slice(1)}
+                    </span>
+                  </div>
+                  {reservation.status !== "cancelled" &&
+                    reservation.status !== "completed" && (
+                      <button
+                        onClick={() =>
+                          handleCancelReservation(reservation.reservation_id)
+                        }
+                        className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg 
+                                 font-medium hover:bg-red-700 transition-colors duration-200 
+                                 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+                      >
+                        <X className="w-4 h-4" />
+                        Cancel
+                      </button>
+                    )}
+                </div>
+              </div>
+            ))
+          ))}
       </div>
+
+      {activeTab === "approved" &&
+        filteredReservations.length > itemsPerPage && (
+          <div className="flex items-center justify-center mt-8 gap-6">
+            <button
+              onClick={handlePrevious}
+              disabled={currentPage === 1}
+              className="flex items-center gap-2 px-4 py-2 rounded-lg font-medium
+                     transition-all duration-200
+                     disabled:opacity-50 disabled:cursor-not-allowed
+                     bg-white text-gray-700 hover:bg-gray-100
+                     border border-gray-200 shadow-sm"
+            >
+              Previous
+            </button>
+            <div className="flex items-center gap-2">
+              <span
+                className="px-3 py-1 text-sm font-medium text-gray-700 
+                         bg-white rounded-md border border-gray-200"
+              >
+                {currentPage}
+              </span>
+              <span className="text-gray-500">of</span>
+              <span
+                className="px-3 py-1 text-sm font-medium text-gray-700 
+                         bg-white rounded-md border border-gray-200"
+              >
+                {totalPages}
+              </span>
+            </div>
+            <button
+              onClick={handleNext}
+              disabled={currentPage === totalPages}
+              className="flex items-center gap-2 px-4 py-2 rounded-lg font-medium
+                     transition-all duration-200
+                     disabled:opacity-50 disabled:cursor-not-allowed
+                     bg-white text-gray-700 hover:bg-gray-100
+                     border border-gray-200 shadow-sm"
+            >
+              Next
+            </button>
+          </div>
+        )}
     </div>
   );
 };

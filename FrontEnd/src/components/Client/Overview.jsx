@@ -34,6 +34,7 @@ const Overview = ({ clientProfile, idUser }) => {
     };
 
     const fetchCompletedJobs = async () => {
+       const idUser = localStorage.getItem("idUser");
       try {
         const response = await axios.get(
           `http://localhost:3005/reservations/countReservationsC/${idUser}`

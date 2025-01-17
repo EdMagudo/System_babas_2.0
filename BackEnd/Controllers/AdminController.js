@@ -17,7 +17,7 @@ const generateRandomPassword = () => {
 
 const initializeAdmin = async () => {
   try {
-    const adminCount = await Admin.count(); // Conta o número de registros na tabela
+    const adminCount = await Admin.count(); 
     if (adminCount === 0) {
       // Gera uma senha aleatória de 8 caracteres
       const randomPassword = generateRandomPassword();

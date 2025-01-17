@@ -11,33 +11,13 @@ const Footer = () => {
             <nav>
               <ul className="grid grid-cols-2 gap-4">
                 <li>
-                  <a href="/contact" className="text-slate-600 hover:text-slate-900 transition-colors duration-200 text-sm">
+                  <a href="/contact-us" className="text-slate-600 hover:text-slate-900 transition-colors duration-200 text-sm">
                     Contact Us
                   </a>
                 </li>
                 <li>
                   <a href="/terms" className="text-slate-600 hover:text-slate-900 transition-colors duration-200 text-sm">
                     Terms & Conditions
-                  </a>
-                </li>
-                <li>
-                  <a href="/faqs" className="text-slate-600 hover:text-slate-900 transition-colors duration-200 text-sm">
-                    FAQs
-                  </a>
-                </li>
-                <li>
-                  <a href="/service-fee" className="text-slate-600 hover:text-slate-900 transition-colors duration-200 text-sm">
-                    Service Fee
-                  </a>
-                </li>
-                <li>
-                  <a href="/places-to-visit" className="text-slate-600 hover:text-slate-900 transition-colors duration-200 text-sm">
-                    Places to Visit
-                  </a>
-                </li>
-                <li>
-                  <a href="/travel-tips" className="text-slate-600 hover:text-slate-900 transition-colors duration-200 text-sm">
-                    Travel Tips
                   </a>
                 </li>
               </ul>

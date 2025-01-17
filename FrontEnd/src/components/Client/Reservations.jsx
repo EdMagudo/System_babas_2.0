@@ -230,6 +230,7 @@ const Reservations = () => {
                     <span className="font-medium">Status:</span>{" "}
                     {reservation.status}
                   </p>
+                  
 
                   {reservation.status !== "cancelled" &&
                     reservation.status !== "completed" && (

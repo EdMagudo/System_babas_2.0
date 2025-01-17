@@ -4,7 +4,7 @@ const ServiceRequest = db.Service_Requests;
 const Payments = db.Payments;
 const Users = db.Users;
 const Reviews = db.Reviews;
-import moment from 'moment'; 
+import moment from "moment";
 
 import { Sequelize } from "sequelize";
 const { Op } = Sequelize;
@@ -152,7 +152,6 @@ const getAllReservationsForClient = async (req, res) => {
               model: Users, // Ensure this matches your Users model name
               as: "client", // Ensure this matches your association name
             },
-            
           ],
         },
       ],
@@ -190,19 +189,21 @@ const cancelReservation = async (req, res) => {
 
     // Verifique se a reserva foi encontrada e atualizada
     if (updatedRows === 0) {
-      return res.status(404).json({ message: "Reservation not found or already cancelled" });
+      return res
+        .status(404)
+        .json({ message: "Reservation not found or already cancelled" });
     }
 
     res.status(200).json({ message: "Reservation cancelled successfully" });
   } catch (error) {
     console.error("Error canceling reservation:", error);
-    res.status(500).json({ message: "Error canceling reservation", error: error.message });
+    res
+      .status(500)
+      .json({ message: "Error canceling reservation", error: error.message });
   }
 };
 
-
 const PayReservationtoClient = async (req, res) => {
-  
   try {
     // Encontre a reserva pelo ID e atualize o status para 'cancelled'
     const updatedRows = await Reservations.update(
@@ -241,7 +242,6 @@ const countConfirmedAndBookedReservations = async (req, res) => {
     res
       .status(500)
       .json({ error: "Error counting confirmed and booked reservations" });
-    
   }
 };
 
@@ -255,7 +255,7 @@ const countCompletedForNanny = async (req, res) => {
         status: {
           [Sequelize.Op.in]: ["Completed"], // Filtra os status confirmed e booked
         },
-        nanny_id: req.params.nanny_id, 
+        nanny_id: req.params.nanny_id,
       },
     });
 
@@ -266,11 +266,10 @@ const countCompletedForNanny = async (req, res) => {
     res
       .status(500)
       .json({ error: "Error counting confirmed and booked reservations" });
-    
   }
 };
 
-const countBookedForClient= async (req, res) => {
+const countBookedForClient = async (req, res) => {
   try {
     console.log("Counting confirmed and booked reservations");
 
@@ -280,7 +279,7 @@ const countBookedForClient= async (req, res) => {
         status: {
           [Sequelize.Op.in]: ["booked"], // Filtra os status confirmed e booked
         },
-        client_id: req.params.client_id,  
+        client_id: req.params.client_id,
       },
     });
 
@@ -291,7 +290,6 @@ const countBookedForClient= async (req, res) => {
     res
       .status(500)
       .json({ error: "Error counting confirmed and booked reservations" });
-    
   }
 };
 
@@ -315,7 +313,9 @@ const payReservation = async (req, res) => {
     );
 
     if (updatedRows[0] === 0) {
-      return res.status(500).json({ message: "Error updating reservation status" });
+      return res
+        .status(500)
+        .json({ message: "Error updating reservation status" });
     }
 
     // Create the payment for the reservation
@@ -323,9 +323,9 @@ const payReservation = async (req, res) => {
       reservation_id: reservation.reservation_id,
       client_id: reservation.client_id,
       amount: reservation.value,
-      payment_method: 'Paypal',  // Assuming the payment method is PayPal
-      payment_date: moment().format('YYYY-MM-DD HH:mm:ss'),
-      status: 'Completed',  // Assuming the payment status is 'Completed'
+      payment_method: "Paypal", // Assuming the payment method is PayPal
+      payment_date: moment().format("YYYY-MM-DD HH:mm:ss"),
+      status: "Completed", // Assuming the payment status is 'Completed'
     });
 
     // Return success message after payment is created
@@ -335,10 +335,11 @@ const payReservation = async (req, res) => {
     });
   } catch (error) {
     console.error("Error processing reservation:", error);
-    res.status(500).json({ message: "Error processing reservation and payment" });
+    res
+      .status(500)
+      .json({ message: "Error processing reservation and payment" });
   }
 };
-
 
 const rateBook = async (req, res) => {
   try {
@@ -414,9 +415,6 @@ const rateBook = async (req, res) => {
   }
 };
 
-
-
-
 export default {
   createReservation,
   getAllReservations,
@@ -431,5 +429,5 @@ export default {
   countCompletedForNanny,
   countBookedForClient,
   PayReservationtoClient,
-  rateBook
+  rateBook,
 };
