@@ -10,8 +10,6 @@ import {
   DollarSign,
 } from "lucide-react";
 
-import { useTranslation } from 'react-i18next';
-
 interface BabysittingRequest {
   id: number;
   startDate: string;
@@ -34,7 +32,7 @@ const BabysittingRequestManager: React.FC = () => {
   const [endDateFilter, setEndDateFilter] = useState<string>("");
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [itemsPerPage] = useState<number>(5);
-  const { t } = useTranslation();
+
   useEffect(() => {
     fetchReservations();
   }, []);
@@ -250,7 +248,7 @@ const BabysittingRequestManager: React.FC = () => {
   return (
     <div className="max-w-4xl mx-auto p-8 bg-gray-50">
       <h1 className="text-3xl font-bold mb-8 text-gray-900 text-center">
-      {t("BabysittingRequestManager.title")}
+        Babysitting Service Requests
       </h1>
 
       <div className="flex justify-center mb-8 gap-4">

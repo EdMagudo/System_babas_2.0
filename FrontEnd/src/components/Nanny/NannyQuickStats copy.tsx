@@ -94,7 +94,7 @@ const NannyQuickStats: React.FC<NannyQuickStatsProps> = ({
   };
 
   if (!nannyProfile) {
-    return <div>{t("NannyQuickStats.profileNotFound")}</div>;
+    return <div>{t("profileNotFound")}</div>;
   }
 
   return (
@@ -103,47 +103,47 @@ const NannyQuickStats: React.FC<NannyQuickStatsProps> = ({
         {/* Quick Stats Section */}
         <div className="bg-white border border-gray-200 rounded-lg p-6 space-y-4">
           <h3 className="text-lg font-semibold text-gray-800 border-b pb-3 mb-4">
-            {t("NannyQuickStats.professionalOverview")}
+            {t("professionalOverview")}
           </h3>
           <div className="space-y-3">
             <div className="flex justify-between items-center">
-              <span className="text-gray-600">{t("NannyQuickStats.completedJobs")}</span>
+              <span className="text-gray-600">{t("completedJobs")}</span>
               <span className="font-bold text-gray-800">
                 {completedJobs.count || 0}
               </span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-gray-600">{t("NannyQuickStats.currency")}</span>
+              <span className="text-gray-600">{t("currency")}</span>
               <span className="font-bold text-gray-800">
                 {nannyProfile.nannyProfile.currency}
               </span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-gray-600">{t("NannyQuickStats.monthlySalary")}</span>
+              <span className="text-gray-600">{t("monthlySalary")}</span>
               <span className="font-bold text-gray-800">
                 {nannyProfile.nannyProfile.mounthly_Salary}
               </span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-gray-600">{t("NannyQuickStats.dailySalary")}</span>
+              <span className="text-gray-600">{t("dailySalary")}</span>
               <span className="font-bold text-gray-800">
                 {nannyProfile.nannyProfile.daily_salary}
               </span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-gray-600">{t("NannyQuickStats.phoneNumber")}</span>
+              <span className="text-gray-600">{t("phoneNumber")}</span>
               <span className="font-bold text-gray-800">
                 {nannyProfile.contact_phone}
               </span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-gray-600">{t("NannyQuickStats.availability")}</span>
+              <span className="text-gray-600">{t("availability")}</span>
               <div className="flex items-center">
                 {nannyProfile.background_check_status === "pending" && (
                   <>
                     <CheckCircle className="w-5 h-5 text-yellow-500 mr-2" />
                     <span className="font-bold text-yellow-600">
-                      {t("NannyQuickStats.pending")}
+                      {t("pending")}
                     </span>
                   </>
                 )}
@@ -151,7 +151,7 @@ const NannyQuickStats: React.FC<NannyQuickStatsProps> = ({
                   <>
                     <CheckCircle className="w-5 h-5 text-green-500 mr-2" />
                     <span className="font-bold text-green-600">
-                      {t("NannyQuickStats.approved")}
+                      {t("approved")}
                     </span>
                   </>
                 )}
@@ -159,7 +159,7 @@ const NannyQuickStats: React.FC<NannyQuickStatsProps> = ({
                   <>
                     <XCircle className="w-5 h-5 text-red-500 mr-2" />
                     <span className="font-bold text-red-600">
-                      {t("NannyQuickStats.rejected")}
+                      {t("rejected")}
                     </span>
                   </>
                 )}
@@ -171,7 +171,7 @@ const NannyQuickStats: React.FC<NannyQuickStatsProps> = ({
         {/* Professional Summary Section */}
         <div className="bg-white border border-gray-200 rounded-lg p-6 space-y-4">
           <h3 className="text-lg font-semibold text-gray-800 border-b pb-3 mb-4">
-            {t("NannyQuickStats.professionalSummary")}
+            {t("professionalSummary")}
           </h3>
           <p className="text-gray-600 italic leading-relaxed">
             "{nannyProfile.nannyProfile.additional_info}"
@@ -181,7 +181,7 @@ const NannyQuickStats: React.FC<NannyQuickStatsProps> = ({
         {/* Password Change Section */}
         <div className="md:col-span-2 bg-white border border-gray-200 rounded-lg p-6">
           <h3 className="text-lg font-semibold text-gray-800 border-b pb-3 mb-4">
-            {t("NannyQuickStats.changePassword")}
+            {t("changePassword")}
           </h3>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -190,7 +190,7 @@ const NannyQuickStats: React.FC<NannyQuickStatsProps> = ({
                   htmlFor="email"
                   className="block text-sm font-medium text-gray-700 mb-2"
                 >
-                  {t("NannyQuickStats.email")}
+                  {t("email")}
                 </label>
                 <div className="relative">
                   <input
@@ -217,7 +217,7 @@ const NannyQuickStats: React.FC<NannyQuickStatsProps> = ({
                     value={currentPassword}
                     onChange={(e) => setCurrentPassword(e.target.value)}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                    placeholder={t("NannyQuickStats.currentPassword")}
+                    placeholder={t("currentPassword")}
                   />
                   <button
                     type="button"
@@ -240,7 +240,7 @@ const NannyQuickStats: React.FC<NannyQuickStatsProps> = ({
                   htmlFor="new-password"
                   className="block text-sm font-medium text-gray-700 mb-2"
                 >
-                  {t("NannyQuickStats.newPassword")}
+                  {t("newPassword")}
                 </label>
                 <div className="relative">
                   <input
@@ -249,7 +249,7 @@ const NannyQuickStats: React.FC<NannyQuickStatsProps> = ({
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                    placeholder={t("NannyQuickStats.newPassword")}
+                    placeholder={t("newPassword")}
                   />
                   <button
                     type="button"
@@ -279,7 +279,7 @@ const NannyQuickStats: React.FC<NannyQuickStatsProps> = ({
                 type="submit"
                 className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
               >
-                {t("NannyQuickStats.changePassword")}
+                {t("changePassword")}
               </button>
             </div>
           </form>

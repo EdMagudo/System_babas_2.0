@@ -5,10 +5,8 @@ import UserQualifications from "../components/Nanny/UserQualifications";
 import NannyQuickyStats from "../components/Nanny/NannyQuickStats";
 import ProfilePictureUploader from "../components/Nanny/ProfilePictureUploader";
 import BabysittingRequestManager from "../components/Nanny/BabysittingRequestManager";
-import { useTranslation } from "react-i18next";
 
 const NannyDashboard = () => {
-  const { t } = useTranslation();
   const [activeSection, setActiveSection] = useState("overview");
   const [nannyProfile, setNannyProfile] = useState(null);
   const [languagesList, setLanguagesList] = useState([]);
@@ -128,10 +126,10 @@ const NannyDashboard = () => {
       );
 
       console.log("Perfil atualizado com sucesso:", response.data);
-      alert(t("error-nanny.updateProfile"));
+      alert("Perfil atualizado com sucesso!");
     } catch (error) {
       console.error("Erro ao atualizar perfil:", error);
-      alert(t("error-nanny.updateProfile"));
+      alert("Falha ao atualizar perfil. Tente novamente.");
     }
   };
 
@@ -145,38 +143,38 @@ const NannyDashboard = () => {
   const renderSection = () => {
     switch (activeSection) {
       case "overview":
-        return <NannyQuickyStats />;
+        return <NannyQuickyStats></NannyQuickyStats>;
       case "profile":
         return (
           <div className="bg-white p-6 rounded-lg shadow-md">
             <h3 className="text-xl font-semibold mb-4 text-blue-700">
-              {t("profile-nanny.personalDetails")}
+              Personal Details
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <p className="font-medium">
-                  {t("profile-nanny.name")}: {nannyProfile.first_name} {nannyProfile.last_name}
+                  Name: {nannyProfile.first_name} {nannyProfile.last_name}
                 </p>
-                <p>{t("profile-nanny.email")}: {nannyProfile.email}</p>
+                <p>Email: {nannyProfile.email}</p>
                 <p>
-                  {t("profile-nanny.location")}: {nannyProfile.province_name},{" "}
+                  Location: {nannyProfile.province_name},{" "}
                   {nannyProfile.country_name}
                 </p>
               </div>
               <div>
-                <p>{t("profile-nanny.education")}: {nannyProfile.nannyProfile.education_level}</p>
-                <p>{t("profile-nanny.dateOfBirth")}: {nannyProfile.nannyProfile.date_of_birth}</p>
-                <p>{t("profile-nanny.jobType")}: {nannyProfile.nannyProfile.job_type}</p>
+                <p>Education: {nannyProfile.nannyProfile.education_level}</p>
+                <p>Date of Birth: {nannyProfile.nannyProfile.date_of_birth}</p>
+                <p>Job Type: {nannyProfile.nannyProfile.job_type}</p>
               </div>
             </div>
 
             {/* Availability & Experience */}
             <div className="space-y-4 mt-6">
               <h2 className="text-xl font-semibold text-blue-700">
-                {t("profile-nanny.availabilityAndExperience")}
+                Availability & Experience
               </h2>
               <div className="space-y-2">
-                <label className="block mb-2">{t("profile-nanny.jobType")}</label>
+                <label className="block mb-2">Job Type</label>
                 <div className="flex space-x-4">
                   {["full_time", "temporary"].map((type) => (
                     <label key={type} className="inline-flex items-center">
@@ -188,22 +186,24 @@ const NannyDashboard = () => {
                         onChange={handleChange}
                         className="form-radio"
                       />
-                      <span className="ml-2 capitalize">{type.replace("-", " ")}</span>
+                      <span className="ml-2 capitalize">
+                        {type.replace("-", " ")}
+                      </span>
                     </label>
                   ))}
                 </div>
               </div>
 
               <div className="space-y-2">
-                <label className="block mb-2">{t("profile-nanny.experience")}</label>
+                <label className="block mb-2">Experience</label>
                 <select
                   name="experience"
                   value={formData.experience}
                   onChange={handleChange}
                   className="w-full px-3 py-2 border rounded"
                 >
-                  <option value="">{t("profile-nanny.yearsOfExperience")}</option>
-                  <option value="none">{t("profile-nanny.none")}</option>
+                  <option value="">Years of Experience</option>
+                  <option value="none">None</option>
                   <option value="1-2">1 - 2 years</option>
                   <option value="3-5">3 - 5 years</option>
                   <option value="5+">More than 5 years</option>
@@ -214,11 +214,11 @@ const NannyDashboard = () => {
             {/* Background Check */}
             <div className="space-y-4 mt-6">
               <h2 className="text-xl font-semibold text-blue-700">
-                {t("profile-nanny.backgroundCheck")}
+                Background Check
               </h2>
               <div className="space-y-2">
                 <label className="block mb-2">
-                  {t("profile-nanny.policeClearance")}
+                  Do you have a police clearance?
                 </label>
                 <div className="flex space-x-4">
                   {["yes", "no"].map((option) => (
@@ -237,7 +237,7 @@ const NannyDashboard = () => {
                 </div>
                 <div>
                   <label className="block mb-2">
-                    {t("profile-nanny.uploadPoliceClearance")}
+                    Please upload a copy of your police clearance:
                   </label>
                   <input
                     type="file"
@@ -248,12 +248,12 @@ const NannyDashboard = () => {
               </div>
 
               <div className="space-y-2">
-                <label className="block mb-2">{t("profile-nanny.additionalInfo")}</label>
+                <label className="block mb-2">Additional Information</label>
                 <textarea
                   name="additionalInfo"
                   value={formData.additionalInfo}
                   onChange={handleChange}
-                  placeholder={t("profile-nanny.additionalInfo")}
+                  placeholder="Please share any other relevant information"
                   className="w-full px-3 py-2 border rounded"
                 />
               </div>
@@ -263,14 +263,15 @@ const NannyDashboard = () => {
               onClick={handleSubmit}
               className="px-4 py-2 mt-4 bg-green-500 text-white rounded hover:bg-green-600"
             >
-              {t("profile-nanny.submit")}
+              Submit
             </button>
           </div>
         );
       case "qualifications":
         return (
-          <UserQualifications idUser={nannyProfile.user_id} />
+          <UserQualifications idUser={nannyProfile.user_id} /> // Passa o ID dinâmico
         );
+
       case "jobs":
         return <BabysittingRequestManager />;
       default:
@@ -300,7 +301,7 @@ const NannyDashboard = () => {
                   ? formatEducationLevel(
                       nannyProfile.nannyProfile.education_level
                     )
-                  : t("sidebar-nanny.educationLevel")}
+                  : "Nível de educação não disponível"}
               </p>
             </div>
             <nav className="space-y-4">
@@ -312,7 +313,7 @@ const NannyDashboard = () => {
                     : "hover:bg-gray-100"
                 }`}
               >
-                <Home className="mr-3" /> {t("sidebar-nanny.dashboard")}
+                <Home className="mr-3" /> Dashboard
               </button>
               <button
                 onClick={() => setActiveSection("profile")}
@@ -322,7 +323,7 @@ const NannyDashboard = () => {
                     : "hover:bg-gray-100"
                 }`}
               >
-                <User className="mr-3" /> {t("sidebar-nanny.profile")}
+                <User className="mr-3" /> Profile
               </button>
               <button
                 onClick={() => setActiveSection("jobs")}
@@ -332,7 +333,7 @@ const NannyDashboard = () => {
                     : "hover:bg-gray-100"
                 }`}
               >
-                <Briefcase className="mr-3" /> {t("sidebar-nanny.jobs")}
+                <Briefcase className="mr-3" /> Jobs
               </button>
               <button
                 onClick={() => setActiveSection("qualifications")}
@@ -342,18 +343,20 @@ const NannyDashboard = () => {
                     : "hover:bg-gray-100"
                 }`}
               >
-                <Briefcase className="mr-3" /> {t("sidebar-nanny.qualifications")}
+                <Briefcase className="mr-3" /> Qualifications
               </button>
             </nav>
           </div>
 
-          {/* Main Content */}
+          {/* Conteúdo Principal */}
           <div className="col-span-1 md:col-span-3">
             <div className="bg-white rounded-lg p-6 shadow-md mb-6">
               <h1 className="text-3xl font-bold text-blue-700">
-                {t("dashboard-nanny.title", { name: nannyProfile.first_name })}
+                Welcome, {nannyProfile.first_name}!
               </h1>
-              <p className="text-gray-600">{t("dashboard-nanny.description")}</p>
+              <p className="text-gray-600">
+                Here's an overview of your nanny profile and opportunities.
+              </p>
             </div>
 
             {renderSection()}
@@ -363,5 +366,4 @@ const NannyDashboard = () => {
     </div>
   );
 };
-
 export default NannyDashboard;

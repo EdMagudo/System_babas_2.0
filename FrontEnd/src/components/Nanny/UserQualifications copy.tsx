@@ -3,6 +3,7 @@ import { Phone, DollarSign, Languages, Loader, Save, Map } from "lucide-react";
 import axios from "axios";
 import { useTranslation } from "react-i18next";
 
+
 const UserQualifications = ({ idUser }) => {
   const [formData, setFormData] = useState({
     languages: [],
@@ -13,7 +14,7 @@ const UserQualifications = ({ idUser }) => {
     country: "",
     province: "",
   });
-
+  const { t } = useTranslation();
   const [countries, setCountries] = useState([]);
   const [provinces, setProvinces] = useState([]);
   const [languagesList, setLanguagesList] = useState([]);
@@ -25,7 +26,7 @@ const UserQualifications = ({ idUser }) => {
     contact: false,
     salary: false,
   });
-  const { t } = useTranslation();
+
   useEffect(() => {
     const fetchCountries = async () => {
       try {
@@ -231,7 +232,7 @@ const UserQualifications = ({ idUser }) => {
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
             <Phone className="w-5 h-5 text-blue-500" />
-            {t("contactInformation-nanny.title")}
+            Contact Information
           </h2>
           <button
             onClick={() => handleSaveP("contact", { phone: formData.phone })}
@@ -243,7 +244,7 @@ const UserQualifications = ({ idUser }) => {
             ) : (
               <Save className="w-4 h-4" />
             )}
-           {t("contactInformation-nanny.saveButton")}
+            Save
           </button>
         </div>
         <input
@@ -261,7 +262,7 @@ const UserQualifications = ({ idUser }) => {
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
             <Map className="w-5 h-5 text-blue-500" />
-            {t("location-nanny.title")}
+            Location
           </h2>
           <button
             onClick={() =>
@@ -278,12 +279,12 @@ const UserQualifications = ({ idUser }) => {
             ) : (
               <Save className="w-4 h-4" />
             )}
-            {t("location-nanny.saveButton")}
+            Save
           </button>
         </div>
         <div className="flex gap-4">
           <div className="w-full">
-            <label className="block mb-2">{t("location-nanny.countryLabel")}</label>
+            <label className="block mb-2">Country</label>
             <select
               id="country"
               value={formData.country}
@@ -302,7 +303,7 @@ const UserQualifications = ({ idUser }) => {
             </select>
           </div>
           <div className="w-full">
-            <label className="block mb-2">{t("location-nanny.provinceLabel")}</label>
+            <label className="block mb-2">Province</label>
             <select
               id="province"
               value={formData.province}
@@ -328,7 +329,7 @@ const UserQualifications = ({ idUser }) => {
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
             <DollarSign className="w-5 h-5 text-blue-500" />
-            {t("salaryInformation-nanny.title")}
+            Salary Information
           </h2>
           <button 
             onClick={() =>
@@ -346,13 +347,13 @@ const UserQualifications = ({ idUser }) => {
             ) : (
               <Save className="w-4 h-4" />
             )}
-            {t("salaryInformation-nanny.saveButton")}
+            Save
           </button>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-            {t("salaryInformation-nanny.currencyLabel")}
+              Currency
             </label>
             <select
               id="currency"
@@ -370,7 +371,7 @@ const UserQualifications = ({ idUser }) => {
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-            {t("salaryInformation-nanny.monthlySalaryLabel")}
+              Monthly Salary
             </label>
             <input
               type="number"
@@ -383,7 +384,7 @@ const UserQualifications = ({ idUser }) => {
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-            {t("salaryInformation-nanny.dailySalaryLabel")}
+              Daily salary
             </label>
             <input
               type="number"
@@ -401,12 +402,12 @@ const UserQualifications = ({ idUser }) => {
       <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6">
         <h2 className="text-xl font-semibold text-gray-800 flex items-center gap-2 mb-6">
           <Languages className="w-5 h-5 text-blue-500" />
-          {t("languages-nanny.title")}
+          Languages
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-            {t("languages-nanny.assignedLanguagesLabel")}
+              Assigned Languages
             </label>
             <ul className="list-disc pl-5 space-y-1">
               {formData.languages.map((language, index) => (
@@ -419,7 +420,7 @@ const UserQualifications = ({ idUser }) => {
                     onClick={() => handleRemove("languages", language)}
                     className="text-red-500 hover:underline text-sm"
                   >
-                    {t("languages-nanny.removeButton")}
+                    Remove
                   </button>
                 </li>
               ))}
@@ -427,7 +428,7 @@ const UserQualifications = ({ idUser }) => {
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-               {t("languages-nanny.addLanguageLabel")}
+              Add Language
             </label>
             <select
               value={selectedLanguage}
@@ -450,7 +451,7 @@ const UserQualifications = ({ idUser }) => {
               disabled={!selectedLanguage}
               className="mt-3 w-full px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors disabled:opacity-50"
             >
-               {t("languages-nanny.addButton")}
+              Add Language
             </button>
           </div>
         </div>

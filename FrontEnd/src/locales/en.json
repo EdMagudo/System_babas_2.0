@@ -247,9 +247,9 @@
     "dateOfBirth": "Date of birth"
   },
   "overview": {
-    "quickStats": "Quick Stats",
+   "quickStats": "Quick Stats",
     "totalPaidReservations": "Total of paid reservations",
-    "changeEmailPassword": "Change Email and Password",
+    "changeEmailAndPassword": "Change Email and Password",
     "email": "Email",
     "emailPlaceholder": "Your email address",
     "currentPassword": "Current Password",
@@ -258,16 +258,136 @@
     "newPasswordPlaceholder": "Enter your new password",
     "updatePassword": "Update Password",
     "contactInformation": "Contact Information",
-    "save": "Save",
     "saving": "Saving...",
+    "save": "Save",
     "phoneInstructions": "Please update your contact number below. Ensure the format includes the country code.",
-    "phoneNumber": "Phone Number",
+    "phone": "Phone Number",
     "phonePlaceholder": "E.g., +1 (555) 000-0000",
     "errorLoadingProfile": "Error loading user profile.",
+    "phoneUpdated": "Phone number updated successfully!",
+    "failedPhoneUpdate": "Failed to update phone number.",
     "fillAllFields": "Please fill in all fields.",
-    "passwordUpdateSuccess": "Password updated successfully!",
-    "passwordUpdateError": "There was an error updating the password.",
-    "phoneUpdateSuccess": "Phone number updated successfully!",
-    "phoneUpdateError": "Failed to update phone number."
+    "passwordUpdated": "Password updated successfully!",
+    "errorUpdatingPassword": "There was an error updating the password."
+  },
+  
+    "dashboard-nanny": {
+      "title": "Welcome, {{name}}!",
+      "description": "Here's an overview of your nanny profile and opportunities."
+    },
+    "profile-nanny": {
+      "personalDetails": "Personal Details",
+      "name": "Name",
+      "email": "Email",
+      "location": "Location",
+      "education": "Education",
+      "dateOfBirth": "Date of Birth",
+      "jobType": "Job Type",
+      "availabilityAndExperience": "Availability & Experience",
+      "experience": "Experience",
+      "yearsOfExperience": "Years of Experience",
+      "backgroundCheck": "Background Check",
+      "policeClearance": "Do you have a police clearance?",
+      "uploadPoliceClearance": "Please upload a copy of your police clearance:",
+      "additionalInfo": "Additional Information",
+      "submit": "Submit",
+      "none": "None",
+      "yes": "Yes",
+      "no": "No"
+    },
+    "sidebar-nanny": {
+      "profilePicture": "Profile Picture",
+      "uploadSuccess": "Profile picture uploaded successfully!",
+      "educationLevel": "Education Level",
+      "dashboard": "Dashboard",
+      "profile": "Profile",
+      "jobs": "Jobs",
+      "qualifications": "Qualifications"
+    },
+    "error-nanny": {
+      "profileFetch": "Error fetching profile. Please try again.",
+      "updateProfile": "Failed to update profile. Please try again."
+    },
+    "NannyQuickStats":
+    {
+      "professionalOverview": "Professional Overview",
+      "completedJobs": "Completed Jobs",
+      "currency": "Currency",
+      "monthlySalary": "Monthly Salary",
+      "dailySalary": "Daily Salary",
+      "phoneNumber": "Phone Number",
+      "availability": "Availability",
+      "pending": "Pending",
+      "approved": "Approved",
+      "rejected": "Rejected",
+      "professionalSummary": "Professional Summary",
+      "changePassword": "Change Password",
+      "currentPassword": "Current Password",
+      "newPassword": "New Password",
+      "email": "Email",
+      "errorPasswordLength": "The new password must be at least 8 characters long.",
+      "passwordUpdateSuccess": "Password updated successfully.",
+      "passwordUpdateError": "There was an error updating the password. Please try again later."
+    },
+    "contactInformation-nanny": {
+      "title": "Contact Information",
+      "phonePlaceholder": "+1 (555) 000-0000",
+      "saveButton": "Save"
+    },
+    "location-nanny": {
+      "title-nanny": "Location",
+      "countryLabel": "Country",
+      "provinceLabel": "Province",
+      "saveButton": "Save"
+    },
+    "salaryInformation-nanny": {
+      "title": "Salary Information",
+      "currencyLabel": "Currency",
+      "monthlySalaryLabel": "Monthly Salary",
+      "dailySalaryLabel": "Daily Salary",
+      "saveButton": "Save"
+    },
+    "languages-nanny": {
+      "title": "Languages",
+      "assignedLanguagesLabel": "Assigned Languages",
+      "addLanguageLabel": "Add Language",
+      "removeButton": "Remove",
+      "addButton": "Add Language"
+    },
+    "loading-nanny": "Loading...",
+    "messages": {
+      "success": "Information updated successfully",
+      "error": "Failed to update information"
+    },
+    "BabysittingRequestManager": {
+    "title": "Babysitting Service Requests",
+    "newRequests": "New Requests",
+    "approvedRequests": "Approved Requests",
+    "applyFilter": "Apply Filter",
+    "noNewRequests": "No new requests available",
+    "noApprovedReservations": "No approved reservations",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "numberOfPeople": "Number of People",
+    "address": "Address",
+    "email": "Email",
+    "note": "Note",
+    "enterServiceValue": "Enter service value",
+    "approve": "Approve",
+    "reject": "Reject",
+    "cancel": "Cancel",
+    "finalize": "Finalize",
+    "serviceValue": "Service Value",
+    "status": "Status",
+    "pending": "Pending",
+    "approved": "Approved",
+    "rejected": "Rejected",
+    "confirmationApprove": "Are you sure you want to approve this request?",
+    "confirmationReject": "Are you sure you want to reject this request?",
+    "confirmationCancel": "Are you sure you want to cancel this reservation?",
+    "invalidValue": "Please enter a valid service value."
   }
+    
+  
+  
 }

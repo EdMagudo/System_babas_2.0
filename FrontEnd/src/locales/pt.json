@@ -247,28 +247,151 @@
       "dateOfBirth": "Data de Nascimento"
     },
     "overview": {
-    "quickStats": "Estatísticas Rápidas",
-    "totalPaidReservations": "Total de reservas pagas",
-    "changeEmailPassword": "Alterar Email e Senha",
-    "email": "Email",
-    "emailPlaceholder": "Seu endereço de email",
-    "currentPassword": "Senha Atual",
-    "currentPasswordPlaceholder": "Digite sua senha atual",
-    "newPassword": "Nova Senha",
-    "newPasswordPlaceholder": "Digite sua nova senha",
-    "updatePassword": "Atualizar Senha",
-    "contactInformation": "Informações de Contato",
-    "save": "Salvar",
-    "saving": "Salvando...",
-    "phoneInstructions": "Por favor, atualize seu número de telefone abaixo. Certifique-se de incluir o código do país.",
-    "phoneNumber": "Número de Telefone",
-    "phonePlaceholder": "Ex: +55 (11) 99999-9999",
-    "errorLoadingProfile": "Erro ao carregar perfil do usuário.",
-    "fillAllFields": "Por favor, preencha todos os campos.",
-    "passwordUpdateSuccess": "Senha atualizada com sucesso!",
-    "passwordUpdateError": "Houve um erro ao atualizar a senha.",
-    "phoneUpdateSuccess": "Número de telefone atualizado com sucesso!",
-    "phoneUpdateError": "Falha ao atualizar número de telefone."
-  }
+  "quickStats": "Estatísticas Rápidas",
+"totalPaidReservations": "Total de reservas pagas",
+"changeEmailAndPassword": "Alterar E-mail e Senha",
+"email": "E-mail",
+"emailPlaceholder": "Seu endereço de e-mail",
+"currentPassword": "Senha Atual",
+"currentPasswordPlaceholder": "Digite sua senha atual",
+"newPassword": "Nova Senha",
+"newPasswordPlaceholder": "Digite sua nova senha",
+"updatePassword": "Atualizar Senha",
+"contactInformation": "Informações de Contato",
+"saving": "Salvando...",
+"save": "Salvar",
+"phoneInstructions": "Por favor, atualize seu número de contato abaixo. Certifique-se de que o formato inclua o código do país.",
+"phone": "Número de Telefone",
+"phonePlaceholder": "Ex.: +1 (555) 000-0000",
+"errorLoadingProfile": "Erro ao carregar o perfil do usuário.",
+"phoneUpdated": "Número de telefone atualizado com sucesso!",
+"failedPhoneUpdate": "Falha ao atualizar o número de telefone.",
+"fillAllFields": "Por favor, preencha todos os campos.",
+"passwordUpdated": "Senha atualizada com sucesso!",
+"errorUpdatingPassword": "Houve um erro ao atualizar a senha."
+  },
+  
+    "dashboard-nanny": {
+      "title": "Bem-vindo, {{name}}!",
+      "description": "Aqui está um resumo do seu perfil de babá e oportunidades."
+    },
+    "profile-nanny": {
+      "personalDetails": "Detalhes Pessoais",
+      "name": "Nome",
+      "email": "Email",
+      "location": "Localização",
+      "education": "Educação",
+      "dateOfBirth": "Data de Nascimento",
+      "jobType": "Tipo de Trabalho",
+      "availabilityAndExperience": "Disponibilidade e Experiência",
+      "experience": "Experiência",
+      "yearsOfExperience": "Anos de Experiência",
+      "backgroundCheck": "Verificação de Antecedentes",
+      "policeClearance": "Você possui uma certidão de antecedentes criminais?",
+      "uploadPoliceClearance": "Por favor, envie uma cópia do seu atestado de antecedentes criminais:",
+      "additionalInfo": "Informações Adicionais",
+      "submit": "Enviar",
+      "none": "Nenhuma",
+      "yes": "Sim",
+      "no": "Não"
+    },
+    "sidebar-nanny": {
+      "profilePicture": "Foto de Perfil",
+      "uploadSuccess": "Foto atualizada com sucesso!",
+      "educationLevel": "Nível de Educação",
+      "dashboard": "Dashboard",
+      "profile": "Perfil",
+      "jobs": "Trabalhos",
+      "qualifications": "Qualificações"
+    },
+    "error-nanny": {
+      "profileFetch": "Erro ao buscar o perfil. Tente novamente.",
+      "updateProfile": "Falha ao atualizar perfil. Tente novamente."
+    },
+    "NannyQuickStats":
+    {
+      "professionalOverview": "Visão Profissional",
+      "completedJobs": "Trabalhos Concluídos",
+      "currency": "Moeda",
+      "monthlySalary": "Salário Mensal",
+      "dailySalary": "Salário Diário",
+      "phoneNumber": "Número de Telefone",
+      "availability": "Disponibilidade",
+      "pending": "Pendente",
+      "approved": "Aprovado",
+      "rejected": "Rejeitado",
+      "professionalSummary": "Resumo Profissional",
+      "changePassword": "Alterar Senha",
+      "currentPassword": "Senha Atual",
+      "newPassword": "Nova Senha",
+      "email": "E-mail",
+      "errorPasswordLength": "A nova senha deve ter pelo menos 8 caracteres.",
+      "passwordUpdateSuccess": "Senha alterada com sucesso.",
+      "passwordUpdateError": "Ocorreu um erro ao atualizar a senha. Tente novamente mais tarde."
+    },
+    
+      "contactInformation-nanny": {
+        "title": "Informações de Contato",
+        "phonePlaceholder": "+1 (555) 000-0000",
+        "saveButton": "Salvar"
+      },
+      "location-nanny": {
+        "title": "Localização",
+        "countryLabel": "País",
+        "provinceLabel": "Província",
+        "saveButton": "Salvar"
+      },
+      "salaryInformation-nanny": {
+        "title": "Informações Salariais",
+        "currencyLabel": "Moeda",
+        "monthlySalaryLabel": "Salário Mensal",
+        "dailySalaryLabel": "Salário Diário",
+        "saveButton": "Salvar"
+      },
+      "languages-nanny": {
+        "title": "Idiomas",
+        "assignedLanguagesLabel": "Idiomas Atribuídos",
+        "addLanguageLabel": "Adicionar Idioma",
+        "removeButton": "Remover",
+        "addButton": "Adicionar Idioma"
+      },
+      "loading-nanny": "Carregando...",
+      "messages": {
+        "success": "Informações atualizadas com sucesso",
+        "error": "Falha ao atualizar informações"
+      },
+      "BabysittingRequestManager": {
+        "title": "Solicitações de Serviço de Babysitting",
+        "newRequests": "Novas Solicitações",
+        "approvedRequests": "Solicitações Aprovadas",
+        "applyFilter": "Aplicar Filtro",
+        "noNewRequests": "Não há novas solicitações",
+        "noApprovedReservations": "Não há reservas aprovadas",
+        "startDate": "Data de Início",
+        "endDate": "Data de Término",
+        "numberOfPeople": "Número de Pessoas",
+        "address": "Endereço",
+        "email": "E-mail",
+        "note": "Observação",
+        "enterServiceValue": "Digite o valor do serviço",
+        "approve": "Aprovar",
+        "reject": "Rejeitar",
+        "cancel": "Cancelar",
+        "finalize": "Finalizar",
+        "serviceValue": "Valor do Serviço",
+        "status": "Status",
+        "pending": "Pendente",
+        "approved": "Aprovado",
+        "rejected": "Rejeitado",
+        "confirmationApprove": "Tem certeza de que deseja aprovar esta solicitação?",
+        "confirmationReject": "Tem certeza de que deseja rejeitar esta solicitação?",
+        "confirmationCancel": "Tem certeza de que deseja cancelar esta reserva?",
+        "invalidValue": "Por favor, insira um valor válido para o serviço."
+      }
+    
+    
+    
+  
+  
   
 }
