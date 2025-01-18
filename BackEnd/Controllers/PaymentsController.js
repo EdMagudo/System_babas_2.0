@@ -3,8 +3,9 @@ const Payments = db.Payments;
 const Reservations = db.Reservations;
 const Users = db.Users;
 
-import { Op } from 'sequelize';
+import { Op,  fn, literal } from 'sequelize';
 import moment from 'moment'; 
+import axios from 'axios';
 
 
 // Obter todos os pagamentos
@@ -107,33 +108,62 @@ const getAllPaymentsWithDetails = async (req, res) => {
   }
 };
 
+const CONVERT_API_URL = 'http://localhost:3005/convert';
 
 const getTotalCompletedPayments = async (req, res) => {
   try {
-    console.log('Calculating total amount of completed payments for the current month');
-
     // Obter o primeiro e o último dia do mês atual
     const startOfMonth = moment().startOf('month').toDate();
     const endOfMonth = moment().endOf('month').toDate();
 
-    // Somando os valores dos pagamentos com status 'completed' no mês atual
-    const totalAmount = await Payments.sum('amount', {
+    // Obter todos os pagamentos completados no mês atual
+    const payments = await Payments.findAll({
+      attributes: ['amount', 'payment_method'],
       where: {
-        status: 'completed', // Filtra os pagamentos com status 'completed'
-        payment_date: { // Filtra pela data de pagamento dentro do mês atual
-          [Op.between]: [startOfMonth, endOfMonth]
-        }
+        status: 'completed',
+        payment_date: {
+          [Op.between]: [startOfMonth, endOfMonth],
+        },
       },
+      raw: true,
     });
 
-    // Retorna o valor total dos pagamentos com status 'completed' para o mês atual
-    res.json({ totalAmount });
+    let totalAmountMZN = 0;
+
+    // Processar cada pagamento
+    for (const payment of payments) {
+      let amount = payment.amount;
+
+      if (payment.payment_method === 'Paypal') {
+        
+        try {
+          const response = await axios.post(CONVERT_API_URL, {
+            from: 'USD',
+            to: 'MZN',
+            amount,
+          });
+
+          if (response.data.success) {
+            amount = response.data.convertedAmount;
+          } else {
+            console.warn('Falha na conversão de moeda:', response.data.message);
+            continue;
+          }
+        } catch (error) {
+          console.error('Erro ao chamar a API de conversão:', error);
+          continue;
+        }
+      }
+
+      totalAmountMZN += amount * 0.1;
+    }
+
+    res.json({ totalAmount: parseFloat(totalAmountMZN.toFixed(2)) });
   } catch (error) {
-    console.error('Error calculating total completed payments:', error);
-    res.status(500).json({ error: 'Error calculating total completed payments' });
+    console.error('Erro ao calcular pagamentos concluídos:', error);
+    res.status(500).json({ error: 'Erro ao calcular pagamentos concluídos' });
   }
 };
-
 
 
 export default {

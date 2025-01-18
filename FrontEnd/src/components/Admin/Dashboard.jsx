@@ -36,7 +36,7 @@ const Dashboard = () => {
           totalClientes: data.clients || 0,
           reservasAtivas: reservationsData.count || 0,
           rendimentoMensal: paymentData.totalAmount
-            ? new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(paymentData.totalAmount)
+            ? new Intl.NumberFormat('en-US', { style: 'currency', currency: 'MZN' }).format(paymentData.totalAmount)
             : "$0.00", // Caso o valor não exista, exibe $0.00
           crescimentoMensal: data.crescimentoMensal || "+0%",
           satisfacaoClientes: data.satisfacaoClientes || "0%",
