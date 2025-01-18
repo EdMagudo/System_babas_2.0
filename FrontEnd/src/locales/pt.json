@@ -386,7 +386,8 @@
         "confirmationApprove": "Tem certeza de que deseja aprovar esta solicitação?",
         "confirmationReject": "Tem certeza de que deseja rejeitar esta solicitação?",
         "confirmationCancel": "Tem certeza de que deseja cancelar esta reserva?",
-        "invalidValue": "Por favor, insira um valor válido para o serviço."
+        "invalidValue": "Por favor, insira um valor válido para o serviço.",
+        "requestFor":"Solicitção para"
       }
     
     

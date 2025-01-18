@@ -262,7 +262,7 @@ const BabysittingRequestManager: React.FC = () => {
           }`}
           onClick={() => setActiveTab("new")}
         >
-          New Requests
+         {t("BabysittingRequestManager.newRequests")}
         </button>
         <button
           className={`px-6 py-2.5 rounded-full font-medium transition-all duration-200 ${
@@ -272,7 +272,7 @@ const BabysittingRequestManager: React.FC = () => {
           }`}
           onClick={() => setActiveTab("approved")}
         >
-          Approved Requests
+         {t("BabysittingRequestManager.approvedRequests")} 
         </button>
       </div>
 
@@ -283,7 +283,7 @@ const BabysittingRequestManager: React.FC = () => {
               htmlFor="startDateFilter"
               className="text-gray-700 font-medium"
             >
-              Start Date
+              {t("BabysittingRequestManager.startDate")}
             </label>
             <input
               type="date"
@@ -298,7 +298,7 @@ const BabysittingRequestManager: React.FC = () => {
               htmlFor="endDateFilter"
               className="text-gray-700 font-medium"
             >
-              End Date
+             {t("BabysittingRequestManager.endDate")}
             </label>
             <input
               type="date"
@@ -313,7 +313,7 @@ const BabysittingRequestManager: React.FC = () => {
             className="px-6 py-2.5 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 
                      transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
           >
-            Apply Filter
+            {t("BabysittingRequestManager.applyFilter")}
           </button>
         </div>
       )}
@@ -321,7 +321,7 @@ const BabysittingRequestManager: React.FC = () => {
       <div className="space-y-6">
         {activeTab === "new" && filteredRequests.length === 0 ? (
           <div className="text-center py-12 bg-white rounded-xl shadow-sm">
-            <p className="text-gray-500 text-lg">No new requests available</p>
+            <p className="text-gray-500 text-lg">{t("BabysittingRequestManager.noNewRequests")}</p>
           </div>
         ) : (
           filteredRequests.map((request) => (
@@ -330,26 +330,26 @@ const BabysittingRequestManager: React.FC = () => {
               className="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow duration-200"
             >
               <h2 className="text-xl font-semibold mb-4 text-gray-900">
-                Request for {request.startDate}
+              {t("BabysittingRequestManager.requestFor")} {request.startDate}
               </h2>
               <div className="space-y-3 mb-6">
                 <p className="flex items-center gap-3 text-gray-700">
                   <Users className="w-5 h-5 text-pink-500" />
-                  <span className="font-medium">Number of People:</span>
+                  <span className="font-medium"> {t("BabysittingRequestManager.numberOfPeople")}:</span>
                   <span>{request.numberOfPeople}</span>
                 </p>
                 <p className="flex items-center gap-3 text-gray-700">
                   <MapPin className="w-5 h-5 text-green-500" />
-                  <span className="font-medium">Address:</span>
+                  <span className="font-medium"> {t("BabysittingRequestManager.address")}:</span>
                   <span>{request.address}</span>
                 </p>
                 <p className="flex items-center gap-3 text-gray-700">
                   <Mail className="w-5 h-5 text-blue-500" />
-                  <span className="font-medium">Email:</span>
+                  <span className="font-medium"> {t("BabysittingRequestManager.email")}:</span>
                   <span>{request.email}</span>
                 </p>
                 <div className="mt-4 bg-gray-50 p-4 rounded-lg">
-                  <p className="text-gray-900 font-medium">Note:</p>
+                  <p className="text-gray-900 font-medium"> {t("BabysittingRequestManager.note")}:</p>
                   <p className="text-gray-600 italic mt-1">{request.notes}</p>
                 </div>
               </div>
@@ -368,7 +368,7 @@ const BabysittingRequestManager: React.FC = () => {
                     className="px-6 py-2.5 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 
                              transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
                   >
-                    Finalize
+                    {t("BabysittingRequestManager.finalize")}
                   </button>
                 </div>
               ) : (
@@ -378,14 +378,14 @@ const BabysittingRequestManager: React.FC = () => {
                     className="px-6 py-2.5 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 
                              transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                   >
-                    Approve
+                     {t("BabysittingRequestManager.approve")}
                   </button>
                   <button
                     onClick={() => handleReject(request.id)}
                     className="px-6 py-2.5 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 
                              transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
                   >
-                    Reject
+                     {t("BabysittingRequestManager.reject")}
                   </button>
                 </div>
               )}
@@ -396,7 +396,7 @@ const BabysittingRequestManager: React.FC = () => {
         {activeTab === "approved" &&
           (currentItems.length === 0 ? (
             <div className="text-center py-12 bg-white rounded-xl shadow-sm">
-              <p className="text-gray-500 text-lg">No approved reservations</p>
+              <p className="text-gray-500 text-lg"> {t("BabysittingRequestManager.noApprovedReservations")}</p>
             </div>
           ) : (
             currentItems.map((reservation) => (
@@ -405,27 +405,27 @@ const BabysittingRequestManager: React.FC = () => {
                 className="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow duration-200"
               >
                 <h2 className="text-xl font-semibold mb-4 text-gray-900">
-                  Reservation for {reservation.serviceRequest.client.first_name}{" "}
+                {t("BabysittingRequestManager.requestFor")} {reservation.serviceRequest.client.first_name}{" "}
                   {reservation.serviceRequest.client.last_name}
                 </h2>
                 <div className="space-y-3 mb-6">
                   <p className="flex items-center gap-3 text-gray-700">
                     <Users className="w-5 h-5 text-pink-500" />
-                    <span className="font-medium">Number of People:</span>
+                    <span className="font-medium">{t("BabysittingRequestManager.numberOfPeople")}:</span>
                     <span>{reservation.serviceRequest.number_of_people}</span>
                   </p>
                   <p className="flex items-center gap-3 text-gray-700">
                     <MapPin className="w-5 h-5 text-green-500" />
-                    <span className="font-medium">Address:</span>
+                    <span className="font-medium">{t("BabysittingRequestManager.address")}:</span>
                     <span>{reservation.serviceRequest.address}</span>
                   </p>
                   <p className="flex items-center gap-3 text-gray-700">
                     <Mail className="w-5 h-5 text-blue-500" />
-                    <span className="font-medium">Email:</span>
+                    <span className="font-medium">{t("BabysittingRequestManager.email")}:</span>
                     <span>{reservation.serviceRequest.client.email}</span>
                   </p>
                   <div className="mt-4 bg-gray-50 p-4 rounded-lg">
-                    <p className="text-gray-900 font-medium">Note:</p>
+                    <p className="text-gray-900 font-medium">{t("BabysittingRequestManager.note")}:</p>
                     <p className="text-gray-600 italic mt-1">
                       {reservation.serviceRequest.notes}
                     </p>
@@ -433,7 +433,7 @@ const BabysittingRequestManager: React.FC = () => {
                   {reservation.status === "confirmed" && (
                     <p className="flex items-center gap-3 text-gray-700 bg-green-50 p-4 rounded-lg">
                       <DollarSign className="w-5 h-5 text-green-500" />
-                      <span className="font-medium">Service Value:</span>
+                      <span className="font-medium">{t("BabysittingRequestManager.serviceValue")}:</span>
                       <span className="text-green-700">
                         ${parseFloat(reservation.value).toFixed(2)}
                       </span>
@@ -463,7 +463,7 @@ const BabysittingRequestManager: React.FC = () => {
                                  focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
                       >
                         <X className="w-4 h-4" />
-                        Cancel
+                        {t("BabysittingRequestManager.cancel")}
                       </button>
                     )}
                 </div>
