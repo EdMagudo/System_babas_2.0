@@ -14,8 +14,7 @@ const LoginPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
-
+   
     try {
       const response = await fetch('http://localhost:3005/user/login', {
         method: 'POST',
@@ -31,8 +30,6 @@ const LoginPage = () => {
       const data = await response.json();
 
       if (response.ok) {
-       
-       
         localStorage.setItem('authToken', data.token);
         localStorage.setItem('SliderService', data.user.id); //idUser = SliderService
         localStorage.setItem('SliderNavigation', data.user.role); // userRole = SliderNavigation
