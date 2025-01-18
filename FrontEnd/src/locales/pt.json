@@ -104,7 +104,7 @@
     "selectProvince": "Selecione uma província",
     "loadingProvinces": "Carregando províncias...",
     "uploadError": "Por favor, faça o upload de um arquivo.",
-    "registrationSuccess": "Cliente registrado com sucesso!",
+    "registrationSuccess": "Cliente registrado com sucesso! Acesse o seu perfil usando o seu email e Id usado cadastro",
     "registrationError": "Erro ao registrar cliente. Tente novamente mais tarde.",
     "register": "Cadastrar"
   },
@@ -144,7 +144,7 @@
     "submit_button": "Enviar Inscrição",
     "age_error": "Você precisa ter 18 anos ou mais para se registrar.",
     "submit_error": "Falha ao enviar inscrição. Tente novamente.",
-    "success_message": "Cadastro realizado com sucesso!"
+    "success_message": "Cadastro realizado com sucesso! Acesse o seu perfil usando o seu email e Id usado cadastro"
   },
   "ClientDashboard": {
     "welcome_message": "Bem-vindo, {{first_name}}!",

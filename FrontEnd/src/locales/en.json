@@ -104,7 +104,7 @@
     "selectProvince": "Select a province",
     "loadingProvinces": "Loading provinces...",
     "uploadError": "Please upload a file.",
-    "registrationSuccess": "Client successfully registered!",
+    "registrationSuccess": "Client successfully registered! Access your profile using your email and ID used to register",
     "registrationError": "Error registering client. Please try again later.",
     "register": "Register"
   },
@@ -144,7 +144,7 @@
     "submit_button": "Submit Application",
     "age_error": "You must be 18 years or older to register.",
     "submit_error": "Failed to submit registration. Please try again.",
-    "success_message": "Registration successful!"
+    "success_message": "Registration completed successfully! Access your profile using your email and ID used to register"
   },
   "ClientDashboard": {
     "welcome_message": "Welcome, {{first_name}}!",

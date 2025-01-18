@@ -44,6 +44,7 @@ const AdminLogin = () => {
 
       // Navigate to dashboard
       navigate('/admin');
+      window.location.reload();
     } catch (err) {
       setError(
         err.response?.data?.message || 'Unable to connect to the server. Please try again later.'
