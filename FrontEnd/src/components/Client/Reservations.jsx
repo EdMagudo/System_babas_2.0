@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-import MpesaPaymentModal from '../Estrutura/MpesaPaymentModal';
+import MpesaPaymentModal from "../Estrutura/MpesaPaymentModal";
 import {
   ChevronDown,
   ChevronUp,
@@ -20,16 +20,14 @@ const Reservations = () => {
   const [message, setMessage] = useState({ text: "", type: "" });
   const [expanded, setExpanded] = useState({});
   const [feedbacks, setFeedbacks] = useState({});
-   const [startDate, setStartDate] = useState("");
-    const [endDate, setEndDate] = useState("");
-    const [mpesaModalOpen, setMpesaModalOpen] = useState(false);
-    const [selectedReservation, setSelectedReservation] = useState(null);
-    const { t } = useTranslation();
+  const [mpesaModalOpen, setMpesaModalOpen] = useState(false);
+  const [selectedReservation, setSelectedReservation] = useState(null);
+  const { t } = useTranslation();
 
-    const handleMpesaPayment = (reservation) => {
-      setSelectedReservation(reservation);
-      setMpesaModalOpen(true);
-    };
+  const handleMpesaPayment = (reservation) => {
+    setSelectedReservation(reservation);
+    setMpesaModalOpen(true);
+  };
   useEffect(() => {
     let timeoutId;
     if (message.text) {
@@ -45,7 +43,7 @@ const Reservations = () => {
   }, [message]);
 
   const fetchReservations = async () => {
-    const clientId = localStorage.getItem("idUser");
+    const clientId = localStorage.getItem("SliderService");
     if (!clientId) {
       console.error("Client ID not found in localStorage");
       return;
@@ -163,7 +161,9 @@ const Reservations = () => {
   return (
     <div className="max-w-5xl mx-auto bg-gray-50 rounded-lg shadow-lg overflow-hidden">
       <div className="p-6 bg-indigo-700 text-white">
-        <h2 className="text-2xl font-bold">{t('reservation.clientReservations')}</h2>
+        <h2 className="text-2xl font-bold">
+          {t("reservation.clientReservations")}
+        </h2>
       </div>
 
       {message.text && (
@@ -179,7 +179,7 @@ const Reservations = () => {
       <div className="p-6">
         {currentItems.length === 0 ? (
           <div className="text-center py-8 text-gray-500">
-            {t('reservation.noReservations')}
+            {t("reservation.noReservations")}
           </div>
         ) : (
           currentItems.map((reservation) => (
@@ -194,15 +194,18 @@ const Reservations = () => {
                   </div>
                   <div>
                     <p className="text-sm text-gray-500">
-                      {t('reservation.nannyEmail')}{reservation.serviceRequest.nanny_email}
+                      {t("reservation.nannyEmail")}
+                      {reservation.serviceRequest.nanny_email}
                     </p>
                     <p className="text-sm text-gray-500">
-                      {t('reservation.status')} <span className="font-medium">{reservation.status}</span>
+                      {t("reservation.status")}{" "}
+                      <span className="font-medium">{reservation.status}</span>
                     </p>
                     {reservation.status === "completed" && (
                       <p className="text-sm text-gray-500 flex items-center">
                         <DollarSign className="w-4 h-4 text-green-500 mr-1" />
-                        {t('reservation.paidAmount')}{reservation.value}
+                        {t("reservation.paidAmount")}
+                        {reservation.value}
                       </p>
                     )}
                   </div>
@@ -223,42 +226,61 @@ const Reservations = () => {
                 <div className="p-6 border-t">
                   <p className="text-sm text-gray-600">
                     <Calendar className="inline-block w-4 h-4 mr-2 text-blue-500" />
-                    <span className="font-medium">{t('reservation.start')}:</span>{" "}
-                    {new Date(reservation.serviceRequest.start_date).toLocaleDateString()}
+                    <span className="font-medium">
+                      {t("reservation.start")}:
+                    </span>{" "}
+                    {new Date(
+                      reservation.serviceRequest.start_date
+                    ).toLocaleDateString()}
                   </p>
                   <p className="text-sm text-gray-600">
                     <Clock className="inline-block w-4 h-4 mr-2 text-blue-500" />
-                    <span className="font-medium">{t('reservation.end')}:</span>{" "}
-                    {new Date(reservation.serviceRequest.end_date).toLocaleDateString()}
+                    <span className="font-medium">{t("reservation.end")}:</span>{" "}
+                    {new Date(
+                      reservation.serviceRequest.end_date
+                    ).toLocaleDateString()}
                   </p>
                   <p className="text-sm text-gray-600">
                     <FileText className="inline-block w-4 h-4 mr-2 text-blue-500" />
-                    <span className="font-medium">{t('reservation.status')}:</span>{" "}
+                    <span className="font-medium">
+                      {t("reservation.status")}:
+                    </span>{" "}
                     {reservation.status}
                   </p>
-                  
+
                   {reservation.status !== "cancelled" &&
                     reservation.status !== "completed" && (
                       <button
                         onClick={() => handleCancel(reservation.reservation_id)}
                         className="px-4 py-2 bg-red-600 text-white mt-6 font-semibold text-sm rounded-md shadow-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-all duration-200"
                       >
-                        {t('reservation.cancelReservation')}
+                        {t("reservation.cancelReservation")}
                       </button>
                     )}
 
                   {reservation.status === "confirmed" && (
                     <div className="mt-4 bg-gray-100 p-4 rounded-lg shadow-sm">
                       <h3 className="text-lg font-semibold text-gray-700 mb-2">
-                        {t('reservation.choosePaymentMethod')}
+                        {t("reservation.choosePaymentMethod")}
                       </h3>
                       <div className="flex flex-col gap-4">
                         {/* PayPal Payment Button */}
-                        <form action="http://localhost:3005/sam/pay" method="post">
-                          <input type="hidden" name="reservationId" value={reservation.reservation_id} />
-                          <input type="hidden" name="amount" value={reservation.value} />
+                        <form
+                          action="http://localhost:3005/sam/pay"
+                          method="post"
+                        >
+                          <input
+                            type="hidden"
+                            name="reservationId"
+                            value={reservation.reservation_id}
+                          />
+                          <input
+                            type="hidden"
+                            name="amount"
+                            value={reservation.value}
+                          />
                           <button className="w-full px-4 py-2 bg-blue-600 text-white rounded-md shadow hover:bg-blue-700 transition-colors">
-                            {t('reservation.payWithPaypal')}
+                            {t("reservation.payWithPaypal")}
                           </button>
                         </form>
 
@@ -267,7 +289,7 @@ const Reservations = () => {
                           onClick={() => handleMpesaPayment(reservation)}
                           className="px-4 py-2 bg-green-600 text-white rounded-md shadow hover:bg-green-700"
                         >
-                          {t('reservation.payWithMpesa')}
+                          {t("reservation.payWithMpesa")}
                         </button>
                       </div>
                     </div>
@@ -275,7 +297,7 @@ const Reservations = () => {
 
                   <div className="flex items-center bg-gray-50 px-4 py-2 rounded-xl mt-4">
                     <span className="text-sm font-medium text-gray-600 mr-2">
-                      {t('reservation.total')}:
+                      {t("reservation.total")}:
                     </span>
                     <span className="text-lg font-bold text-gray-800">
                       {formatCurrency(reservation.value)}
@@ -284,21 +306,37 @@ const Reservations = () => {
 
                   {reservation.status === "completed" && (
                     <div className="mt-4">
-                      <h3 className="text-lg font-semibold">{t('reservation.leaveFeedback')}</h3>
+                      <h3 className="text-lg font-semibold">
+                        {t("reservation.leaveFeedback")}
+                      </h3>
                       <textarea
-                        placeholder={t('reservation.writeComment')}
-                        value={feedbacks[reservation.reservation_id]?.comment || ""}
+                        placeholder={t("reservation.writeComment")}
+                        value={
+                          feedbacks[reservation.reservation_id]?.comment || ""
+                        }
                         onChange={(e) =>
-                          handleFeedbackChange(reservation.reservation_id, "comment", e.target.value)
+                          handleFeedbackChange(
+                            reservation.reservation_id,
+                            "comment",
+                            e.target.value
+                          )
                         }
                         className="mt-2 w-full p-3 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500"
                       />
                       <div className="mt-2 flex items-center">
-                        <label className="mr-4">{t('reservation.rating')}:</label>
+                        <label className="mr-4">
+                          {t("reservation.rating")}:
+                        </label>
                         <select
-                          value={feedbacks[reservation.reservation_id]?.rating || ""}
+                          value={
+                            feedbacks[reservation.reservation_id]?.rating || ""
+                          }
                           onChange={(e) =>
-                            handleFeedbackChange(reservation.reservation_id, "rating", e.target.value)
+                            handleFeedbackChange(
+                              reservation.reservation_id,
+                              "rating",
+                              e.target.value
+                            )
                           }
                           className="p-2 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500"
                         >
@@ -311,10 +349,12 @@ const Reservations = () => {
                         </select>
                       </div>
                       <button
-                        onClick={() => handleFeedbackSubmit(reservation.reservation_id)}
+                        onClick={() =>
+                          handleFeedbackSubmit(reservation.reservation_id)
+                        }
                         className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md shadow hover:bg-blue-700"
                       >
-                        {t('reservation.submitFeedback')}
+                        {t("reservation.submitFeedback")}
                       </button>
                     </div>
                   )}
@@ -324,12 +364,12 @@ const Reservations = () => {
           ))
         )}
 
-<MpesaPaymentModal
-    isOpen={mpesaModalOpen}
-    onClose={() => setMpesaModalOpen(false)}
-    reservationId={selectedReservation?.reservation_id}
-    amount={selectedReservation?.value}
-  />
+        <MpesaPaymentModal
+          isOpen={mpesaModalOpen}
+          onClose={() => setMpesaModalOpen(false)}
+          reservationId={selectedReservation?.reservation_id}
+          amount={selectedReservation?.value}
+        />
         <div className="flex justify-between items-center mt-6">
           <button
             onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
@@ -340,13 +380,15 @@ const Reservations = () => {
                 : "bg-indigo-600 text-white hover:bg-indigo-700"
             }`}
           >
-            {t('reservation.previous')}
+            {t("reservation.previous")}
           </button>
           <span className="text-gray-500">
-            {t('reservation.page')} {currentPage} {t('of')} {totalPages}
+            {t("reservation.page")} {currentPage} {t("of")} {totalPages}
           </span>
           <button
-            onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+            onClick={() =>
+              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+            }
             disabled={currentPage === totalPages}
             className={`px-4 py-2 text-sm font-medium rounded-md shadow ${
               currentPage === totalPages
@@ -354,7 +396,7 @@ const Reservations = () => {
                 : "bg-indigo-600 text-white hover:bg-indigo-700"
             }`}
           >
-            {t('reservation.next')}
+            {t("reservation.next")}
           </button>
         </div>
       </div>

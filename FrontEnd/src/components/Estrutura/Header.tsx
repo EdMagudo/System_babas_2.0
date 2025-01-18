@@ -9,7 +9,7 @@ const Header = () => {
   const [currentLang, setCurrentLang] = useState(i18n.language);
 
   useEffect(() => {
-    const storedRole = localStorage.getItem('userRole');
+    const storedRole = localStorage.getItem('SliderNavigation');
     setUserRole(storedRole);
   }, []);
 

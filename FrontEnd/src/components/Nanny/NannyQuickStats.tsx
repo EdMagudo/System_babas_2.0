@@ -11,7 +11,7 @@ type NannyQuickStatsProps = {
 };
 
 const NannyQuickStats: React.FC<NannyQuickStatsProps> = ({
-  professionalSummary = "No professional summary provided.",
+ 
 }) => {
   const { t } = useTranslation(); // Usando o hook para tradução
   const [currentPassword, setCurrentPassword] = useState("");
@@ -70,7 +70,7 @@ const NannyQuickStats: React.FC<NannyQuickStatsProps> = ({
   }, []);
 
   const fetchNannyProfile = async () => {
-    const idUser = localStorage.getItem("idUser");
+    const idUser = localStorage.getItem("SliderService");
     if (!idUser) {
       console.error("ID do usuário não encontrado no localStorage");
       return;

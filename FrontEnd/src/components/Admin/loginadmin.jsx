@@ -39,7 +39,7 @@ const AdminLogin = () => {
       });
 
       // Store token and user role
-      localStorage.setItem('userRole', response.data.user.role);
+      localStorage.setItem('SliderNavigation', response.data.user.role);
       localStorage.setItem('adminToken', response.data.token);
 
       // Navigate to dashboard

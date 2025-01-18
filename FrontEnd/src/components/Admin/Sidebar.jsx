@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Home, Users, Calendar, BarChart3, Settings } from 'lucide-react';
+import { Home, Users, Calendar, Settings } from 'lucide-react';
 
 const Sidebar = ({ selectedTab, onSelectTab }) => {
   return (

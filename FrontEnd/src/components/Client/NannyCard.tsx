@@ -27,18 +27,17 @@ const NannyCard = ({
 
   const handleSubmitRequest = async (nannyId, em) => {
     try {
-      console.log("Nanny email:", em);
-  
-      const clientId = localStorage.getItem("idUser");
-      const email = localStorage.getItem("userEmail");
-      const country = localStorage.getItem("userCountry");
-      const province = localStorage.getItem("userProvince");
+        
+      const clientId = localStorage.getItem("SliderService");
+      const email = localStorage.getItem("SliderPagination");
+      const country = localStorage.getItem("tokenCData");
+      const province = localStorage.getItem("tokenPrData");
+
       const address = `${country}, ${province}`;
       const nanny_email = nanny.email;
       const nanny_Id = nanny.user_id;
       
-      console.log("Nanny email:", nanny_email);
-
+    
       if (!clientId || !email || !address || !startDate || !endDate || !nanny_email) {
         alert("Por favor, certifique-se de que todos os campos obrigatórios estão preenchidos.");
         return;
@@ -56,8 +55,7 @@ const NannyCard = ({
         notes: notes || "",
       };
   
-      console.log("Request data:", requestData);
-  
+      
       const response = await axios.post(
         "http://localhost:3005/requestServices",
         requestData

@@ -25,7 +25,7 @@ const NannyDashboard = () => {
 
   // Função para buscar dados do perfil da babá
   const fetchNannyProfile = async () => {
-    const idUser = localStorage.getItem("idUser");
+    const idUser = localStorage.getItem("SliderService");
     if (!idUser) {
       console.error("ID do usuário não encontrado no localStorage");
       return;
@@ -83,16 +83,11 @@ const NannyDashboard = () => {
     }
   };
 
-  const handleUploadSuccess = (newImageUrl: string) => {
-    console.log("Nova URL da imagem:", newImageUrl);
-    // Atualize o estado global ou sincronize com o backend.
-  };
-
-  const handleSubmit = async (e) => {
+   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const submitFormData = new FormData();
-    const id_user = localStorage.getItem("idUser");
+    const id_user = localStorage.getItem("SliderService");
 
     submitFormData.append("id", id_user);
     submitFormData.append("jobType", formData.jobType);

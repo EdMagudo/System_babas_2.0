@@ -31,13 +31,14 @@ const LoginPage = () => {
       const data = await response.json();
 
       if (response.ok) {
-        console.log('Login successful:', data);
+       
+       
         localStorage.setItem('authToken', data.token);
-        localStorage.setItem('idUser', data.user.id);
-        localStorage.setItem('userRole', data.user.role);
-        localStorage.setItem('userEmail', data.user.email);
-        localStorage.setItem('userProvince', data.user.country);
-        localStorage.setItem('userCountry', data.user.province);
+        localStorage.setItem('SliderService', data.user.id); //idUser = SliderService
+        localStorage.setItem('SliderNavigation', data.user.role); // userRole = SliderNavigation
+        localStorage.setItem('SliderPagination', data.user.email); // userEmail = SliderPagination
+        localStorage.setItem('tokenPrData', data.user.country); // userProvince = tokenPrData
+        localStorage.setItem('tokenCData', data.user.province); // userCountry = tokenCData
 
         if (data.user.role === 'client') {
           navigate('/client-dashboard');

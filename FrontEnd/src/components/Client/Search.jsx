@@ -7,10 +7,6 @@ const Search = () => {
   const { t } = useTranslation(); // Inicializa o uso de traduções
 
   const [searchResults, setSearchResults] = useState([]);
-  const [children, setChildren] = useState(1);
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
-  const [notes, setSpecialRequests] = useState("");
   const [countries, setCountries] = useState([]);
   const [provinces, setProvinces] = useState([]);
   const [client, setClient] = useState({

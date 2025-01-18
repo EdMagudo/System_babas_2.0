@@ -14,7 +14,7 @@ const ClientDashboard = () => {
   const [activeSection, setActiveSection] = useState('overview');
   const [clientProfile, setClientProfile] = useState(null);
   const [loading, setLoading] = useState(true);
-  const userId = localStorage.getItem("idUser");
+  const userId = localStorage.getItem("SliderService");
 
   const [searchParams] = useSearchParams();
 

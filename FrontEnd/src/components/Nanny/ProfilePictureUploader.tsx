@@ -17,7 +17,7 @@ const ProfilePictureUploader: React.FC<ProfilePictureUploaderProps> = ({
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
 
-  const userId = localStorage.getItem("idUser");
+  const userId = localStorage.getItem("SliderService");
 
   useEffect(() => {
     const fetchUserImage = async () => {
@@ -30,14 +30,12 @@ const ProfilePictureUploader: React.FC<ProfilePictureUploaderProps> = ({
         const response = await axios.get(`${fetchImageEndpoint}`);
         const profilePictureUrl = response.data.file?.filePath;
   
-        console.log("Original URL do arquivo:", profilePictureUrl);
-  
+   
         if (profilePictureUrl) {
           // Remove o prefixo "uploads/" se existir
           const correctedUrl = profilePictureUrl.substring(8);
              
-          console.log("URL corrigido:", correctedUrl);
-  
+           
           // Atualiza a imagem para o estado
           setImageUrl(`http://localhost:3005/uploads/${correctedUrl}`);
         } else {

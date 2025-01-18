@@ -44,7 +44,7 @@ const BabysittingRequestManager: React.FC = () => {
   }, []);
 
   const fetchReservations = async () => {
-    const idUser = localStorage.getItem("idUser");
+    const idUser = localStorage.getItem("SliderService");
     if (!idUser) {
       console.error("ID do usuário não encontrado no localStorage");
       return;
@@ -61,7 +61,7 @@ const BabysittingRequestManager: React.FC = () => {
   };
 
   const fetchRequests = async () => {
-    const idUser = localStorage.getItem("idUser");
+    const idUser = localStorage.getItem("SliderService");
     if (!idUser) {
       console.error("ID do usuário não encontrado no localStorage");
       return;
@@ -90,7 +90,7 @@ const BabysittingRequestManager: React.FC = () => {
   };
 
   const fetchAllReservations = async () => {
-    const idUser = localStorage.getItem("idUser");
+    const idUser = localStorage.getItem("SliderService");
     try {
       const response = await axios.get(
         `http://localhost:3005/reservations/getAll/reservations/${idUser}`

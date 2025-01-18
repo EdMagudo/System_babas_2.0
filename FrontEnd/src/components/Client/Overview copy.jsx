@@ -22,7 +22,7 @@ const Overview = ({ clientProfile, idUser }) => {
 
   useEffect(() => {
     const fetchUserProfile = async () => {
-      const idUser = localStorage.getItem("idUser");
+      const idUser = localStorage.getItem("SliderService");
       try {
         const response = await axios.get(`http://localhost:3005/client/${idUser}`);
         setEmail(response.data.email);
@@ -34,7 +34,7 @@ const Overview = ({ clientProfile, idUser }) => {
     };
 
     const fetchCompletedJobs = async () => {
-       const idUser = localStorage.getItem("idUser");
+      const idUser = localStorage.getItem("SliderService");
       try {
         const response = await axios.get(
           `http://localhost:3005/reservations/countReservationsC/${idUser}`
@@ -70,7 +70,7 @@ const Overview = ({ clientProfile, idUser }) => {
   };
 
   const handleSavePhone = async () => {
-    const idUser = localStorage.getItem("idUser");
+    const idUser = localStorage.getItem("SliderService");
     setSaving((prev) => ({ ...prev, phone: true }));
     try {
       const response = await axios.put(

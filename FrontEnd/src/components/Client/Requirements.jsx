@@ -19,7 +19,7 @@ const Favorites = () => {
   const [message, setMessage] = useState({ text: "", type: "" });
 
   const fetchRequests = async () => {
-    const idUser = localStorage.getItem("idUser");
+    const idUser = localStorage.getItem("SliderService");
     if (!idUser) {
       console.error("ID do usuário não encontrado no localStorage");
       return;
