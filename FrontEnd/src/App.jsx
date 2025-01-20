@@ -8,7 +8,7 @@ import ClientForm from './components/Client/ClientForm';
 import NannyForm from './components/Nanny/NannyForm';
 import ContactUs from './components/Estrutura/contactUs';
 import FindNanny from './components/FindNanny';
-import LoginPage from './Pages/loginPage';
+import LoginPage from './Pages/LoginPage';
 import ClientDashboard from './Pages/ClientDashBoard'; 
 import NannyDashboard from './Pages/NannyDashboard'; 
 import Admin from './Pages/AdminDashboard'
@@ -17,7 +17,7 @@ import AdminLogin from './components/Admin/AdminLogin';
 
 import Error404 from './components/Error404';
 
-import PayPalComponent from './Pages/payPalComponent';
+import PayPalComponent from './Pages/PayPalComponent';
 function App() {
   return (
     <Router>
