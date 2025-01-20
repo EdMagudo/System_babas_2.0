@@ -12,7 +12,9 @@ import LoginPage from './Pages/loginPage';
 import ClientDashboard from './Pages/ClientDashBoard'; 
 import NannyDashboard from './Pages/NannyDashboard'; 
 import Admin from './Pages/AdminDashboard'
-import AdminLogin from './components/Admin/Loginadmin';
+
+import AdminLogin from './components/Admin/AdminLogin';
+
 import Error404 from './components/Error404';
 
 import PayPalComponent from './Pages/payPalComponent';
