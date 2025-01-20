@@ -115,7 +115,6 @@ const NannyRegistrationForm = () => {
 
       setError(""); // Limpa a mensagem de erro
       setSuccessMessage(t('NannyRegistrationForm.success_message')); // Tradução de sucesso
-      console.log('Backend response:', response.data);
     } catch (error) {
       console.error('Submission error:', error.response?.data || error.message);
       setError(t('NannyRegistrationForm.submit_error')); // Tradução de erro ao submeter
