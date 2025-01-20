@@ -1,5 +1,4 @@
 {
-  "type": "module",
   "dependencies": {
     "axios": "^1.7.9",
     "bcrypt": "^5.1.1",
@@ -16,7 +15,5 @@
     "react-select": "^5.8.3",
     "sequelize": "^6.37.5"
   },
-  "scripts": {
-     "start": "react-scripts start"
-  }
+  "type": "module"
 }
