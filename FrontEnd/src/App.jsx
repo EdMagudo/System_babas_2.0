@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './components/Estrutura/Header';
 import Footer from './components/Estrutura/Footer';
@@ -8,7 +9,9 @@ import ClientForm from './components/Client/ClientForm';
 import NannyForm from './components/Nanny/NannyForm';
 import ContactUs from './components/Estrutura/contactUs';
 import FindNanny from './components/FindNanny';
-import LoginPage from './Pages/LoginPage';
+
+import LoginPage from './Pages/loginPage';
+
 import ClientDashboard from './Pages/ClientDashBoard'; 
 import NannyDashboard from './Pages/NannyDashboard'; 
 import Admin from './Pages/AdminDashboard'
