@@ -34,7 +34,7 @@ const NannyRegistrationForm = () => {
     const fetchCountries = async () => {
       try {
         setLoading(true);
-        const response = await axios.get("http://localhost:3005/countries");
+        const response = await axios.get("http://localhost:3005/api/countries");
         setCountries(response.data);
         setLoading(false);
       } catch (error) {
@@ -51,7 +51,7 @@ const NannyRegistrationForm = () => {
       const fetchProvinces = async () => {
         try {
           const response = await axios.get(
-            `http://localhost:3005/provinces/${client.country}`
+            `http://localhost:3005/api/provinces/${client.country}`
           );
           setProvinces(response.data);
         } catch (error) {
@@ -109,7 +109,7 @@ const NannyRegistrationForm = () => {
       formData.append('education_level', educationLevel);
 
       // Envia ao backend
-      const response = await axios.post('http://localhost:3005/user/register', formData, {
+      const response = await axios.post('http://localhost:3005/api/user/register', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
 

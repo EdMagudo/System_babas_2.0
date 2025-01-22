@@ -37,7 +37,7 @@ const ProfilePictureUploader: React.FC<ProfilePictureUploaderProps> = ({
              
            
           // Atualiza a imagem para o estado
-          setImageUrl(`http://localhost:3005/uploads/${correctedUrl}`);
+          setImageUrl(`http://localhost:3005/api/uploads/${correctedUrl}`);
         } else {
           // Define uma imagem padrão
           setImageUrl("https://via.placeholder.com/128");

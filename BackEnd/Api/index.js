@@ -42,7 +42,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 // Rota para registrar o usuário e o perfil da babá
-app.post('/register-nanny', upload.single('idCopy'), async (req, res) => {
+app.post('/api/register-nanny', upload.single('idCopy'), async (req, res) => {
   const {
     email,
     password,

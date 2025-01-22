@@ -17,7 +17,7 @@ const app = express();
 
 // CORS options
 const corsOptions = {
-  origin: ["https://nanniesfinder.com", "https://www.nanniesfinder.com"], // Lista de domínios permitidos
+  origin: "*", // Lista de domínios permitidos
   methods: ["GET", "POST", "PUT", "DELETE"], // Permitir todos os métodos
   allowedHeaders: ["Content-Type", "Authorization"], // Cabeçalhos permitidos
 };
@@ -44,29 +44,29 @@ import Admin from "./Routes/adminRoutes.js";
 import File from "./Routes/filesRouter.js";
 import Reviews from "./Routes/reviewsRouter.js";
 
-app.use("/admin", routerAdmin);
-app.use("/user", routerUser);
-app.use("/lang", UserLanguage);
-app.use("/nanny", routerNanny);
-app.use("/experienceAge", NannyChildAgeExperience);
-app.use("/experienceWork", NannyChildWorkPreference);
-app.use("/requestServices", ServiceRequests);
-app.use("/reservations", Reservations);
-app.use("/client", Client);
-app.use("/Payment", Payment);
-app.use("/Admin", Admin);
-app.use("/File", File);
-app.use("/Review", Reviews);
+app.use("/api/admin", routerAdmin);
+app.use("/api/user", routerUser);
+app.use("/api/lang", UserLanguage);
+app.use("/api/nanny", routerNanny);
+app.use("/api/experienceAge", NannyChildAgeExperience);
+app.use("/api/experienceWork", NannyChildWorkPreference);
+app.use("/api/requestServices", ServiceRequests);
+app.use("/api/reservations", Reservations);
+app.use("/api/client", Client);
+app.use("/api/Payment", Payment);
+app.use("/api/Admin", Admin);
+app.use("/api/File", File);
+app.use("/api/Review", Reviews);
 
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
-app.use("/requestServices", ServiceRequests);
-app.use("/reservations", Reservations);
-app.use("/client", Client);
+app.use("/api/uploads", express.static(path.join(__dirname, "uploads")));
+app.use("/api/requestServices", ServiceRequests);
+app.use("/api/reservations", Reservations);
+app.use("/api/client", Client);
 
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+app.use("/api/uploads", express.static(path.join(__dirname, "uploads")));
 
 // Supondo que você esteja usando Express.js
-app.get("/count-users", async (req, res) => {
+app.get("/api/count-users", async (req, res) => {
   try {
     const counts = await ClientController.countUsers(); // Chama a função de contagem de usuários
     res.json(counts); // Envia o resultado como resposta JSON
@@ -76,7 +76,7 @@ app.get("/count-users", async (req, res) => {
 });
 
 // Route to fetch countries
-app.get("/countries", async (req, res) => {
+app.get("/api/countries", async (req, res) => {
   try {
     const response = await axios.get(
       "https://countriesnow.space/api/v0.1/countries/info?returns=name"
@@ -92,7 +92,7 @@ app.get("/countries", async (req, res) => {
 });
 
 // Route to fetch provinces/states for a specific country
-app.get("/provinces/:country", async (req, res) => {
+app.get("/api/provinces/:country", async (req, res) => {
   try {
     const response = await axios.post(
       "https://countriesnow.space/api/v0.1/countries/states",
@@ -111,7 +111,7 @@ app.get("/provinces/:country", async (req, res) => {
 });
 
 // Static list of languages
-app.get("/languages", (req, res) => {
+app.get("/api/languages", (req, res) => {
   const languages = [
     "Afrikaans",
     "Albanian",
@@ -181,7 +181,7 @@ app.get("/languages", (req, res) => {
 });
 
 // Send email
-app.post("/send-email", async (req, res) => {
+app.post("/api/send-email", async (req, res) => {
   const { name, email, subject, message } = req.body;
   const transporter = nodemailer.createTransport({
     service: "gmail",
@@ -214,7 +214,7 @@ app.post("/send-email", async (req, res) => {
 import ReservationController from "./Controllers/ReservationsController.js";
 
 let id_reserva = "";
-app.post("/sam/pay", async (req, res) => {
+app.post("/api/sam/pay", async (req, res) => {
   try {
     const { reservationId, amount } = req.body;
     console.log(req.body);
@@ -238,7 +238,7 @@ app.post("/sam/pay", async (req, res) => {
 });
 
 // Complete PayPal Order Route
-app.get("/complete-order", async (req, res) => {
+app.get("/api/complete-order", async (req, res) => {
   try {
     const result = await paypal.capturePayment(req.query.token);
 
@@ -278,18 +278,18 @@ app.get("/complete-order", async (req, res) => {
     await updatePromise;
 
     // Redirect to success page
-    res.redirect(`/payment-success?reservationId=${reservationId}`);
+    res.redirect(`/api/payment-success?reservationId=${reservationId}`);
   } catch (error) {
     console.error("Error completing payment:", error);
     res.redirect("/payment-error");
   }
 });
 
-app.get("/cancel-order", (req, res) => {
+app.get("/api/cancel-order", (req, res) => {
   res.redirect("/reservations");
 });
 
-app.get("/payment-success", (req, res) => {
+app.get("/api/payment-success", (req, res) => {
   const reservationId = req.query.reservationId;
 
   // Redirecionar para o frontend com o ID da reserva como query parameter, se necessário
@@ -298,14 +298,14 @@ app.get("/payment-success", (req, res) => {
   );
 });
 
-app.get("/payment-error", (req, res) => {
+app.get("/api/payment-error", (req, res) => {
   res.send("Payment failed. Please try again.");
 });
 
 const EXCHANGE_RATE_API_URL = 'https://api.exchangerate-api.com/v4/latest/MZN';
 
 // Route to fetch all currencies
-app.get('/currencies', async (req, res) => {
+app.get('/api/currencies', async (req, res) => {
     try {
         const response = await axios.get(EXCHANGE_RATE_API_URL);
         const { rates } = response.data;
@@ -332,7 +332,7 @@ app.get('/currencies', async (req, res) => {
 });
 
 // Route to convert between two currencies
-app.post('/convert', async (req, res) => {
+app.post('/api/convert', async (req, res) => {
     const { from, to, amount } = req.body;
 
     if (!from || !to || !amount) {
@@ -417,7 +417,7 @@ import mpesaService from './services/mpesa.js';
 
 // Initialize database before starting the server
 
-app.post("/mpesa/pay", async (req, res) => {
+app.post("/api/mpesa/pay", async (req, res) => {
   try {
     const { reservationId, amount, phoneNumber } = req.body;
 

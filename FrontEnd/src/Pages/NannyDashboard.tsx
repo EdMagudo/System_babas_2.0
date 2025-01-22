@@ -32,7 +32,7 @@ const NannyDashboard = () => {
     }
 
     try {
-      const response = await axios.get(`http://localhost:3005/user/${idUser}`);
+      const response = await axios.get(`http://localhost:3005/api/user/${idUser}`);
       setNannyProfile(response.data);
       console.info(response.data);
     } catch (error) {
@@ -43,7 +43,7 @@ const NannyDashboard = () => {
   // Função para buscar idiomas disponíveis
   const fetchLanguages = async () => {
     try {
-      const response = await axios.get("http://localhost:3005/languages");
+      const response = await axios.get("http://localhost:3005/api/languages");
       setLanguagesList(response.data); // Atualiza o estado com os idiomas obtidos
     } catch (error) {
       console.error("Erro ao buscar idiomas:", error);
@@ -115,7 +115,7 @@ const NannyDashboard = () => {
 
     try {
       const response = await axios.put(
-        `http://localhost:3005/user/updatenannyProfiles/${id_user}`,
+        `http://localhost:3005/api/user/updatenannyProfiles/${id_user}`,
         submitFormData,
         {
           headers: { "Content-Type": "multipart/form-data" },
@@ -281,8 +281,8 @@ const NannyDashboard = () => {
           <div className="bg-white rounded-lg shadow-md p-6">
             <div className="text-center mb-6">
               <ProfilePictureUploader
-                uploadEndpoint={`http://localhost:3005/user/uploadProfile/Picture/${nannyProfile.user_id}`}
-                fetchImageEndpoint={`http://localhost:3005/user/${nannyProfile.user_id}/profile-picture`}
+                uploadEndpoint={`http://localhost:3005/api/user/uploadProfile/Picture/${nannyProfile.user_id}`}
+                fetchImageEndpoint={`http://localhost:3005/api/user/${nannyProfile.user_id}/profile-picture`}
                 onUploadSuccess={(newImageUrl) => {
                   console.log("Foto atualizada com sucesso:", newImageUrl);
                 }}

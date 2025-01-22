@@ -108,7 +108,7 @@ const getAllPaymentsWithDetails = async (req, res) => {
   }
 };
 
-const CONVERT_API_URL = 'http://localhost:3005/convert';
+const CONVERT_API_URL = 'http://localhost:3005/api/convert';
 
 const getTotalCompletedPayments = async (req, res) => {
   try {

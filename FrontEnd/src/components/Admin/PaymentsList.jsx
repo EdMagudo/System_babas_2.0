@@ -14,7 +14,7 @@ const PaymentList = () => {
     const fetchPayments = async () => {
       try {
         setLoading(true);
-        const response = await axios.get("http://localhost:3005/payment");
+        const response = await axios.get("http://localhost:3005/api/payment");
         setPayments(response.data);
       } catch (err) {
         setError("Erro ao carregar os pagamentos.");
@@ -87,7 +87,7 @@ const PaymentList = () => {
   const convertCurrency = async (amount) => {
     console.log("Converting USD to MZN for:", amount);
     try {
-      const response = await axios.post("http://localhost:3005/convert", {
+      const response = await axios.post("http://localhost:3005/api/convert", {
         from: "USD",
         to: "MZN",
         amount: amount,

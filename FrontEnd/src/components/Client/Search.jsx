@@ -42,7 +42,7 @@ const Search = () => {
         jobType: availability,
       };
 
-      const url = "http://localhost:3005/user/getAllNannyWith/Requirement";
+      const url = "http://localhost:3005/api/user/getAllNannyWith/Requirement";
 
       const response = await axios.post(url, requestBody);
 
@@ -54,7 +54,7 @@ const Search = () => {
           const filePath = nanny.files?.[0]?.path;
           const fileName = filePath ? filePath.split("\\").pop() : null;
           const profilePictureUrl = fileName
-            ? `http://localhost:3005/uploads/${fileName}`
+            ? `http://localhost:3005/api/uploads/${fileName}`
             : "/default-profile.png";
 
           return { ...nanny, profilePictureUrl };
@@ -72,7 +72,7 @@ const Search = () => {
   useEffect(() => {
     const fetchCountries = async () => {
       try {
-        const response = await axios.get("http://localhost:3005/countries");
+        const response = await axios.get("http://localhost:3005/api/countries");
         setCountries(response.data);
       } catch (error) {
         setError(t('search.errorFetchingCountries'));
@@ -87,7 +87,7 @@ const Search = () => {
     if (client.country) {
       const fetchProvinces = async () => {
         try {
-          const response = await axios.get(`http://localhost:3005/provinces/${client.country}`);
+          const response = await axios.get(`http://localhost:3005/api/provinces/${client.country}`);
           setProvinces(response.data);
         } catch (error) {
           setError(t('search.errorFetchingProvinces'));

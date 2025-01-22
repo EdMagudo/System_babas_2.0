@@ -7,7 +7,7 @@ const MpesaPaymentModal = ({ isOpen, onClose, reservationId, amount }) => {
     e.preventDefault();
     const form = document.createElement('form');
     form.method = 'POST';
-    form.action = 'http://localhost:3005/mpesa/pay';
+    form.action = 'http://localhost:3005/api/mpesa/pay';
 
     const reservationIdInput = document.createElement('input');
     reservationIdInput.type = 'hidden';

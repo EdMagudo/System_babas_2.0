@@ -67,7 +67,7 @@ const Header = () => {
 
     try {
       // Supondo que o email seja único
-      const response = await axios.put(`http://localhost:3005/Admin/${credentials.email}`, {
+      const response = await axios.put(`http://localhost:3005/api/Admin/${credentials.email}`, {
         currentPassword: credentials.currentPassword,
         newPassword: credentials.newPassword
       });

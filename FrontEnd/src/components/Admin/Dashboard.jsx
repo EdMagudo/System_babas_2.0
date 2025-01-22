@@ -16,12 +16,12 @@ const Dashboard = () => {
     const fetchData = async () => {
       try {
         // Realiza a requisição para obter os dados
-        const response = await axios.get("http://localhost:3005/count-users");
+        const response = await axios.get("http://localhost:3005/api/count-users");
         const responseData = await axios.get(
-          "http://localhost:3005/reservations/getAll/reservations"
+          "http://localhost:3005/api/reservations/getAll/reservations"
         );
 
-        const res = await axios.get("http://localhost:3005/Payment/payments/total-completed-month");
+        const res = await axios.get("http://localhost:3005/api/Payment/payments/total-completed-month");
 
         const data = response.data;
         const reservationsData = responseData.data;

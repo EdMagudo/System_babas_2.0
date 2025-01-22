@@ -33,7 +33,7 @@ const AdminLogin = () => {
     }
 
     try {
-      const response = await axios.post('http://localhost:3005/Admin/login', {
+      const response = await axios.post('http://localhost:3005/api/Admin/login', {
         email,
         password,
       });

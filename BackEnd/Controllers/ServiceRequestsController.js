@@ -3,16 +3,7 @@ import db from "../Models/index.js";
 import { Sequelize } from 'sequelize';
 const ServiceRequest = db.Service_Requests;
 const Reservation = db.Reservations;
-/*
-const createRequest = async (req, res) => {
-  try {
-    const request = await ServiceRequest.create(req.body);
-    res.status(201).json(request);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-*/
+
 const createRequest = async (req, res) => {
   try {
     // Verificando os campos obrigatórios

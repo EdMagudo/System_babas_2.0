@@ -32,7 +32,7 @@ const ContactPage = () => {
     setErrorMessage('');
 
     try {
-      const response = await fetch('http://localhost:3005/send-email', {
+      const response = await fetch('http://localhost:3005/api/send-email', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
