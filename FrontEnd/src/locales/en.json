@@ -125,6 +125,8 @@
     "last_name_title": "The last name must contain at least 3 letters and only alphabetic characters.",
     "date_of_birth": "Date of Birth",
     "email": "Email",
+    "country": "Country",
+    "province": "Province",
     "select_country": "Select Country",
     "select_province": "Select Province",
     "id_number": "ID/Passport",

@@ -125,6 +125,8 @@
     "last_name_title": "O sobrenome deve conter pelo menos 3 letras e apenas caracteres alfabéticos.",
     "date_of_birth": "Data de Nascimento",
     "email": "Email",
+    "country": "País",
+    "province": "Província",
     "select_country": "Selecione o País",
     "select_province": "Selecione a Província",
     "id_number": "Número de ID/Passaporte",
