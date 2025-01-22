@@ -1,8 +1,9 @@
 import db from "../Models/index.js";
 const Admin = db.Admin;
+
+// Importando as bibliotecas necessárias
 import bcrypt from "bcrypt";
 import axios from 'axios';
-import multer from "multer";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 

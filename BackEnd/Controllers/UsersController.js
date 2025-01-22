@@ -10,7 +10,6 @@ import bcrypt from "bcrypt";
 import multer from "multer";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
-import { v4 as uuidv4 } from "uuid";
 import fs from "fs";
 import path from "path"; // Certifique-se de importar o módulo path
 

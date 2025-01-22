@@ -17,9 +17,9 @@ const app = express();
 
 // CORS options
 const corsOptions = {
-  origin: "*",
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  allowedHeaders: ["Content-Type", "Authorization"],
+  origin: ["https://nanniesfinder.com", "https://www.nanniesfinder.com"], // Lista de domínios permitidos
+  methods: ["GET", "POST", "PUT", "DELETE"], // Permitir todos os métodos
+  allowedHeaders: ["Content-Type", "Authorization"], // Cabeçalhos permitidos
 };
 
 // Middleware
