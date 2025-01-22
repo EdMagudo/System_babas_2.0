@@ -1,5 +1,5 @@
 export default  {
-    HOST: 'localhost',
+    HOST: '145.223.103.28',
     USER: 'root',
     PASSWORD: '',
     DB: 'nannyexpress',
