@@ -32,7 +32,7 @@ const ClientDashboard = () => {
   useEffect(() => {
     const fetchClientData = async () => {
       try {
-        const response = await axios.get(`http://145.223.103.28:3005/api/client/${userId}`);
+        const response = await axios.get(`https://145.223.103.28:3005/api/client/${userId}`);
         setClientProfile(response.data);
         setLoading(false);
       } catch (error) {
@@ -76,8 +76,8 @@ const ClientDashboard = () => {
           <div className="bg-white rounded-lg shadow-md p-6">
             <div className="text-center mb-6">
               <ProfilePictureUploader
-                uploadEndpoint={`http://145.223.103.28:3005/api/user/uploadProfile/Picture/${clientProfile.user_id}`}
-                fetchImageEndpoint={`http://145.223.103.28:3005/api/user/${clientProfile.user_id}/profile-picture`}
+                uploadEndpoint={`https://145.223.103.28:3005/api/user/uploadProfile/Picture/${clientProfile.user_id}`}
+                fetchImageEndpoint={`https://145.223.103.28:3005/api/user/${clientProfile.user_id}/profile-picture`}
                 onUploadSuccess={(newImageUrl) => {
                   console.log(t("ClientDashboard.profile_picture_uploader.upload_success_message"), newImageUrl);
                 }}

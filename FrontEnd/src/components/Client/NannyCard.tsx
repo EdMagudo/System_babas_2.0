@@ -15,7 +15,7 @@ const NannyCard = ({
 
   const openModal = async () => {
     setShowModal(true);
-    const response = await axios.get(`http://145.223.103.28:3005/api/Review/comments/${nanny.user_id}`);
+    const response = await axios.get(`https://145.223.103.28:3005/api/Review/comments/${nanny.user_id}`);
     setComments(response.data);
   };
 
@@ -57,7 +57,7 @@ const NannyCard = ({
   
       
       const response = await axios.post(
-        "http://145.223.103.28:3005/api/requestServices",
+        "https://145.223.103.28:3005/api/requestServices",
         requestData
       );
   

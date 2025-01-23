@@ -32,7 +32,7 @@ const ContactPage = () => {
     setErrorMessage('');
 
     try {
-      const response = await fetch('http://145.223.103.28:3005/api/send-email', {
+      const response = await fetch('https://145.223.103.28:3005/api/send-email', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

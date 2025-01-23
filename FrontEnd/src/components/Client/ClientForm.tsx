@@ -30,7 +30,7 @@ const NannyFinderForm = () => {
   useEffect(() => {
     const fetchCountries = async () => {
       try {
-        const response = await axios.get("http://145.223.103.28:3005/api/countries");
+        const response = await axios.get("https://145.223.103.28:3005/api/countries");
         setCountries(response.data);
         setLoading(false);
       } catch (error) {
@@ -48,7 +48,7 @@ const NannyFinderForm = () => {
       const fetchProvinces = async () => {
         try {
           const response = await axios.get(
-            `http://145.223.103.28:3005/api/provinces/${client.country_name}`
+            `https://145.223.103.28:3005/api/provinces/${client.country_name}`
           );
           setProvinces(response.data);
           setLoadingProvinces(false);
@@ -100,7 +100,7 @@ const NannyFinderForm = () => {
 
     try {
       const response = await axios.post(
-        "http://145.223.103.28:3005/api/user",
+        "https://145.223.103.28:3005/api/user",
         formData,
         {
           headers: {

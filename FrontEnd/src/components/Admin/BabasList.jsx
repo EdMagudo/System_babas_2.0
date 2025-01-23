@@ -8,7 +8,7 @@ const MainComponent = () => {
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
-    fetch("http://145.223.103.28:3005/api/user")
+    fetch("https://145.223.103.28:3005/api/user")
       .then(response => response.json())
       .then(data => {
         setBabas(data.filter((user) => user.role === "nanny"));
@@ -29,7 +29,7 @@ const MainComponent = () => {
       )
     );
 
-    fetch("http://145.223.103.28:3005/api/user/changeStatus", {
+    fetch("https://145.223.103.28:3005/api/user/changeStatus", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -106,7 +106,7 @@ const MainComponent = () => {
       }
 
       try {
-        const response = await fetch(`http://145.223.103.28:3005/api/File/deletefile/${fileId}`, {
+        const response = await fetch(`https://145.223.103.28:3005/api/File/deletefile/${fileId}`, {
           method: 'DELETE',
         });
         
@@ -191,7 +191,7 @@ const MainComponent = () => {
                     className="group flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-600 bg-gray-50 hover:bg-gray-100 rounded-xl transition-all duration-200 ring-1 ring-gray-200"
                   >
                     <a
-                      href={`http://145.223.103.28:3005/api/${file.file_path?.replace(/\\/g, "/").split("/").map(encodeURIComponent).join("/")}`}
+                      href={`https://145.223.103.28:3005/api/${file.file_path?.replace(/\\/g, "/").split("/").map(encodeURIComponent).join("/")}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex items-center gap-2"
