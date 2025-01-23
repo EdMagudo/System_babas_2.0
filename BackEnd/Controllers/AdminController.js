@@ -52,7 +52,7 @@ NannyExpress`
 
       // Enviar a solicitação POST para a rota /send-email
       try {
-        await axios.post('http://145.223.103.28:3005/api/send-email', emailData);
+        await axios.post('https://145.223.103.28:3005/api/send-email', emailData);
         console.log('Email sent successfully');
       } catch (emailError) {
         console.error('Error sending email: ', emailError);
@@ -145,7 +145,7 @@ NannyExpress`
 
       // Enviar a solicitação POST para a rota /send-email
       try {
-        await axios.post('http://145.223.103.28:3005/api/send-email', emailData);
+        await axios.post('https://145.223.103.28:3005/api/send-email', emailData);
         console.log('Email sent successfully');
       } catch (emailError) {
         console.error('Error sending email: ', emailError);

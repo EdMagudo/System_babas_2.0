@@ -11,6 +11,7 @@ const __dirname = path.dirname(__filename);
 import fs from "fs";
 import paypal from "./services/paypal.js"; // Módulo PayPal
 import dotenv from "dotenv";
+import mpesaService from './services/mpesa.js';
 dotenv.config();
 
 const app = express();
@@ -372,51 +373,6 @@ app.post('/api/convert', async (req, res) => {
 });
 
 
-//Mpesa 
-import mpesaService from './services/mpesa.js';
-
-// app.post("/mpesa/pay", async (req, res) => {
-//   try {
-//     const { reservationId, amount, phoneNumber } = req.body;
-    
-//     if (!amount || !phoneNumber || !reservationId) {
-//       return res.status(400).json({ error: "Missing required payment information" });
-//     }
-
-//     const result = await mpesaService.pagamentoMpesa(amount, phoneNumber, reservationId);
-
-//     if (result.status === 'timeout') {
-//       return res.status(408).json({
-//         message: result.message,
-//         reference: result.reference,
-//         details: result.details
-//       });
-//     }
-
-//     if (result.success) {
-//       res.status(200).json({
-//         message: "Payment processed successfully",
-//         ...result
-//       });
-//     } else {
-//       res.status(400).json({
-//         message: result.message || "Payment processing failed",
-//         ...result
-//       });
-//     }
-
-//   } catch (error) {
-//     console.error("Error processing payment:", error);
-//     res.status(500).json({
-//       error: "Error processing payment",
-//       details: error.message
-//     });
-//   }
-// });
-
-
-// Initialize database before starting the server
-
 app.post("/api/mpesa/pay", async (req, res) => {
   try {
     const { reservationId, amount, phoneNumber } = req.body;
@@ -466,7 +422,7 @@ const startServer = async () => {
     AdminController.initializeAdmin();
 
     const PORT = process.env.PORT || 3005;
-    app.listen(PORT,'127.0.0.1', () => console.log(`Server running on port ${PORT}`));
+    app.listen(PORT,'0.0.0.0', () => console.log(`Server running on port ${PORT}`));
   } catch (error) {
     console.error("Failed to start server:", error);
     process.exit(1);
