@@ -18,9 +18,7 @@ const upload = multer({ dest: "uploads/" }); // Define o diretório de destino p
 
 const createUser = async (req, res) => {
 
-  console.log("Entrei")
-
-  try {
+   try {
     // Verifica se o email ou ID já existe
     const { email, id_number, first_name, last_name, country_name, province_name } = req.body;
 

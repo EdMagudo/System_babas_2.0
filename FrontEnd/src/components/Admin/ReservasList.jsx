@@ -20,7 +20,7 @@ const ReservationList = () => {
   const itemsPerPage = 5;
 
   useEffect(() => {
-    fetch("http://localhost:3005/api/reservations")
+    fetch("http://145.223.103.28:3005/api/reservations")
       .then((response) => response.json())
       .then((data) => {
         setReservations(data);
@@ -36,7 +36,7 @@ const ReservationList = () => {
       const nannyId = reservation.nanny_id;
       if (!names[nannyId]) {
         try {
-          const response = await fetch(`http://localhost:3005/api/user/${nannyId}`);
+          const response = await fetch(`http://145.223.103.28:3005/api/user/${nannyId}`);
           const data = await response.json();
           names[nannyId] = `${data.first_name} ${data.last_name}`;
           emails[nannyId] = data.email;
@@ -92,7 +92,7 @@ const ReservationList = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:3005/api/reservations/payClient/reservation/${reservation_id}`,
+        `http://145.223.103.28:3005/api/reservations/payClient/reservation/${reservation_id}`,
         { method: "PUT" } // Use "PUT" em maiúsculas
       );
 

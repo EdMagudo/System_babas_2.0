@@ -27,7 +27,7 @@ const Favorites = () => {
 
     try {
       const response = await axios.get(
-        `http://localhost:3005/api/requestServices/allRequestCliente/${idUser}`
+        `http://145.223.103.28:3005/api/requestServices/allRequestCliente/${idUser}`
       );
       setRequests(response.data);
     } catch (error) {
@@ -44,7 +44,7 @@ const Favorites = () => {
 
     try {
       const response = await axios.delete(
-        `http://localhost:3005/api/requestServices/${request_id}`
+        `http://145.223.103.28:3005/api/requestServices/${request_id}`
       );
       if (response.status === 204) {
         setMessage({ text: "Request deleted successfully!", type: "success" });

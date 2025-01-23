@@ -27,7 +27,7 @@ const Overview = ({ clientProfile, idUser }) => {
     const fetchUserProfile = async () => {
       const idUser = localStorage.getItem("SliderService");
       try {
-        const response = await axios.get(`http://localhost:3005/api/client/${idUser}`);
+        const response = await axios.get(`http://145.223.103.28:3005/api/client/${idUser}`);
         setEmail(response.data.email);
         setPhone(response.data.phone);
       } catch (error) {
@@ -40,7 +40,7 @@ const Overview = ({ clientProfile, idUser }) => {
       const idUser = localStorage.getItem("SliderService");
       try {
         const response = await axios.get(
-          `http://localhost:3005/api/reservations/countReservationsC/${idUser}`
+          `http://145.223.103.28:3005/api/reservations/countReservationsC/${idUser}`
         );
         setCompletedJobs(response.data.count || 0);
       } catch (error) {
@@ -77,7 +77,7 @@ const Overview = ({ clientProfile, idUser }) => {
     setSaving((prev) => ({ ...prev, phone: true }));
     try {
       const response = await axios.put(
-        `http://localhost:3005/api/user/save/Phone/${idUser}`,
+        `http://145.223.103.28:3005/api/user/save/Phone/${idUser}`,
         { phone }
       );
 
@@ -104,7 +104,7 @@ const Overview = ({ clientProfile, idUser }) => {
     }
 
     try {
-      const response = await axios.put("http://localhost:3005/api/user/upd/Pas", {
+      const response = await axios.put("http://145.223.103.28:3005/api/user/upd/Pas", {
         email,
         currentPassword,
         newPassword,

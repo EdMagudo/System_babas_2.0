@@ -52,7 +52,7 @@ const BabysittingRequestManager: React.FC = () => {
 
     try {
       const response = await axios.get(
-        `http://localhost:3005/api/reservations/getAll/reservations/${idUser}`
+        `http://145.223.103.28:3005/api/reservations/getAll/reservations/${idUser}`
       );
       setReservations(response.data);
     } catch (error) {
@@ -69,7 +69,7 @@ const BabysittingRequestManager: React.FC = () => {
 
     try {
       const response = await axios.get(
-        `http://localhost:3005/api/requestServices/allRequest/${idUser}`
+        `http://145.223.103.28:3005/api/requestServices/allRequest/${idUser}`
       );
       const data = response.data.map((req: any) => ({
         id: req.request_id,
@@ -93,7 +93,7 @@ const BabysittingRequestManager: React.FC = () => {
     const idUser = localStorage.getItem("SliderService");
     try {
       const response = await axios.get(
-        `http://localhost:3005/api/reservations/getAll/reservations/${idUser}`
+        `http://145.223.103.28:3005/api/reservations/getAll/reservations/${idUser}`
       );
       return response.data;
     } catch (error) {
@@ -150,7 +150,7 @@ const BabysittingRequestManager: React.FC = () => {
 
     try {
       await axios.put(
-        `http://localhost:3005/api/requestServices/approvedRequest/${id}`,
+        `http://145.223.103.28:3005/api/requestServices/approvedRequest/${id}`,
         { value: Number(value), client_id: clientId }
       );
       setRequests(
@@ -175,7 +175,7 @@ const BabysittingRequestManager: React.FC = () => {
 
     try {
       await axios.put(
-        `http://localhost:3005/api/requestServices/rejectRequest/${id}`
+        `http://145.223.103.28:3005/api/requestServices/rejectRequest/${id}`
       );
       setRequests(
         requests.map((req) =>
@@ -195,7 +195,7 @@ const BabysittingRequestManager: React.FC = () => {
 
     try {
       await axios.put(
-        `http://localhost:3005/api/reservations/cancel/reservation/${reservationId}`
+        `http://145.223.103.28:3005/api/reservations/cancel/reservation/${reservationId}`
       );
       setReservations(
         reservations.filter(
