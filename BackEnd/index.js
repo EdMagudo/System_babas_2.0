@@ -60,6 +60,8 @@ app.use("/api/File", File);
 app.use("/api/Review", Reviews);
 
 app.use("/api/uploads", express.static(path.join(__dirname, "uploads")));
+app.use("/", express.static(path.join(__dirname, "static")));
+
 app.use("/api/requestServices", ServiceRequests);
 app.use("/api/reservations", Reservations);
 app.use("/api/client", Client);
