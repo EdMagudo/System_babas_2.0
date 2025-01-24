@@ -413,6 +413,7 @@ const loginUser = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
 const updatedProfile = async (req, res) => {
   try {
     // Verifica se um arquivo foi enviado
@@ -456,39 +457,6 @@ const updatedProfile = async (req, res) => {
 
       if (updated[0] === 0) {
         return res.status(404).json({ message: "Perfil não encontrado" });
-      }
-    }
-
-    // Atualiza as línguas, caso haja
-    if (req.body.languages) {
-      const languages = JSON.parse(req.body.languages);
-      for (const language of languages) {
-        await user_language.create({
-          user_id: req.params.id_user,
-          language: language,
-        });
-      }
-    }
-
-    // Atualiza as preferências de trabalho, caso haja
-    if (req.body.work_preference) {
-      const workPreferences = JSON.parse(req.body.work_preference);
-      for (const workPreference of workPreferences) {
-        await NannyChildWorkPreference.create({
-          nanny_id: req.params.id_user,
-          work_preference: workPreference,
-        });
-      }
-    }
-
-    // Atualiza as preferências de idade, caso haja
-    if (req.body.preference_age) {
-      const agePreferences = JSON.parse(req.body.preference_age);
-      for (const age of agePreferences) {
-        await NannyChildAgeExperience.create({
-          nanny_id: req.params.id_user,
-          age_group: age,
-        });
       }
     }
 

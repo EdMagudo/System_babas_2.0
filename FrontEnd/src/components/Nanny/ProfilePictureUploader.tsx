@@ -18,7 +18,6 @@ const ProfilePictureUploader: React.FC<ProfilePictureUploaderProps> = ({
   const [uploading, setUploading] = useState(false);
 
   const userId = localStorage.getItem("SliderService");
-
   useEffect(() => {
     const fetchUserImage = async () => {
       if (!userId) {
@@ -27,19 +26,16 @@ const ProfilePictureUploader: React.FC<ProfilePictureUploaderProps> = ({
       }
   
       try {
-        const response = await axios.get(`${fetchImageEndpoint}`);
-        const profilePictureUrl = response.data.file?.filePath;
+        const response = await axios.get(fetchImageEndpoint);
+        const profilePictureUrl = response.data?.file?.filePath;
   
-   
         if (profilePictureUrl) {
-          // Remove o prefixo "uploads/" se existir
-          const correctedUrl = profilePictureUrl.substring(8);
-             
-           
-          // Atualiza a imagem para o estado
+          const correctedUrl = profilePictureUrl.startsWith("uploads/")
+            ? profilePictureUrl.substring(8)
+            : profilePictureUrl;
+  
           setImageUrl(`https://nanniesfinder.com/api/uploads/${correctedUrl}`);
         } else {
-          // Define uma imagem padrão
           setImageUrl("https://via.placeholder.com/128");
         }
       } catch (error) {
@@ -49,7 +45,8 @@ const ProfilePictureUploader: React.FC<ProfilePictureUploaderProps> = ({
     };
   
     fetchUserImage();
-  }, [fetchImageEndpoint, userId]);
+  }, [userId, fetchImageEndpoint]);
+  
   
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
