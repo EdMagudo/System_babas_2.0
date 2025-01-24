@@ -113,8 +113,7 @@ const NannyDashboard = () => {
         }
       );
 
-      console.log("Perfil atualizado com sucesso:", response.data);
-      alert(t("error-nanny.updateProfile"));
+      alert(t("error-nanny.sucessProfile"));
     } catch (error) {
       console.error("Erro ao atualizar perfil:", error);
       alert(t("error-nanny.updateProfile"));

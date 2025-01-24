@@ -308,7 +308,8 @@
     },
     "error-nanny": {
       "profileFetch": "Erro ao buscar o perfil. Tente novamente.",
-      "updateProfile": "Falha ao atualizar perfil. Tente novamente."
+      "updateProfile": "Falha ao atualizar perfil. Tente novamente.",
+      "sucessProfile": "Sucesso ao actualizar perfil."
     },
     "NannyQuickStats":
     {

@@ -308,7 +308,8 @@
     },
     "error-nanny": {
       "profileFetch": "Error fetching profile. Please try again.",
-      "updateProfile": "Failed to update profile. Please try again."
+      "updateProfile": "Failed to update profile. Please try again.",
+      "sucessProfile":"Sucess profile updated"
     },
     "NannyQuickStats":
     {
