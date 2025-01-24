@@ -152,11 +152,6 @@ const getAllReservationsForClient = async (req, res) => {
             },
           ],
         },
-        {
-          model: NannyProfiles,
-          as: "nannyProfile",
-          where: { nanny_id: Sequelize.col('Reservations.nanny_id') }, // Filtra pela correspondência do nanny_id
-        },
       ],
       where: { client_id: req.params.client_id },
       order: [["booking_date", "ASC"]],
@@ -166,12 +161,31 @@ const getAllReservationsForClient = async (req, res) => {
       return res.status(404).json({ message: "No reservations found" });
     }
 
-    res.json(reservations);
+    const nannyIds = reservations.map(reservation => reservation.nanny_id); // Extraímos os nanny_ids das reservas
+    const nannyProfiles = await NannyProfiles.findAll({
+      where: {
+        nanny_id: {
+          [Op.in]: nannyIds, // Buscando perfis com nanny_id na lista extraída
+        },
+      },
+    });
+
+    // Passo 3: Juntar os dados das reservas e dos perfis das babás
+    const result = reservations.map(reservation => {
+      const nannyProfile = nannyProfiles.find(profile => profile.nanny_id === reservation.nanny_id);
+      return {
+        ...reservation.toJSON(), // Converte a reserva para objeto simples
+        nannyProfile: nannyProfile || null, // Adiciona o perfil da babá ou null caso não exista
+      };
+    });
+
+    res.json(result);
   } catch (error) {
     console.error("Error fetching all reservations:", error);
     res.status(500).json({ error: "Error fetching all reservations" });
   }
 };
+
 
 
 const cancelReservation = async (req, res) => {
