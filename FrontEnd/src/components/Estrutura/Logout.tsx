@@ -5,11 +5,8 @@ const Logout = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-
-    localStorage.clear();
-    window.location.reload();
-
-    navigate('/sign-in');
+    localStorage.clear(); // Limpa os dados do usuário
+    navigate('/sign-in'); // Redireciona para a página de login
   }, [navigate]);
 
   return null; // O componente não precisa renderizar nada visível
