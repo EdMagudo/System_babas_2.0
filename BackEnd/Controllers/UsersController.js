@@ -443,7 +443,7 @@ const updatedProfile = async (req, res) => {
       updatedProfileData.experience_years = req.body.experience;
     }
     if (req.body.policeClearance) {
-      updatedProfileData.has_criminal_record = req.body.policeClearance;
+      updatedProfileData.has_criminal_record = req.body.policeClearance === "true";
     }
     if (req.body.additionalInfo) {
       updatedProfileData.additional_info = req.body.additionalInfo;

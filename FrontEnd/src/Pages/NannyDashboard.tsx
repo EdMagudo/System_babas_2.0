@@ -102,15 +102,6 @@ const NannyDashboard = () => {
       );
     }
 
-    submitFormData.append(
-      "work_preference",
-      JSON.stringify(formData.work_preference)
-    );
-    submitFormData.append(
-      "preference_age",
-      JSON.stringify(formData.preference_age)
-    );
-    submitFormData.append("languages", JSON.stringify(formData.languages));
     submitFormData.append("additionalInfo", formData.additionalInfo);
 
     try {
