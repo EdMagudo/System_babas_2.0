@@ -152,10 +152,7 @@ const getAllReservationsForClient = async (req, res) => {
             },
           ],
         },
-        {
-          model: NannyProfiles,
-          as: "nannyProfile",
-        },
+        
       ],
       where: { client_id: req.params.client_id },
       order: [["booking_date", "ASC"]],
