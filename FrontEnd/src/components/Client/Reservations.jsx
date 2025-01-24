@@ -50,7 +50,7 @@ const Reservations = () => {
     }
     try {
       const response = await fetch(
-        `https://145.223.103.28:3005/api/reservations/getAll/reservations/client/${clientId}`
+        `https://nanniesfinder.com/api/reservations/getAll/reservations/client/${clientId}`
       );
       if (!response.ok) {
         throw new Error("Network response was not ok");
@@ -85,7 +85,7 @@ const Reservations = () => {
 
     try {
       const response = await axios.put(
-        `https://145.223.103.28:3005/api/reservations/cancel/reservation/${reservation_id}`
+        `https://nanniesfinder.com/api/reservations/cancel/reservation/${reservation_id}`
       );
       if (response.status === 200) {
         setMessage({
@@ -115,7 +115,7 @@ const Reservations = () => {
     }
     try {
       const response = await fetch(
-        `https://145.223.103.28:3005/api/reservations/${reservationId}/feedback`,
+        `https://nanniesfinder.com/api/reservations/${reservationId}/feedback`,
         {
           method: "POST",
           headers: {
@@ -266,7 +266,7 @@ const Reservations = () => {
                       <div className="flex flex-col gap-4">
                         {/* PayPal Payment Button */}
                         <form
-                          action="https://145.223.103.28:3005/api/sam/pay"
+                          action="https://nanniesfinder.com/api/sam/pay"
                           method="post"
                         >
                           <input

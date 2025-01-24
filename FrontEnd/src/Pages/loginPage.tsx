@@ -16,7 +16,7 @@ const LoginPage = () => {
     e.preventDefault();
    
     try {
-      const response = await fetch('https://145.223.103.28:3005/api/user/login', {
+      const response = await fetch('https://nanniesfinder.com/api/user/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

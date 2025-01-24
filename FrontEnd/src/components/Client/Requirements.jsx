@@ -27,7 +27,7 @@ const Favorites = () => {
 
     try {
       const response = await axios.get(
-        `https://145.223.103.28:3005/api/requestServices/allRequestCliente/${idUser}`
+        `https://nanniesfinder.com/api/requestServices/allRequestCliente/${idUser}`
       );
       setRequests(response.data);
     } catch (error) {
@@ -44,7 +44,7 @@ const Favorites = () => {
 
     try {
       const response = await axios.delete(
-        `https://145.223.103.28:3005/api/requestServices/${request_id}`
+        `https://nanniesfinder.com/api/requestServices/${request_id}`
       );
       if (response.status === 204) {
         setMessage({ text: "Request deleted successfully!", type: "success" });

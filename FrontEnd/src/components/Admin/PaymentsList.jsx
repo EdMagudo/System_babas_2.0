@@ -14,7 +14,7 @@ const PaymentList = () => {
     const fetchPayments = async () => {
       try {
         setLoading(true);
-        const response = await axios.get("https://145.223.103.28:3005/api/payment");
+        const response = await axios.get("https://nanniesfinder.com/api/payment");
         setPayments(response.data);
       } catch (err) {
         setError("Erro ao carregar os pagamentos.");
@@ -87,7 +87,7 @@ const PaymentList = () => {
   const convertCurrency = async (amount) => {
     console.log("Converting USD to MZN for:", amount);
     try {
-      const response = await axios.post("https://145.223.103.28:3005/api/convert", {
+      const response = await axios.post("https://nanniesfinder.com/api/convert", {
         from: "USD",
         to: "MZN",
         amount: amount,

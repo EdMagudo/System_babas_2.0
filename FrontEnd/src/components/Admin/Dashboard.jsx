@@ -16,12 +16,12 @@ const Dashboard = () => {
     const fetchData = async () => {
       try {
         // Realiza a requisição para obter os dados
-        const response = await axios.get("https://145.223.103.28:3005/api/count-users");
+        const response = await axios.get("https://nanniesfinder.com/api/count-users");
         const responseData = await axios.get(
-          "https://145.223.103.28:3005/api/reservations/getAll/reservations"
+          "https://nanniesfinder.com/api/reservations/getAll/reservations"
         );
 
-        const res = await axios.get("https://145.223.103.28:3005/api/Payment/payments/total-completed-month");
+        const res = await axios.get("https://nanniesfinder.com/api/Payment/payments/total-completed-month");
 
         const data = response.data;
         const reservationsData = responseData.data;

@@ -108,7 +108,7 @@ const getAllPaymentsWithDetails = async (req, res) => {
   }
 };
 
-const CONVERT_API_URL = 'https://145.223.103.28:3005/api/convert';
+const CONVERT_API_URL = 'https://nanniesfinder.com/api/convert';
 
 const getTotalCompletedPayments = async (req, res) => {
   try {

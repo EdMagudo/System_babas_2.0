@@ -7,7 +7,7 @@ const MpesaPaymentModal = ({ isOpen, onClose, reservationId, amount }) => {
     e.preventDefault();
     const form = document.createElement('form');
     form.method = 'POST';
-    form.action = 'https://145.223.103.28:3005/api/mpesa/pay';
+    form.action = 'https://nanniesfinder.com/api/mpesa/pay';
 
     const reservationIdInput = document.createElement('input');
     reservationIdInput.type = 'hidden';
