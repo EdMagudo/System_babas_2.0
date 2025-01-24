@@ -238,7 +238,7 @@ app.post("/api/sam/pay", async (req, res) => {
 });
 
 // Complete PayPal Order Route
-app.get("/api/complete-order", async (req, res) => {
+app.get("/complete-order", async (req, res) => {
   try {
     const result = await paypal.capturePayment(req.query.token);
 
@@ -278,27 +278,27 @@ app.get("/api/complete-order", async (req, res) => {
     await updatePromise;
 
     // Redirect to success page
-    res.redirect(`/api/payment-success?reservationId=${reservationId}`);
+    res.redirect(`https://nanniesfinder.com/payment-success?reservationId=${reservationId}`);
   } catch (error) {
     console.error("Error completing payment:", error);
-    res.redirect("/payment-error");
+    res.redirect("https://nanniesfinder.com/payment-error");
   }
 });
 
-app.get("/api/cancel-order", (req, res) => {
-  res.redirect("/reservations");
+app.get("/cancel-order", (req, res) => {
+  res.redirect("https://nanniesfinder.com/reservations");
 });
 
-app.get("/api/payment-success", (req, res) => {
+app.get("/payment-success", (req, res) => {
   const reservationId = req.query.reservationId;
 
   // Redirecionar para o frontend com o ID da reserva como query parameter, se necessário
   res.redirect(
-    `http://localhost:5173/client-dashboard?reservationId=${reservationId}`
+    `https://nanniesfinder.com/client-dashboard?reservationId=${reservationId}`
   );
 });
 
-app.get("/api/payment-error", (req, res) => {
+app.get("/payment-error", (req, res) => {
   res.send("Payment failed. Please try again.");
 });
 

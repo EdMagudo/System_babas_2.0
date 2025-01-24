@@ -22,7 +22,7 @@ const ClientDashboard = () => {
     const handlePaymentSuccess = async () => {
       const reservationId = searchParams.get('reservationId');
       if (reservationId) {
-        window.history.replaceState({}, document.title, '/client-dashboard');
+        window.history.replaceState({}, document.title, 'https://nanniesfinder.com/client-dashboard');
       }
     };
 
