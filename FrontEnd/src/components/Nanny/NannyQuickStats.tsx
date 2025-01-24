@@ -36,7 +36,7 @@ const NannyQuickStats: React.FC<NannyQuickStatsProps> = ({
 
     try {
       // Realizar a requisição para mudar a senha
-      const response = await axios.put("http://145.223.103.28:3005/api/user/upd/Pas", {
+      const response = await axios.put("https://nanniesfinder.com/api/user/upd/Pas", {
         email: nannyProfile?.email,
         currentPassword: currentPassword,
         newPassword: newPassword,
@@ -77,7 +77,7 @@ const NannyQuickStats: React.FC<NannyQuickStatsProps> = ({
     }
 
     try {
-      const response = await axios.get(`http://145.223.103.28:3005/api/user/${idUser}`);
+      const response = await axios.get(`https://nanniesfinder.com/api/user/${idUser}`);
       setNannyProfile(response.data);
     } catch (error) {
       console.error("Erro ao buscar o perfil:", error);
@@ -85,7 +85,7 @@ const NannyQuickStats: React.FC<NannyQuickStatsProps> = ({
 
     try {
       const response = await axios.get(
-        `http://145.223.103.28:3005/api/reservations/countReservations/${idUser}`
+        `https://nanniesfinder.com/api/reservations/countReservations/${idUser}`
       );
       setCompletedJobs(response.data);
     } catch (error) {

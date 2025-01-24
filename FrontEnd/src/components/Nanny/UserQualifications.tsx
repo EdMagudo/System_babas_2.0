@@ -30,7 +30,7 @@ const UserQualifications = ({ idUser }) => {
     const fetchCountries = async () => {
       try {
         setLoading(true);
-        const response = await axios.get("http://145.223.103.28:3005/api/countries");
+        const response = await axios.get("https://nanniesfinder.com/api/countries");
         setCountries(response.data);
         setLoading(false);
       } catch (error) {
@@ -47,7 +47,7 @@ const UserQualifications = ({ idUser }) => {
       const fetchProvinces = async () => {
         try {
           const response = await axios.get(
-            `http://145.223.103.28:3005/api/provinces/${formData.country}`
+            `https://nanniesfinder.com/api/provinces/${formData.country}`
           );
           setProvinces(response.data);
         } catch (error) {
@@ -68,11 +68,11 @@ const UserQualifications = ({ idUser }) => {
     const fetchData = async () => {
       try {
         const [userRes, languagesRes, currenciesRes] = await Promise.all([
-          fetch(`http://145.223.103.28:3005/api/user/${idUser}`).then((res) =>
+          fetch(`https://nanniesfinder.com/api/user/${idUser}`).then((res) =>
             res.json()
           ),
-          fetch("http://145.223.103.28:3005/api/languages").then((res) => res.json()),
-          fetch("http://145.223.103.28:3005/api/currencies").then((res) => res.json()),
+          fetch("https://nanniesfinder.com/api/languages").then((res) => res.json()),
+          fetch("https://nanniesfinder.com/api/currencies").then((res) => res.json()),
         ]);
 
         setFormData({
@@ -103,7 +103,7 @@ const UserQualifications = ({ idUser }) => {
   const handleSave = async (section, data) => {
     setSaving((prev) => ({ ...prev, [section]: true }));
     try {
-      const response = await fetch(`http://145.223.103.28:3005/api/user/saveLocation/${idUser}`, {
+      const response = await fetch(`https://nanniesfinder.com/api/user/saveLocation/${idUser}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
@@ -122,7 +122,7 @@ const UserQualifications = ({ idUser }) => {
   const handleSaveM = async (section, data) => {
     setSaving((prev) => ({ ...prev, [section]: true }));
     try {
-      const response = await fetch(`http://145.223.103.28:3005/api/nanny/saveBusiness/${idUser}`, {
+      const response = await fetch(`https://nanniesfinder.com/api/nanny/saveBusiness/${idUser}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
@@ -141,7 +141,7 @@ const UserQualifications = ({ idUser }) => {
   const handleSaveP = async (section, data) => {
     setSaving((prev) => ({ ...prev, [section]: true }));
     try {
-      const response = await fetch(`http://145.223.103.28:3005/api/user/save/Phone/${idUser}`, {
+      const response = await fetch(`https://nanniesfinder.com/api/user/save/Phone/${idUser}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
@@ -159,7 +159,7 @@ const UserQualifications = ({ idUser }) => {
 
   const handleAdd = async (type, value) => {
     try {
-      const response = await fetch(`http://145.223.103.28:3005/api/lang/${idUser}`, {
+      const response = await fetch(`https://nanniesfinder.com/api/lang/${idUser}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ [type]: value }),
@@ -181,7 +181,7 @@ const UserQualifications = ({ idUser }) => {
   const handleRemove = async (type, value) => {
     try {
       const response = await fetch(
-        `http://145.223.103.28:3005/api/lang/${idUser}/${value}`,
+        `https://nanniesfinder.com/api/lang/${idUser}/${value}`,
         {
           method: "DELETE",
         }

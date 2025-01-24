@@ -109,7 +109,7 @@ const NannyRegistrationForm = () => {
       formData.append('education_level', educationLevel);
 
       // Envia ao backend
-      const response = await axios.post('http://145.223.103.28:3005/api/user/register', formData, {
+      const response = await axios.post('https://nanniesfinder.com/api/user/register', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
 

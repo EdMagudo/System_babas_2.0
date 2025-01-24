@@ -37,7 +37,7 @@ const ProfilePictureUploader: React.FC<ProfilePictureUploaderProps> = ({
              
            
           // Atualiza a imagem para o estado
-          setImageUrl(`http://145.223.103.28:3005/api/uploads/${correctedUrl}`);
+          setImageUrl(`https://nanniesfinder.com/api/uploads/${correctedUrl}`);
         } else {
           // Define uma imagem padrão
           setImageUrl("https://via.placeholder.com/128");
