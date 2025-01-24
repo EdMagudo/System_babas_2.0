@@ -8,7 +8,7 @@ const NannyProfiles = db.Nanny_Profiles;
 import moment from "moment";
 
 import { Sequelize } from "sequelize";
-const { Op } = Sequelize;
+const { Op, col } = Sequelize;
 
 const createReservation = async (req, res) => {
   try {
@@ -152,7 +152,11 @@ const getAllReservationsForClient = async (req, res) => {
             },
           ],
         },
-        
+        {
+          model: NannyProfiles,
+          as: "nannyProfile",
+          where: { nanny_id: Sequelize.col('Reservations.nanny_id') }, // Filtra pela correspondência do nanny_id
+        },
       ],
       where: { client_id: req.params.client_id },
       order: [["booking_date", "ASC"]],
