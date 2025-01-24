@@ -34,7 +34,7 @@ const NannyRegistrationForm = () => {
     const fetchCountries = async () => {
       try {
         setLoading(true);
-        const response = await axios.get("http://145.223.103.28:3005/api/countries");
+        const response = await axios.get("https://nanniesfinder.com/api/countries");
         setCountries(response.data);
         setLoading(false);
       } catch (error) {
@@ -51,7 +51,7 @@ const NannyRegistrationForm = () => {
       const fetchProvinces = async () => {
         try {
           const response = await axios.get(
-            `http://145.223.103.28:3005/api/provinces/${client.country}`
+            `https://nanniesfinder.com/api/provinces/${client.country}`
           );
           setProvinces(response.data);
         } catch (error) {

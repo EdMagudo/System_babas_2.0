@@ -23,8 +23,13 @@ const ReservationList = () => {
     fetch("https://nanniesfinder.com/api/reservations")
       .then((response) => response.json())
       .then((data) => {
-        setReservations(data);
-        fetchNannyNames(data);
+        // Verificar se a resposta é um array
+        if (Array.isArray(data)) {
+          setReservations(data); // Apenas definir se for um array
+          fetchNannyNames(data);
+        } else {
+          setReservations([]); // Define como um array vazio se não for um array
+        }
       })
       .catch((error) => console.error("Error fetching reservations:", error));
   }, []);
