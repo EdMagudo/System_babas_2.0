@@ -4,6 +4,7 @@ const ServiceRequest = db.Service_Requests;
 const Payments = db.Payments;
 const Users = db.Users;
 const Reviews = db.Reviews;
+const NannyProfiles = db.Nanny_Profiles;
 import moment from "moment";
 
 import { Sequelize } from "sequelize";
@@ -139,38 +140,38 @@ const getAllReservationsForNanny = async (req, res) => {
 
 const getAllReservationsForClient = async (req, res) => {
   try {
-    console.log("Fetching all reservations with service request and user data");
-
-    // Fetching all reservations, including service request and client data
     const reservations = await Reservations.findAll({
       include: [
         {
           model: ServiceRequest,
-          as: "serviceRequest", // Ensure this matches your association name
+          as: "serviceRequest",
           include: [
             {
-              model: Users, // Ensure this matches your Users model name
-              as: "client", // Ensure this matches your association name
+              model: Users,
+              as: "client",
             },
           ],
         },
+        {
+          model: NannyProfiles,
+          as: "nannyProfile",
+        },
       ],
-      where: { client_id: req.params.client_id }, // Corrected syntax
-      order: [["booking_date", "ASC"]], // Sorting by booking date in ascending order
+      where: { client_id: req.params.client_id },
+      order: [["booking_date", "ASC"]],
     });
 
-    // Check if no reservations were found
     if (!reservations || reservations.length === 0) {
       return res.status(404).json({ message: "No reservations found" });
     }
 
-    // Return reservations with related data
     res.json(reservations);
   } catch (error) {
     console.error("Error fetching all reservations:", error);
     res.status(500).json({ error: "Error fetching all reservations" });
   }
 };
+
 
 const cancelReservation = async (req, res) => {
   try {

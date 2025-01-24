@@ -34,7 +34,6 @@ const NannyDashboard = () => {
     try {
       const response = await axios.get(`https://nanniesfinder.com/api/user/${idUser}`);
       setNannyProfile(response.data);
-      console.info(response.data);
     } catch (error) {
       console.error("Erro ao buscar o perfil:", error);
     }

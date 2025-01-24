@@ -150,6 +150,7 @@
   },
   "ClientDashboard": {
     "welcome_message": "Bem-vindo, {{first_name}}!",
+    "message":"Explore e encontre a babá perfeita para sua família",
     "overview": "Visão Geral",
     "search": "Procurar uma Babá",
     "favorites": "Requerimentos",

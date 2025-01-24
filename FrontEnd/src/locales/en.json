@@ -150,6 +150,7 @@
   },
   "ClientDashboard": {
     "welcome_message": "Welcome, {{first_name}}!",
+    "message":"Explore and find the perfect nanny for your family",
     "overview": "Overview",
     "search": "Find a Nanny",
     "favorites": "Requirements",

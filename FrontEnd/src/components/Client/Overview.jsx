@@ -161,7 +161,6 @@ const Overview = ({ clientProfile, idUser }) => {
               <input
                 type={showPassword.current ? "text" : "password"}
                 id="current-password"
-                value={currentPassword}
                 onChange={(e) => setCurrentPassword(e.target.value)}
                 className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
                 placeholder={t('overview.currentPasswordPlaceholder')}

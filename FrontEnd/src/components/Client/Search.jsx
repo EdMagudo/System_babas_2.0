@@ -54,7 +54,7 @@ const Search = () => {
           const filePath = nanny.files?.[0]?.path;
           const fileName = filePath ? filePath.split("\\").pop() : null;
           const profilePictureUrl = fileName
-            ? `https://nanniesfinder.com/api/uploads/${fileName}`
+            ? `https://nanniesfinder.com/api/${fileName}`
             : "/default-profile.png";
 
           return { ...nanny, profilePictureUrl };

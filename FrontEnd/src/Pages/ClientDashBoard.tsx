@@ -119,7 +119,7 @@ const ClientDashboard = () => {
           <div className="col-span-1 lg:col-span-3">
             <div className="bg-white rounded-lg p-6 shadow-md mb-6">
               <h1 className="text-3xl font-bold text-indigo-700">{t("ClientDashboard.welcome_message", { first_name: clientProfile.first_name })}</h1>
-              <p className="text-gray-600">{t("ClientDashboard.error_message")}</p>
+              <p className="text-gray-600">{t("ClientDashboard.message")}</p>
             </div>
 
             {renderSection()}
