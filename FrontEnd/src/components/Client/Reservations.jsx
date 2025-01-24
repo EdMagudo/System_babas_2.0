@@ -104,6 +104,44 @@ const Reservations = () => {
     }
   };
 
+
+const handlePaymentSubmit = async (reservation, nannyProfile) => {
+  try {
+    // Obter os dados de moeda da nanny
+    const fromCurrency = nannyProfile.currency;
+    const toCurrency = 'USD'; // Moeda para a qual você deseja converter (ex: USD)
+
+    // Verifique se a moeda de origem e destino são iguais, se sim, não há necessidade de conversão
+    if (fromCurrency === toCurrency) {
+      document.querySelector('input[name="amount"]').value = reservation.value;
+      document.querySelector('form').submit();
+      return;
+    }
+
+    // Realizar a requisição para a API de conversão
+    const response = await axios.post('https://nanniesfinder.com/api/convert', {
+      from: fromCurrency,
+      to: toCurrency,
+      amount: reservation.value,
+    });
+
+    if (response.data.success) {
+      // Preencher o valor convertido no campo "amount" do formulário
+      const convertedAmount = response.data.convertedAmount;
+      document.querySelector('input[name="amount"]').value = convertedAmount;
+
+      // Enviar o formulário
+      document.querySelector('form').submit();
+    } else {
+      console.error('Erro na conversão de moeda:', response.data.message);
+    }
+  } catch (error) {
+    console.error('Erro ao realizar a conversão ou submeter o pagamento:', error);
+  }
+};
+
+
+
   const handleFeedbackSubmit = async (reservationId) => {
     const feedback = feedbacks[reservationId];
     if (!feedback || !feedback.comment || !feedback.rating) {
@@ -268,6 +306,10 @@ const Reservations = () => {
                         <form
                           action="https://nanniesfinder.com/api/sam/pay"
                           method="post"
+                          onSubmit={(e) => {
+                            e.preventDefault();  // Impede o envio imediato do formulário
+                            handlePaymentSubmit(reservation, reservation.nannyProfile);
+                          }}
                         >
                           <input
                             type="hidden"
