@@ -278,10 +278,10 @@ app.get("/complete-order", async (req, res) => {
     await updatePromise;
 
     // Redirect to success page
-    res.redirect(`https://nanniesfinder.com/payment-success?reservationId=${reservationId}`);
+    res.redirect(`/payment-success?reservationId=${reservationId}`);
   } catch (error) {
     console.error("Error completing payment:", error);
-    res.redirect("https://nanniesfinder.com/payment-error");
+    res.redirect("/payment-error");
   }
 });
 

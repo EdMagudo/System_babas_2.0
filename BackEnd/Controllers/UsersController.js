@@ -150,10 +150,7 @@ const getUserById = async (req, res) => {
       languages: languages.map((lang) => lang.language),
     };
 
-    // console.log(
-    //   "User fetched successfully:",
-    //   JSON.stringify(userResponse, null, 2)
-    // );
+   
     return res.status(200).json(userResponse);
   } catch (error) {
     console.error("Error fetching user and nanny profile:", error);
