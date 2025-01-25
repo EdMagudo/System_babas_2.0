@@ -278,7 +278,8 @@ app.get("/complete-order", async (req, res) => {
     await updatePromise;
 
     // Redirect to success page
-    res.redirect(`/payment-success?reservationId=${reservationId}`);
+    //res.redirect(`/payment-success?reservationId=${reservationId}`);
+    `https://nanniesfinder.com/client-dashboard?reservationId=${reservationId}`
   } catch (error) {
     console.error("Error completing payment:", error);
     res.redirect("/payment-error");
@@ -396,7 +397,7 @@ app.post("/api/mpesa/pay", async (req, res) => {
     // Verificação do sucesso do pagamento
     if (result.success) {
       // Redireciona para a rota de sucesso com o ID da reserva
-      return res.redirect(`/payment-success?reservationId=${reservationId}`);
+      return res.redirect(`https://nanniesfinder.com/client-dashboard?reservationId=${reservationId}`);
     } else {
       // Retorna erro se o pagamento falhar
       return res.status(400).json({
