@@ -238,7 +238,7 @@ app.post("/api/sam/pay", async (req, res) => {
 });
 
 // Complete PayPal Order Route
-app.get("/complete-order", async (req, res) => {
+app.get("/api/complete-order", async (req, res) => {
   try {
     const result = await paypal.capturePayment(req.query.token);
 
@@ -286,11 +286,11 @@ app.get("/complete-order", async (req, res) => {
   }
 });
 
-app.get("/cancel-order", (req, res) => {
+app.get("/api/cancel-order", (req, res) => {
   res.redirect("https://nanniesfinder.com/reservations");
 });
 
-app.get("/payment-success", (req, res) => {
+app.get("/api/payment-success", (req, res) => {
   const reservationId = req.query.reservationId;
 
   // Redirecionar para o frontend com o ID da reserva como query parameter, se necessário
@@ -299,7 +299,7 @@ app.get("/payment-success", (req, res) => {
   );
 });
 
-app.get("/payment-error", (req, res) => {
+app.get("/api/payment-error", (req, res) => {
   res.send("Payment failed. Please try again.");
 });
 

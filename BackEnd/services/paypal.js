@@ -53,8 +53,8 @@ const createOrder = async (amount, reservationId) => {
                 }
             ],
             application_context: {
-                return_url: `${process.env.BASE_URL}/complete-order`,
-                cancel_url: `${process.env.BASE_URL}/cancel-order`,
+                return_url: `${process.env.BASE_URL}/api/complete-order`,
+                cancel_url: `${process.env.BASE_URL}/api/cancel-order`,
                 shipping_preference: 'NO_SHIPPING',
                 user_action: 'PAY_NOW',
                 brand_name: 'manfra.io'
