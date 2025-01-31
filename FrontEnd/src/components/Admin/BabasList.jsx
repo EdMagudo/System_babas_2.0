@@ -7,8 +7,10 @@ const MainComponent = () => {
   const [clientes, setClientes] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
 
+   const BASE_URL = "http://localhost:3005";;
+
   useEffect(() => {
-    fetch("https://nanniesfinder.com/api/user")
+    fetch(`${BASE_URL}/api/user`)
       .then(response => response.json())
       .then(data => {
         setBabas(data.filter((user) => user.role === "nanny"));
@@ -29,7 +31,7 @@ const MainComponent = () => {
       )
     );
 
-    fetch("https://nanniesfinder.com/api/user/changeStatus", {
+    fetch(`${BASE_URL}/api/user/changeStatus`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -106,7 +108,7 @@ const MainComponent = () => {
       }
 
       try {
-        const response = await fetch(`https://nanniesfinder.com/api/File/deletefile/${fileId}`, {
+        const response = await fetch(`${BASE_URL}/api/File/deletefile/${fileId}`, {
           method: 'DELETE',
         });
         
@@ -191,7 +193,7 @@ const MainComponent = () => {
                     className="group flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-600 bg-gray-50 hover:bg-gray-100 rounded-xl transition-all duration-200 ring-1 ring-gray-200"
                   >
                     <a
-                      href={`https://nanniesfinder.com/api/${file.file_path?.replace(/\\/g, "/").split("/").map(encodeURIComponent).join("/")}`}
+                      href={`${BASE_URL}/api/${file.file_path?.replace(/\\/g, "/").split("/").map(encodeURIComponent).join("/")}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex items-center gap-2"

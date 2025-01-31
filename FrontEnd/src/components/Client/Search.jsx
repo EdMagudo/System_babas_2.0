@@ -16,7 +16,9 @@ const Search = () => {
   const [availability, setAvailability] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 4;
-  const [error, setError] = useState(null); // Estado para tratar erros de fetch
+  const [error, setError] = useState(null); 
+  
+   const BASE_URL = "http://localhost:3005";;
 
   const handleInputChange = (e) => {
     const { id, value } = e.target;
@@ -42,7 +44,7 @@ const Search = () => {
         jobType: availability,
       };
 
-      const url = "https://nanniesfinder.com/api/user/getAllNannyWith/Requirement";
+      const url = `${BASE_URL}/api/user/getAllNannyWith/Requirement`;
 
       const response = await axios.post(url, requestBody);
 
@@ -54,7 +56,7 @@ const Search = () => {
           const filePath = nanny.files?.[0]?.path;
           const fileName = filePath ? filePath.split("\\").pop() : null;
           const profilePictureUrl = fileName
-            ? `https://nanniesfinder.com/api/${fileName}`
+            ? `${BASE_URL}/api/${fileName}`
             : "/default-profile.png";
 
           return { ...nanny, profilePictureUrl };
@@ -72,7 +74,7 @@ const Search = () => {
   useEffect(() => {
     const fetchCountries = async () => {
       try {
-        const response = await axios.get("https://nanniesfinder.com/api/countries");
+        const response = await axios.get(`${BASE_URL}/api/countries`);
         setCountries(response.data);
       } catch (error) {
         setError(t('search.errorFetchingCountries'));
@@ -87,7 +89,7 @@ const Search = () => {
     if (client.country) {
       const fetchProvinces = async () => {
         try {
-          const response = await axios.get(`https://nanniesfinder.com/api/provinces/${client.country}`);
+          const response = await axios.get(`${BASE_URL}/api/provinces/${client.country}`);
           setProvinces(response.data);
         } catch (error) {
           setError(t('search.errorFetchingProvinces'));

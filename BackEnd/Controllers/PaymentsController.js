@@ -7,6 +7,8 @@ import { Op,  fn, literal } from 'sequelize';
 import moment from 'moment'; 
 import axios from 'axios';
 
+const BASE_URL = process.env.REACT_APP_BASE_URL;
+
 
 // Obter todos os pagamentos
 const getAllPayments = async (req, res) => {
@@ -108,7 +110,7 @@ const getAllPaymentsWithDetails = async (req, res) => {
   }
 };
 
-const CONVERT_API_URL = 'https://nanniesfinder.com/api/convert';
+const CONVERT_API_URL = `${BASE_URL}/api/convert`;
 
 const getTotalCompletedPayments = async (req, res) => {
   try {

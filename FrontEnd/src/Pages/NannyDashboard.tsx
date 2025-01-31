@@ -22,6 +22,7 @@ const NannyDashboard = () => {
     languages: [],
     additionalInfo: "",
   });
+   const BASE_URL = "http://localhost:3005";;
 
   // Função para buscar dados do perfil da babá
   const fetchNannyProfile = async () => {
@@ -32,7 +33,7 @@ const NannyDashboard = () => {
     }
 
     try {
-      const response = await axios.get(`https://nanniesfinder.com/api/user/${idUser}`);
+      const response = await axios.get(`${BASE_URL}/api/user/${idUser}`);
       setNannyProfile(response.data);
     } catch (error) {
       console.error("Erro ao buscar o perfil:", error);
@@ -42,7 +43,7 @@ const NannyDashboard = () => {
   // Função para buscar idiomas disponíveis
   const fetchLanguages = async () => {
     try {
-      const response = await axios.get("https://nanniesfinder.com/api/languages");
+      const response = await axios.get(`${BASE_URL}/api/languages`);
       setLanguagesList(response.data); // Atualiza o estado com os idiomas obtidos
     } catch (error) {
       console.error("Erro ao buscar idiomas:", error);
@@ -105,7 +106,7 @@ const NannyDashboard = () => {
 
     try {
       const response = await axios.put(
-        `https://nanniesfinder.com/api/user/updatenannyProfiles/${id_user}`,
+        `${BASE_URL}/api/user/updatenannyProfiles/${id_user}`,
         submitFormData,
         {
           headers: { "Content-Type": "multipart/form-data" },
@@ -270,8 +271,8 @@ const NannyDashboard = () => {
           <div className="bg-white rounded-lg shadow-md p-6">
             <div className="text-center mb-6">
               <ProfilePictureUploader
-                uploadEndpoint={`https://nanniesfinder.com/api/user/uploadProfile/Picture/${nannyProfile.user_id}`}
-                fetchImageEndpoint={`https://nanniesfinder.com/api/user/${nannyProfile.user_id}/profile-picture`}
+                uploadEndpoint={`${BASE_URL}/api/user/uploadProfile/Picture/${nannyProfile.user_id}`}
+                fetchImageEndpoint={`${BASE_URL}/api/user/${nannyProfile.user_id}/profile-picture`}
                 onUploadSuccess={(newImageUrl) => {
                   console.log("Foto atualizada com sucesso:", newImageUrl);
                 }}

@@ -1,7 +1,7 @@
 export default {
     HOST: 'localhost',  // ou '127.0.0.1'
-    USER: 'nannies',
-    PASSWORD: '224466',
+    USER: 'root',
+    PASSWORD: '',
     DB: 'nannyexpress',
     dialect: 'mysql',
     

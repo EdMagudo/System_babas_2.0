@@ -13,12 +13,13 @@ import paypal from "./services/paypal.js"; // Módulo PayPal
 import dotenv from "dotenv";
 import mpesaService from './services/mpesa.js';
 dotenv.config();
+const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 const app = express();
 
 // CORS options
 const corsOptions = {
-  origin: ["https://nanniesfinder.com", "https://www.nanniesfinder.com"], 
+  origin: "*", 
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"],
 };
@@ -278,7 +279,7 @@ app.get("/api/complete-order", async (req, res) => {
     await updatePromise;
 
     // Redirect to success page
-    res.redirect(`https://nanniesfinder.com/client-dashboard?reservationId=${reservationId}`);
+    res.redirect(`${BASE_URL}/client-dashboard?reservationId=${reservationId}`);
     
   } catch (error) {
     console.error("Error completing payment:", error);
@@ -287,7 +288,7 @@ app.get("/api/complete-order", async (req, res) => {
 });
 
 app.get("/api/cancel-order", (req, res) => {
-  res.redirect("https://nanniesfinder.com/reservations");
+  res.redirect("${BASE_URL}/reservations");
 });
 
 app.get("/api/payment-success", (req, res) => {
@@ -295,7 +296,7 @@ app.get("/api/payment-success", (req, res) => {
 
   // Redirecionar para o frontend com o ID da reserva como query parameter, se necessário
   res.redirect(
-    `https://nanniesfinder.com/client-dashboard?reservationId=${reservationId}`
+    `${BASE_URL}/client-dashboard?reservationId=${reservationId}`
   );
 });
 
@@ -397,7 +398,7 @@ app.post("/api/mpesa/pay", async (req, res) => {
     // Verificação do sucesso do pagamento
     if (result.success) {
       // Redireciona para a rota de sucesso com o ID da reserva
-      return res.redirect(`https://nanniesfinder.com/client-dashboard?reservationId=${reservationId}`);
+      return res.redirect(`${BASE_URL}/client-dashboard?reservationId=${reservationId}`);
     } else {
       // Retorna erro se o pagamento falhar
       return res.status(400).json({

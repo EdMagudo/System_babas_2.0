@@ -25,12 +25,13 @@ const UserQualifications = ({ idUser }) => {
     contact: false,
     salary: false,
   });
+   const BASE_URL = "http://localhost:3005";;
   const { t } = useTranslation();
   useEffect(() => {
     const fetchCountries = async () => {
       try {
         setLoading(true);
-        const response = await axios.get("https://nanniesfinder.com/api/countries");
+        const response = await axios.get(`${BASE_URL}/api/countries`);
         setCountries(response.data);
         setLoading(false);
       } catch (error) {
@@ -47,7 +48,7 @@ const UserQualifications = ({ idUser }) => {
       const fetchProvinces = async () => {
         try {
           const response = await axios.get(
-            `https://nanniesfinder.com/api/provinces/${formData.country}`
+            `${BASE_URL}/api/provinces/${formData.country}`
           );
           setProvinces(response.data);
         } catch (error) {
@@ -68,11 +69,11 @@ const UserQualifications = ({ idUser }) => {
     const fetchData = async () => {
       try {
         const [userRes, languagesRes, currenciesRes] = await Promise.all([
-          fetch(`https://nanniesfinder.com/api/user/${idUser}`).then((res) =>
+          fetch(`${BASE_URL}/api/user/${idUser}`).then((res) =>
             res.json()
           ),
-          fetch("https://nanniesfinder.com/api/languages").then((res) => res.json()),
-          fetch("https://nanniesfinder.com/api/currencies").then((res) => res.json()),
+          fetch(`${BASE_URL}/api/languages`).then((res) => res.json()),
+          fetch(`${BASE_URL}/api/currencies`).then((res) => res.json()),
         ]);
 
         setFormData({
@@ -103,7 +104,7 @@ const UserQualifications = ({ idUser }) => {
   const handleSave = async (section, data) => {
     setSaving((prev) => ({ ...prev, [section]: true }));
     try {
-      const response = await fetch(`https://nanniesfinder.com/api/user/saveLocation/${idUser}`, {
+      const response = await fetch(`${BASE_URL}/user/saveLocation/${idUser}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
@@ -122,7 +123,7 @@ const UserQualifications = ({ idUser }) => {
   const handleSaveM = async (section, data) => {
     setSaving((prev) => ({ ...prev, [section]: true }));
     try {
-      const response = await fetch(`https://nanniesfinder.com/api/nanny/saveBusiness/${idUser}`, {
+      const response = await fetch(`${BASE_URL}/api/nanny/saveBusiness/${idUser}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
@@ -141,7 +142,7 @@ const UserQualifications = ({ idUser }) => {
   const handleSaveP = async (section, data) => {
     setSaving((prev) => ({ ...prev, [section]: true }));
     try {
-      const response = await fetch(`https://nanniesfinder.com/api/user/save/Phone/${idUser}`, {
+      const response = await fetch(`${BASE_URL}/api/user/save/Phone/${idUser}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
@@ -159,7 +160,7 @@ const UserQualifications = ({ idUser }) => {
 
   const handleAdd = async (type, value) => {
     try {
-      const response = await fetch(`https://nanniesfinder.com/api/lang/${idUser}`, {
+      const response = await fetch(`${BASE_URL}/api/lang/${idUser}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ [type]: value }),
@@ -181,7 +182,7 @@ const UserQualifications = ({ idUser }) => {
   const handleRemove = async (type, value) => {
     try {
       const response = await fetch(
-        `https://nanniesfinder.com/api/lang/${idUser}/${value}`,
+        `${BASE_URL}/api/lang/${idUser}/${value}`,
         {
           method: "DELETE",
         }

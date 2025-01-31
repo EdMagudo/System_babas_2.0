@@ -15,6 +15,7 @@ const ClientDashboard = () => {
   const [clientProfile, setClientProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const userId = localStorage.getItem("SliderService");
+   const BASE_URL = "http://localhost:3005";;
 
   const [searchParams] = useSearchParams();
 
@@ -22,7 +23,7 @@ const ClientDashboard = () => {
     const handlePaymentSuccess = async () => {
       const reservationId = searchParams.get('reservationId');
       if (reservationId) {
-        window.history.replaceState({}, document.title, 'https://nanniesfinder.com/client-dashboard');
+        window.history.replaceState({}, document.title, `${BASE_URL}/client-dashboard`);
       }
     };
 
@@ -32,7 +33,7 @@ const ClientDashboard = () => {
   useEffect(() => {
     const fetchClientData = async () => {
       try {
-        const response = await axios.get(`https://nanniesfinder.com/api/client/${userId}`);
+        const response = await axios.get(`${BASE_URL}/api/client/${userId}`);
         setClientProfile(response.data);
         setLoading(false);
       } catch (error) {
@@ -76,8 +77,8 @@ const ClientDashboard = () => {
           <div className="bg-white rounded-lg shadow-md p-6">
             <div className="text-center mb-6">
               <ProfilePictureUploader
-                uploadEndpoint={`https://nanniesfinder.com/api/user/uploadProfile/Picture/${clientProfile.user_id}`}
-                fetchImageEndpoint={`https://nanniesfinder.com/api/user/${clientProfile.user_id}/profile-picture`}
+                uploadEndpoint={`${BASE_URL}/api/user/uploadProfile/Picture/${clientProfile.user_id}`}
+                fetchImageEndpoint={`${BASE_URL}/api/user/${clientProfile.user_id}/profile-picture`}
                 onUploadSuccess={(newImageUrl) => {
                   console.log(t("ClientDashboard.profile_picture_uploader.upload_success_message"), newImageUrl);
                 }}

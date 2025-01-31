@@ -6,6 +6,7 @@ import bcrypt from "bcrypt";
 import axios from 'axios';
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 const generateRandomPassword = () => {
   const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -52,7 +53,7 @@ NannyExpress`
 
       // Enviar a solicitação POST para a rota /send-email
       try {
-        await axios.post('https://nanniesfinder.com/api/send-email', emailData);
+        await axios.post(`${BASE_URL}/api/send-email`, emailData);
         console.log('Email sent successfully');
       } catch (emailError) {
         console.error('Error sending email: ', emailError);
@@ -145,7 +146,7 @@ NannyExpress`
 
       // Enviar a solicitação POST para a rota /send-email
       try {
-        await axios.post('https://nanniesfinder.com/api/send-email', emailData);
+        await axios.post(`${BASE_URL}/api/send-email`, emailData);
         console.log('Email sent successfully');
       } catch (emailError) {
         console.error('Error sending email: ', emailError);

@@ -18,9 +18,10 @@ const ReservationList = () => {
   const [endDate, setEndDate] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
+   const BASE_URL = "http://localhost:3005";;
 
   useEffect(() => {
-    fetch("https://nanniesfinder.com/api/reservations")
+    fetch(`${BASE_URL}/api/reservations`)
       .then((response) => response.json())
       .then((data) => {
         // Verificar se a resposta é um array
@@ -41,7 +42,7 @@ const ReservationList = () => {
       const nannyId = reservation.nanny_id;
       if (!names[nannyId]) {
         try {
-          const response = await fetch(`https://nanniesfinder.com/api/user/${nannyId}`);
+          const response = await fetch(`${BASE_URL}/api/user/${nannyId}`);
           const data = await response.json();
           names[nannyId] = `${data.first_name} ${data.last_name}`;
           emails[nannyId] = data.email;
@@ -97,7 +98,7 @@ const ReservationList = () => {
 
     try {
       const response = await fetch(
-        `https://nanniesfinder.com/api/reservations/payClient/reservation/${reservation_id}`,
+        `${BASE_URL}/api/reservations/payClient/reservation/${reservation_id}`,
         { method: "PUT" } // Use "PUT" em maiúsculas
       );
 

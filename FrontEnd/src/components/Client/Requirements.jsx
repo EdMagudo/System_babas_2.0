@@ -17,6 +17,7 @@ const Favorites = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(5);
   const [message, setMessage] = useState({ text: "", type: "" });
+   const BASE_URL = "http://localhost:3005";;
 
   const fetchRequests = async () => {
     const idUser = localStorage.getItem("SliderService");
@@ -27,7 +28,7 @@ const Favorites = () => {
 
     try {
       const response = await axios.get(
-        `https://nanniesfinder.com/api/requestServices/allRequestCliente/${idUser}`
+        `${BASE_URL}/api/requestServices/allRequestCliente/${idUser}`
       );
       setRequests(response.data);
     } catch (error) {
@@ -44,7 +45,7 @@ const Favorites = () => {
 
     try {
       const response = await axios.delete(
-        `https://nanniesfinder.com/api/requestServices/${request_id}`
+        `${BASE_URL}/api/requestServices/${request_id}`
       );
       if (response.status === 204) {
         setMessage({ text: "Request deleted successfully!", type: "success" });

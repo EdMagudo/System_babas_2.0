@@ -8,7 +8,7 @@ import HomePage from './Pages/HomePage';
 import ClientForm from './components/Client/ClientForm';
 import NannyForm from './components/Nanny/NannyForm';
 import ContactUs from './components/Estrutura/contactUs';
-import FindNanny from './components/FindNanny';
+
 
 import LoginPage from './Pages/loginPage';
 
@@ -31,7 +31,6 @@ function App() {
             <Route path="/register-client" element={<ClientForm />} />
             <Route path="/register-nanny" element={<NannyForm />} />
             <Route path="/contact-us" element={<ContactUs />} />
-            <Route path="/search" element={<FindNanny />} />
             <Route path="/sign-in" element={<LoginPage />} />
             <Route path="/client-dashboard" element={<ClientDashboard />} />
             <Route path="/nanny-dashboard" element={<NannyDashboard />} />

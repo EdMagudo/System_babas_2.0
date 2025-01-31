@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import mpesa from '../../assets/mpesa.png'
 const MpesaPaymentModal = ({ isOpen, onClose, reservationId, amount }) => {
   const [phoneNumber, setPhoneNumber] = useState('');
+   const BASE_URL = "http://localhost:3005";;
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const form = document.createElement('form');
     form.method = 'POST';
-    form.action = 'https://nanniesfinder.com/api/mpesa/pay';
+    form.action = `${BASE_URL}/api/mpesa/pay`;
 
     const reservationIdInput = document.createElement('input');
     reservationIdInput.type = 'hidden';

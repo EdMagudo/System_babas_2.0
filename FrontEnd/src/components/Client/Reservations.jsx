@@ -23,6 +23,8 @@ const Reservations = () => {
   const [mpesaModalOpen, setMpesaModalOpen] = useState(false);
   const [selectedReservation, setSelectedReservation] = useState(null);
   const { t } = useTranslation();
+  
+   const BASE_URL = "http://localhost:3005";;
 
   const handleMpesaPayment = (reservation) => {
     setSelectedReservation(reservation);
@@ -50,7 +52,7 @@ const Reservations = () => {
     }
     try {
       const response = await fetch(
-        `https://nanniesfinder.com/api/reservations/getAll/reservations/client/${clientId}`
+        `${BASE_URL}/api/reservations/getAll/reservations/client/${clientId}`
       );
       if (!response.ok) {
         throw new Error("Network response was not ok");
@@ -85,7 +87,7 @@ const Reservations = () => {
 
     try {
       const response = await axios.put(
-        `https://nanniesfinder.com/api/reservations/cancel/reservation/${reservation_id}`
+        `${BASE_URL}/api/reservations/cancel/reservation/${reservation_id}`
       );
       if (response.status === 200) {
         setMessage({
@@ -119,7 +121,7 @@ const handlePaymentSubmit = async (reservation, nannyProfile) => {
     }
 
     // Realizar a requisição para a API de conversão
-    const response = await axios.post('https://nanniesfinder.com/api/convert', {
+    const response = await axios.post(`${BASE_URL}/api/convert`, {
       from: fromCurrency,
       to: toCurrency,
       amount: reservation.value,
@@ -153,7 +155,7 @@ const handlePaymentSubmit = async (reservation, nannyProfile) => {
     }
     try {
       const response = await fetch(
-        `https://nanniesfinder.com/api/reservations/${reservationId}/feedback`,
+        `${BASE_URL}/api/reservations/${reservationId}/feedback`,
         {
           method: "POST",
           headers: {
@@ -304,7 +306,7 @@ const handlePaymentSubmit = async (reservation, nannyProfile) => {
                       <div className="flex flex-col gap-4">
                         {/* PayPal Payment Button */}
                         <form
-                          action="https://nanniesfinder.com/api/sam/pay"
+                          action={`${BASE_URL}/api/sam/pay`}
                           method="post"
                           onSubmit={(e) => {
                             e.preventDefault();  // Impede o envio imediato do formulário

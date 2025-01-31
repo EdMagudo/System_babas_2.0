@@ -22,12 +22,13 @@ const Overview = ({ clientProfile, idUser }) => {
   });
   const [saving, setSaving] = useState({ phone: false });
   const [message, setMessage] = useState({ type: "", text: "" });
+   const BASE_URL = "http://localhost:3005";;
 
   useEffect(() => {
     const fetchUserProfile = async () => {
       const idUser = localStorage.getItem("SliderService");
       try {
-        const response = await axios.get(`https://nanniesfinder.com/api/client/${idUser}`);
+        const response = await axios.get(`${BASE_URL}/api/client/${idUser}`);
         setEmail(response.data.email);
         setPhone(response.data.phone);
       } catch (error) {
@@ -40,7 +41,7 @@ const Overview = ({ clientProfile, idUser }) => {
       const idUser = localStorage.getItem("SliderService");
       try {
         const response = await axios.get(
-          `https://nanniesfinder.com/api/reservations/countReservationsC/${idUser}`
+          `${BASE_URL}/api/reservations/countReservationsC/${idUser}`
         );
         setCompletedJobs(response.data.count || 0);
       } catch (error) {
@@ -77,7 +78,7 @@ const Overview = ({ clientProfile, idUser }) => {
     setSaving((prev) => ({ ...prev, phone: true }));
     try {
       const response = await axios.put(
-        `https://nanniesfinder.com/api/user/save/Phone/${idUser}`,
+        `${BASE_URL}/api/user/save/Phone/${idUser}`,
         { phone }
       );
 
@@ -104,7 +105,7 @@ const Overview = ({ clientProfile, idUser }) => {
     }
 
     try {
-      const response = await axios.put("https://nanniesfinder.com/api/user/upd/Pas", {
+      const response = await axios.put(`${BASE_URL}/api/user/upd/Pas`, {
         email,
         currentPassword,
         newPassword,

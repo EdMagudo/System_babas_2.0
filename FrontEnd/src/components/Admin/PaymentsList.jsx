@@ -10,11 +10,13 @@ const PaymentList = () => {
   const [error, setError] = useState(null);
   const [totalAmount, setTotalAmount] = useState(0);
 
+   const BASE_URL = "http://localhost:3005";;
+
   useEffect(() => {
     const fetchPayments = async () => {
       try {
         setLoading(true);
-        const response = await axios.get("https://nanniesfinder.com/api/payment");
+        const response = await axios.get(`${BASE_URL}/api/payment`);
         setPayments(response.data);
       } catch (err) {
         setError("Erro ao carregar os pagamentos.");
@@ -87,7 +89,7 @@ const PaymentList = () => {
   const convertCurrency = async (amount) => {
     console.log("Converting USD to MZN for:", amount);
     try {
-      const response = await axios.post("https://nanniesfinder.com/api/convert", {
+      const response = await axios.post(`${BASE_URL}/api/convert`, {
         from: "USD",
         to: "MZN",
         amount: amount,

@@ -35,6 +35,7 @@ const BabysittingRequestManager: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [itemsPerPage] = useState<number>(5);
   const { t } = useTranslation();
+   const BASE_URL = "http://localhost:3005";;
   useEffect(() => {
     fetchReservations();
   }, []);
@@ -52,7 +53,7 @@ const BabysittingRequestManager: React.FC = () => {
 
     try {
       const response = await axios.get(
-        `https://nanniesfinder.com/api/reservations/getAll/reservations/${idUser}`
+        `${BASE_URL}/api/reservations/getAll/reservations/${idUser}`
       );
       setReservations(response.data);
     } catch (error) {
@@ -69,7 +70,7 @@ const BabysittingRequestManager: React.FC = () => {
 
     try {
       const response = await axios.get(
-        `https://nanniesfinder.com/api/requestServices/allRequest/${idUser}`
+        `${BASE_URL}/api/requestServices/allRequest/${idUser}`
       );
       const data = response.data.map((req: any) => ({
         id: req.request_id,
@@ -93,7 +94,7 @@ const BabysittingRequestManager: React.FC = () => {
     const idUser = localStorage.getItem("SliderService");
     try {
       const response = await axios.get(
-        `https://nanniesfinder.com/api/reservations/getAll/reservations/${idUser}`
+        `${BASE_URL}/api/reservations/getAll/reservations/${idUser}`
       );
       return response.data;
     } catch (error) {
@@ -150,7 +151,7 @@ const BabysittingRequestManager: React.FC = () => {
 
     try {
       await axios.put(
-        `https://nanniesfinder.com/api/requestServices/approvedRequest/${id}`,
+        `${BASE_URL}/api/requestServices/approvedRequest/${id}`,
         { value: Number(value), client_id: clientId }
       );
       setRequests(
@@ -175,7 +176,7 @@ const BabysittingRequestManager: React.FC = () => {
 
     try {
       await axios.put(
-        `https://nanniesfinder.com/api/requestServices/rejectRequest/${id}`
+        `${BASE_URL}/api/requestServices/rejectRequest/${id}`
       );
       setRequests(
         requests.map((req) =>
@@ -195,7 +196,7 @@ const BabysittingRequestManager: React.FC = () => {
 
     try {
       await axios.put(
-        `https://nanniesfinder.com/api/reservations/cancel/reservation/${reservationId}`
+        `${BASE_URL}/api/reservations/cancel/reservation/${reservationId}`
       );
       setReservations(
         reservations.filter(

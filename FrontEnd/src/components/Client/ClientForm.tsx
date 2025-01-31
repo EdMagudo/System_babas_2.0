@@ -25,12 +25,13 @@ const NannyFinderForm = () => {
   const [loadingProvinces, setLoadingProvinces] = useState(false); 
   const [error, setError] = useState(""); 
   const [successMessage, setSuccessMessage] = useState(""); 
-  const [uploadSuccess, setUploadSuccess] = useState(false); 
+  const [uploadSuccess, setUploadSuccess] = useState(false);
+   const BASE_URL = "http://localhost:3005";; 
 
   useEffect(() => {
     const fetchCountries = async () => {
       try {
-        const response = await axios.get("https://nanniesfinder.com/api/countries");
+        const response = await axios.get(`${BASE_URL}/api/countries`);
         setCountries(response.data);
         setLoading(false);
       } catch (error) {
@@ -48,7 +49,7 @@ const NannyFinderForm = () => {
       const fetchProvinces = async () => {
         try {
           const response = await axios.get(
-            `https://nanniesfinder.com/api/provinces/${client.country_name}`
+            `${BASE_URL}/api/provinces/${client.country_name}`
           );
           setProvinces(response.data);
           setLoadingProvinces(false);
@@ -100,7 +101,7 @@ const NannyFinderForm = () => {
 
     try {
       const response = await axios.post(
-        "https://nanniesfinder.com/api/user",
+        `${BASE_URL}/api/user`,
         formData,
         {
           headers: {

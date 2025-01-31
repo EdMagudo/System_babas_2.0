@@ -1,14 +1,16 @@
-import React, { useState } from 'react';
-import { Lock, Mail, LogIn } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import React, { useState } from "react";
+import { Lock, Mail, LogIn } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const AdminLogin = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+
+  const BASE_URL = import.meta.env.REACT_APP_BASE_URL;
 
   const validateEmail = (email) => {
     const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -17,37 +19,41 @@ const AdminLogin = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
+    setError("");
     setIsLoading(true);
 
     if (!email || !password) {
-      setError('Both fields are required.');
+      setError("Both fields are required.");
       setIsLoading(false);
       return;
     }
 
     if (!validateEmail(email)) {
-      setError('Invalid email format.');
+      setError("Invalid email format.");
       setIsLoading(false);
       return;
     }
 
     try {
-      const response = await axios.post('https://nanniesfinder.com/api/Admin/login', {
-        email,
-        password,
-      });
+      const response = await axios.post(
+        `${BASE_URL}/api/Admin/login`,
+        {
+          email,
+          password,
+        }
+      );
 
       // Store token and user role
-      localStorage.setItem('SliderNavigation', response.data.user.role);
-      localStorage.setItem('adminToken', response.data.token);
+      localStorage.setItem("SliderNavigation", response.data.user.role);
+      localStorage.setItem("adminToken", response.data.token);
 
       // Navigate to dashboard
-      navigate('/admin');
+      navigate("/admin");
       window.location.reload();
     } catch (err) {
       setError(
-        err.response?.data?.message || 'Unable to connect to the server. Please try again later.'
+        err.response?.data?.message ||
+          "Unable to connect to the server. Please try again later."
       );
     } finally {
       setIsLoading(false);
@@ -58,7 +64,9 @@ const AdminLogin = () => {
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         <div>
-          <h2 className="mt-6 text-center text-3xl font-bold text-gray-900">Admin Login</h2>
+          <h2 className="mt-6 text-center text-3xl font-bold text-gray-900">
+            Admin Login
+          </h2>
           <p className="mt-2 text-center text-sm text-gray-600">
             Please sign in to access the admin dashboard
           </p>
@@ -76,7 +84,10 @@ const AdminLogin = () => {
 
           <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 Email
               </label>
               <div className="relative">
@@ -92,7 +103,9 @@ const AdminLogin = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className={`pl-12 pr-4 py-3 w-full rounded-xl border text-sm focus:outline-none transition-all duration-200 ${
-                    error && !email ? 'border-rose-500' : 'border-gray-200 focus:ring-2 focus:ring-indigo-500'
+                    error && !email
+                      ? "border-rose-500"
+                      : "border-gray-200 focus:ring-2 focus:ring-indigo-500"
                   }`}
                   placeholder="Enter your email"
                 />
@@ -100,7 +113,10 @@ const AdminLogin = () => {
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 Password
               </label>
               <div className="relative">
@@ -116,7 +132,9 @@ const AdminLogin = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className={`pl-12 pr-4 py-3 w-full rounded-xl border text-sm focus:outline-none transition-all duration-200 ${
-                    error && !password ? 'border-rose-500' : 'border-gray-200 focus:ring-2 focus:ring-indigo-500'
+                    error && !password
+                      ? "border-rose-500"
+                      : "border-gray-200 focus:ring-2 focus:ring-indigo-500"
                   }`}
                   placeholder="Enter your password"
                 />

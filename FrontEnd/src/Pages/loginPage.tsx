@@ -9,6 +9,8 @@ const LoginPage = () => {
     email: '',
     password: '',
   });
+   const BASE_URL = "http://localhost:3005";;
+
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
@@ -16,7 +18,7 @@ const LoginPage = () => {
     e.preventDefault();
    
     try {
-      const response = await fetch('https://nanniesfinder.com/api/user/login', {
+      const response = await fetch(`${BASE_URL}/api/user/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

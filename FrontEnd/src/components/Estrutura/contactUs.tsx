@@ -13,6 +13,8 @@ const ContactPage = () => {
   });
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  
+  const BASE_URL = "http://localhost:3005";
 
   const location = {
     lat: -25.9659, // Latitude (exemplo de Maputo)
@@ -32,7 +34,7 @@ const ContactPage = () => {
     setErrorMessage('');
 
     try {
-      const response = await fetch('https://nanniesfinder.com/api/send-email', {
+      const response = await fetch(`${BASE_URL}/api/send-email`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

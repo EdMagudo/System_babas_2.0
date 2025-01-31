@@ -12,10 +12,11 @@ const NannyCard = ({
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [notes, setNotes] = useState('');
+   const BASE_URL = "http://localhost:3005";;
 
   const openModal = async () => {
     setShowModal(true);
-    const response = await axios.get(`https://nanniesfinder.com/api/Review/comments/${nanny.user_id}`);
+    const response = await axios.get(`${BASE_URL}/api/Review/comments/${nanny.user_id}`);
     setComments(response.data);
   };
 
@@ -57,7 +58,7 @@ const NannyCard = ({
   
       
       const response = await axios.post(
-        "https://nanniesfinder.com/api/requestServices",
+        `${BASE_URL}/api/requestServices`,
         requestData
       );
   

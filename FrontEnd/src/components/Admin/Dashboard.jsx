@@ -12,25 +12,24 @@ const Dashboard = () => {
     satisfacaoClientes: "0%",
   });
 
+   const BASE_URL = "http://localhost:3005";;
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         // Realiza a requisição para obter os dados
-        const response = await axios.get("https://nanniesfinder.com/api/count-users");
+        const response = await axios.get(`${BASE_URL}/api/count-users`);
         const responseData = await axios.get(
-          "https://nanniesfinder.com/api/reservations/getAll/reservations"
+          `${BASE_URL}/api/reservations/getAll/reservations`
         );
 
-        const res = await axios.get("https://nanniesfinder.com/api/Payment/payments/total-completed-month");
+        const res = await axios.get(`${BASE_URL}/api/Payment/payments/total-completed-month`);
 
         const data = response.data;
         const reservationsData = responseData.data;
         const paymentData = res.data;
 
-        console.log(paymentData)
-
-    
-        // Atualiza o estado com os dados recebidos
+         
         setStats({
           totalBabas: data.nannies || 0,
           totalClientes: data.clients || 0,

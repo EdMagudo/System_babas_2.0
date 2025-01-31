@@ -11,6 +11,8 @@ const Header = () => {
     confirmPassword: "",
   });
 
+   const BASE_URL = "http://localhost:3005";;
+
   const [passwordVisibility, setPasswordVisibility] = useState({
     currentPassword: false,
     newPassword: false,
@@ -67,7 +69,7 @@ const Header = () => {
 
     try {
       // Supondo que o email seja único
-      const response = await axios.put(`https://nanniesfinder.com/api/Admin/${credentials.email}`, {
+      const response = await axios.put(`${BASE_URL}/api/Admin/${credentials.email}`, {
         currentPassword: credentials.currentPassword,
         newPassword: credentials.newPassword
       });

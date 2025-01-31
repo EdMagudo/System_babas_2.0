@@ -16,6 +16,7 @@ const ProfilePictureUploader: React.FC<ProfilePictureUploaderProps> = ({
   const [imageUrl, setImageUrl] = useState<string>("https://via.placeholder.com/128");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
+   const BASE_URL = "http://localhost:3005";;
 
   const userId = localStorage.getItem("SliderService");
   useEffect(() => {
@@ -34,7 +35,7 @@ const ProfilePictureUploader: React.FC<ProfilePictureUploaderProps> = ({
             ? profilePictureUrl.substring(8)
             : profilePictureUrl;
   
-          setImageUrl(`https://nanniesfinder.com/api/uploads/${correctedUrl}`);
+          setImageUrl(`${BASE_URL}/api/uploads/${correctedUrl}`);
         } else {
           setImageUrl("https://via.placeholder.com/128");
         }
