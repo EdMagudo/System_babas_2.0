@@ -30,22 +30,20 @@
         "phone": {
           "label": "Phone",
           "numbers": [
-            "+258 84 123 4567",
-            "+258 86 987 6543"
+            "+258 87 070 5521"
           ]
         },
         "email": {
           "label": "Email",
           "addresses": [
-            "info@expressnannies.co.mz",
-            "support@expressnannies.co.mz"
+            "info@ola-baba.com",
+            "support@ola-baba.com"
           ]
         },
         "location": {
           "label": "Office Location",
           "details": [
-            "Av. Julius Nyerere, 257",
-            "Maputo, Mozambique"
+            " Mahotas, Maputo, Mozambique"
           ]
         },
         "hours": {
@@ -110,9 +108,9 @@
   },
   "expressNannies": {
     "heroTitle": "Express Nannies",
-    "heroDescription": "Welcome to Express Nannies, your trusted platform for finding reliable temporary nannies in Mozambique. Whether you're a tourist enjoying a night out, an expat in need of temporary support, or a parent whose nanny is unavailable, we're here to provide peace of mind with vetted, experienced caregivers.",
+    "heroDescription": "Welcome to Express Nannies, your trusted platform for finding reliable nannies in Mozambique. Whether you're a tourist enjoying a night out, an expat in need of temporary support, or a parent in need of a nanny, being temporary or full-time, we're here to provide peace of mind with vetted, experienced caregivers.",
     "trustedCaregiversTitle": "Our Trusted Caregivers",
-    "trustedCaregiversDescription": "Discover our diverse community of experienced nannies ready to provide exceptional care for your children."
+    "trustedCaregiversDescription": "Discover our diverse community of trusted nannies ready to provide exceptional care for your children."
   },
   "NannyRegistrationForm": {
     "title": "Join Our Trusted Nanny Team",

@@ -30,22 +30,20 @@
       "phone": {
         "label": "Telefone",
         "numbers": [
-          "+258 84 123 4567",
-          "+258 86 987 6543"
+          "+258 870705521"
         ]
       },
       "email": {
         "label": "Email",
         "addresses": [
-          "info@expressnannies.co.mz",
-          "support@expressnannies.co.mz"
+         "info@ola-baba.com",
+          "support@ola-baba.com"
         ]
       },
       "location": {
         "label": "Localização do Escritório",
         "details": [
-          "Av. Julius Nyerere, 257",
-          "Maputo, Moçambique"
+          " Mahotas, Maputo, Moçambique"
         ]
       },
       "hours": {
@@ -110,9 +108,9 @@
   },
   "expressNannies": {
     "heroTitle": "Express Nannies",
-    "heroDescription": "Bem-vindo ao Express Nannies, sua plataforma confiável para encontrar babás temporárias em Moçambique. Se você é um turista aproveitando uma noite fora, um expatriado precisando de suporte temporário ou um pai cuja babá está indisponível, estamos aqui para proporcionar tranquilidade com cuidadores experientes e verificados.",
+    "heroDescription": "Bem-vindo ao Express Nannies, sua plataforma confiável para encontrar babás em Moçambique. Se você é um turista aproveitando uma noite fora, um expatriado precisando de suporte temporário, mãe ou pai precisando de uma babá, temporária ou a tempo inteiro, estamos aqui para proporcionar tranquilidade com cuidadoras verificadas.",
     "trustedCaregiversTitle": "Nossos Cuidadores Confiáveis",
-    "trustedCaregiversDescription": "Descubra nossa comunidade diversificada de babás experientes, prontas para fornecer um cuidado excepcional para seus filhos."
+    "trustedCaregiversDescription": "Descubra nossa comunidade diversificada de babás confiáveis, prontas para fornecer um cuidado excepcional para seus filhos."
   },
   "NannyRegistrationForm": {
     "title": "Junte-se à nossa equipe de babás confiáveis",
