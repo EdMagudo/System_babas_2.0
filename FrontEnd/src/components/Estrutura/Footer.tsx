@@ -1,9 +1,15 @@
-import React from 'react';
-import { Facebook, Instagram, Twitter } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
+import React from "react";
+import { Facebook, Instagram, Twitter } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 const Footer = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+
+  // Define o caminho do arquivo com base no idioma
+  const termsFile =
+    i18n.language === "pt"
+      ? "src/terms/TemporaryNannies_Termosecondicoesetc_PT.pdf"
+      : "src/terms/TemporaryNannies_Termosecondicoesetc_EN.pdf";
 
   return (
     <footer className="bg-gradient-to-r from-slate-50 to-slate-100 py-12 px-6">
@@ -18,15 +24,16 @@ const Footer = () => {
                     href="/contact"
                     className="text-slate-600 hover:text-slate-900 transition-colors duration-200 text-sm"
                   >
-                    {t('footer.contactUs')}
+                    {t("footer.contactUs")}
                   </a>
                 </li>
                 <li>
                   <a
-                    href="/terms"
+                    href={termsFile}
+                    download="termos_de_servico.pdf"
                     className="text-slate-600 hover:text-slate-900 transition-colors duration-200 text-sm"
                   >
-                    {t('footer.terms')}
+                    {t("footer.terms")}
                   </a>
                 </li>
                 <li>
@@ -34,7 +41,7 @@ const Footer = () => {
                     href="/faqs"
                     className="text-slate-600 hover:text-slate-900 transition-colors duration-200 text-sm"
                   >
-                    {t('footer.faqs')}
+                    {t("footer.faqs")}
                   </a>
                 </li>
                 <li>
@@ -42,7 +49,7 @@ const Footer = () => {
                     href="/service-fee"
                     className="text-slate-600 hover:text-slate-900 transition-colors duration-200 text-sm"
                   >
-                    {t('footer.serviceFee')}
+                    {t("footer.serviceFee")}
                   </a>
                 </li>
                 <li>
@@ -50,7 +57,7 @@ const Footer = () => {
                     href="/places-to-visit"
                     className="text-slate-600 hover:text-slate-900 transition-colors duration-200 text-sm"
                   >
-                    {t('footer.placesToVisit')}
+                    {t("footer.placesToVisit")}
                   </a>
                 </li>
                 <li>
@@ -58,7 +65,7 @@ const Footer = () => {
                     href="/travel-tips"
                     className="text-slate-600 hover:text-slate-900 transition-colors duration-200 text-sm"
                   >
-                    {t('footer.travelTips')}
+                    {t("footer.travelTips")}
                   </a>
                 </li>
               </ul>
@@ -96,9 +103,9 @@ const Footer = () => {
           {/* Copyright */}
           <div className="text-center md:text-right">
             <p className="text-sm text-slate-500">
-              {t('footer.copyright.text')}
+              {t("footer.copyright.text")}
               <br />
-              {t('footer.copyright.allRightsReserved')}
+              {t("footer.copyright.allRightsReserved")}
             </p>
           </div>
         </div>
