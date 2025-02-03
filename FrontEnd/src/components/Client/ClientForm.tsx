@@ -80,26 +80,24 @@ const NannyFinderForm = () => {
     }
     setUploadSuccess(false);
   };
-
   const submitForm = async (e) => {
     e.preventDefault();
 
-    if (!file) {
-      setError(t("form.uploadError"));
-      return;
-    }
-
     const formData = new FormData();
-    formData.append("email", client.email);
-    formData.append("password_hash", client.password_hash);
-    formData.append("role", client.role);
-    formData.append("first_name", client.first_name);
-    formData.append("last_name", client.last_name);
-    formData.append("id_number", client.id_number);
-    formData.append("country_name", client.country_name);
-    formData.append("province_name", client.province_name);
-    formData.append("file", file);
-    formData.append("telefone", client.telefone);
+    formData.append("email", client.email || "");
+    formData.append("password_hash", client.password_hash || "");
+    formData.append("role", client.role || "");
+    formData.append("first_name", client.first_name || "");
+    formData.append("last_name", client.last_name || "");
+    formData.append("id_number", client.id_number || "");
+    formData.append("country_name", client.country_name || "");
+    formData.append("province_name", client.province_name || "");
+    formData.append("contact_phone", client.telefone || "");
+
+    // Apenas adiciona o arquivo se existir
+    if (file) {
+      formData.append("file", file);
+    }
 
     try {
       const response = await axios.post(`${BASE_URL}/api/user`, formData, {
@@ -108,17 +106,17 @@ const NannyFinderForm = () => {
         },
       });
 
-      if (response.status === 400) {
-        setError(response.data.message);
-        return;
-      } else if (response.status === 200) {
-        setSuccessMessage(t("form.registrationSuccess"));
-        setError("");
-        setUploadSuccess(true);
-      }
+      setError("");
+      setUploadSuccess(true);
+      setSuccessMessage(t("form.registrationSuccess"));
     } catch (err) {
+      // Se houver resposta do backend, pega a mensagem
+      if (err.response) {
+        setError(err.response.data.message || t("form.registrationError"));
+      } else {
+        setError(t("form.registrationError"));
+      }
       setSuccessMessage("");
-      setError(t("form.registrationError"));
       console.error(err);
     }
   };
@@ -192,7 +190,7 @@ const NannyFinderForm = () => {
               />
             </div>
             <div>
-              <label className="block mb-2">{t('form.telefone')}</label>
+              <label className="block mb-2">{t("form.telefone")}</label>
               <input
                 type="text"
                 id="telefone"
@@ -289,7 +287,6 @@ const NannyFinderForm = () => {
                   type="file"
                   className="hidden"
                   onChange={handleFileChange}
-                  required
                 />
               </label>
             </div>

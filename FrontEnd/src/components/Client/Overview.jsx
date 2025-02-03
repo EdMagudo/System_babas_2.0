@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useTranslation } from 'react-i18next';  // Hook de tradução
+import { useTranslation } from "react-i18next"; // Hook de tradução
 
 const Overview = ({ clientProfile, idUser }) => {
-  const { t } = useTranslation();  // Hook de tradução
-  
+  const { t } = useTranslation(); // Hook de tradução
+
   const {
     totalNannySearches = 0,
     profileCompleteness = 0,
@@ -16,13 +16,14 @@ const Overview = ({ clientProfile, idUser }) => {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [completedJobs, setCompletedJobs] = useState("");
+  const [documentFile, setDocumentFile] = useState(null);
   const [showPassword, setShowPassword] = useState({
     current: false,
     new: false,
   });
   const [saving, setSaving] = useState({ phone: false });
   const [message, setMessage] = useState({ type: "", text: "" });
-   const BASE_URL = "http://localhost:3005";;
+  const BASE_URL = "http://localhost:3005";
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -33,7 +34,7 @@ const Overview = ({ clientProfile, idUser }) => {
         setPhone(response.data.phone);
       } catch (error) {
         console.error("Error fetching user profile:", error);
-        setMessage({ type: "error", text: t('overview.errorLoadingProfile') });
+        setMessage({ type: "error", text: t("overview.errorLoadingProfile") });
       }
     };
 
@@ -69,6 +70,31 @@ const Overview = ({ clientProfile, idUser }) => {
     }));
   };
 
+  const handleFileChange = (e) => {
+    setDocumentFile(e.target.files[0]);
+  };
+
+  const handleDocumentSubmit = async (e) => {
+    e.preventDefault();
+    if (!documentFile) return alert("Por favor, selecione um documento");
+    const idUser = localStorage.getItem("SliderService");
+    const docData = new FormData();
+    docData.append("document", documentFile);
+    try {
+      await axios.post(
+        `${BASE_URL}/api/user/uploadDocument/${idUser}`,
+        docData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
+      alert("Documento enviado com sucesso!");
+    } catch (error) {
+      console.error("Erro ao enviar documento:", error);
+      alert("Erro ao enviar documento");
+    }
+  };
+
   const handlePhoneChange = (e) => {
     setPhone(e.target.value);
   };
@@ -83,14 +109,14 @@ const Overview = ({ clientProfile, idUser }) => {
       );
 
       if (response.status === 200) {
-        setMessage({ type: "success", text: t('overview.phoneUpdated') });
+        setMessage({ type: "success", text: t("overview.phoneUpdated") });
         setPhone(""); // Limpa o campo de telefone após o sucesso
       } else {
-        throw new Error(t('overview.failedPhoneUpdate'));
+        throw new Error(t("overview.failedPhoneUpdate"));
       }
     } catch (error) {
       console.error("Error updating phone number:", error);
-      setMessage({ type: "error", text: t('overview.failedPhoneUpdate') });
+      setMessage({ type: "error", text: t("overview.failedPhoneUpdate") });
     } finally {
       setSaving((prev) => ({ ...prev, phone: false })); // Restaura o estado do botão
     }
@@ -100,7 +126,7 @@ const Overview = ({ clientProfile, idUser }) => {
     e.preventDefault();
 
     if (!currentPassword || !newPassword) {
-      setMessage({ type: "error", text: t('overview.fillAllFields') });
+      setMessage({ type: "error", text: t("overview.fillAllFields") });
       return;
     }
 
@@ -112,11 +138,11 @@ const Overview = ({ clientProfile, idUser }) => {
       });
 
       if (response.status === 200) {
-        setMessage({ type: "success", text: t('overview.passwordUpdated') });
+        setMessage({ type: "success", text: t("overview.passwordUpdated") });
       }
     } catch (error) {
       console.error("Error updating password:", error);
-      setMessage({ type: "error", text: t('overview.errorUpdatingPassword') });
+      setMessage({ type: "error", text: t("overview.errorUpdatingPassword") });
     }
   };
 
@@ -124,9 +150,11 @@ const Overview = ({ clientProfile, idUser }) => {
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
       {/* Quick Stats Section */}
       <div className="bg-white p-6 rounded-lg shadow-lg">
-        <h3 className="text-xl font-semibold mb-4 text-indigo-700">{t('overview.quickStats')}</h3>
+        <h3 className="text-xl font-semibold mb-4 text-indigo-700">
+          {t("overview.quickStats")}
+        </h3>
         <p>
-          {t('overview.totalPaidReservations')}:{" "}
+          {t("overview.totalPaidReservations")}:{" "}
           <span className="font-bold text-gray-800">{completedJobs}</span>
         </p>
       </div>
@@ -134,12 +162,15 @@ const Overview = ({ clientProfile, idUser }) => {
       {/* Change Password Section */}
       <div className="lg:col-span-2 bg-white p-6 rounded-lg shadow-lg">
         <h3 className="text-xl font-semibold mb-4 text-indigo-700">
-          {t('overview.changeEmailAndPassword')}
+          {t("overview.changeEmailAndPassword")}
         </h3>
         <form onSubmit={handlePasswordChange} className="space-y-6">
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-              {t('overview.email')}
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
+              {t("overview.email")}
             </label>
             <input
               type="email"
@@ -147,7 +178,7 @@ const Overview = ({ clientProfile, idUser }) => {
               value={email}
               disabled
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
-              placeholder={t('overview.emailPlaceholder')}
+              placeholder={t("overview.emailPlaceholder")}
             />
           </div>
 
@@ -156,7 +187,7 @@ const Overview = ({ clientProfile, idUser }) => {
               htmlFor="current-password"
               className="block text-sm font-medium text-gray-700 mb-2"
             >
-              {t('overview.currentPassword')}
+              {t("overview.currentPassword")}
             </label>
             <div className="relative">
               <input
@@ -164,7 +195,7 @@ const Overview = ({ clientProfile, idUser }) => {
                 id="current-password"
                 onChange={(e) => setCurrentPassword(e.target.value)}
                 className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
-                placeholder={t('overview.currentPasswordPlaceholder')}
+                placeholder={t("overview.currentPasswordPlaceholder")}
               />
               <button
                 type="button"
@@ -181,7 +212,7 @@ const Overview = ({ clientProfile, idUser }) => {
               htmlFor="new-password"
               className="block text-sm font-medium text-gray-700 mb-2"
             >
-              {t('overview.newPassword')}
+              {t("overview.newPassword")}
             </label>
             <div className="relative">
               <input
@@ -190,7 +221,7 @@ const Overview = ({ clientProfile, idUser }) => {
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
                 className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
-                placeholder={t('overview.newPasswordPlaceholder')}
+                placeholder={t("overview.newPasswordPlaceholder")}
               />
               <button
                 type="button"
@@ -207,7 +238,7 @@ const Overview = ({ clientProfile, idUser }) => {
               type="submit"
               className="px-6 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition"
             >
-              {t('overview.updatePassword')}
+              {t("overview.updatePassword")}
             </button>
           </div>
         </form>
@@ -216,20 +247,25 @@ const Overview = ({ clientProfile, idUser }) => {
       {/* Contact Information */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6">
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-xl font-semibold text-gray-800">{t('overview.contactInformation')}</h2>
+          <h2 className="text-xl font-semibold text-gray-800">
+            {t("overview.contactInformation")}
+          </h2>
           <button
             onClick={handleSavePhone}
             disabled={saving.phone}
             className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors disabled:opacity-50"
           >
-            {saving.phone ? t('overview.saving') : t('overview.save')}
+            {saving.phone ? t("overview.saving") : t("overview.save")}
           </button>
         </div>
         <p className="text-sm text-gray-600 mb-4">
-          {t('overview.phoneInstructions')}
+          {t("overview.phoneInstructions")}
         </p>
-        <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
-          {t('overview.phone')}
+        <label
+          htmlFor="phone"
+          className="block text-sm font-medium text-gray-700 mb-2"
+        >
+          {t("overview.phone")}
         </label>
         <input
           type="tel"
@@ -237,8 +273,29 @@ const Overview = ({ clientProfile, idUser }) => {
           value={phone}
           onChange={handlePhoneChange}
           className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-shadow"
-          placeholder={t('overview.phonePlaceholder')}
+          placeholder={t("overview.phonePlaceholder")}
         />
+      </div>
+      <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6">
+        <h2 className="text-2xl font-semibold text-blue-700 border-b pb-2">
+          {t("profile-nanny.uploadDocuments")}
+        </h2>
+        <div className="space-y-4">
+          <label className="block font-medium text-gray-700">
+            {t("profile-nanny.uploadAnyDocument")}
+          </label>
+          <input
+            type="file"
+            onChange={handleFileChange}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+          />
+        </div>
+        <button
+          onClick={handleDocumentSubmit}
+          className="w-full px-6 py-3 mt-4 bg-green-600 text-white font-semibold rounded-lg shadow-md hover:bg-green-700 transition"
+        >
+          {t("profile-nanny.submitDocument")}
+        </button>
       </div>
 
       {/* Feedback message */}

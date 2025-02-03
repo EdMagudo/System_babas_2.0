@@ -21,7 +21,7 @@ const createUser = async (req, res) => {
 
    try {
     // Verifica se o email ou ID já existe
-    const { email, id_number, first_name, last_name, telefone, country_name, province_name } = req.body;
+    const { email, id_number, first_name, last_name, contact_phone, country_name, province_name } = req.body;
 
     if (!email) {
       return res.status(400).json({ message: "Email e telefone são obrigatórios." });
@@ -45,13 +45,14 @@ const createUser = async (req, res) => {
 
     const userData = {
       email,
-      password_hash: await bcrypt.hash(telefone, 10), // Hash da senha recebida
+      password_hash: await bcrypt.hash(contact_phone, 10), // Hash da senha recebida
       role: 'client', // Padrão ou conforme enviado
       first_name,
       last_name,
       id_number,
       country_name,
       province_name,
+      contact_phone
     };
 
     const user = await User.create(userData);
@@ -300,7 +301,13 @@ const deleteUser = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
-
+const formatDateOfBirth = (dob) => {
+  const date = new Date(dob);
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0"); // Mês começa do 0
+  const year = date.getFullYear();
+  return `${day}${month}${year}`;
+};
 const createNannyUser = async (req, res) => {
   try {
     const { firstName, lastName, email, country, province, idNumber, telefone, education_level, date_of_birth } = req.body;
@@ -328,7 +335,7 @@ const createNannyUser = async (req, res) => {
     }
 
     // Gera a senha apenas se a data de nascimento for fornecida
-    const hashedPassword = date_of_birth ? await bcrypt.hash(date_of_birth, 10) : null;
+    const hashedPassword = date_of_birth ? await bcrypt.hash(formatDateOfBirth(date_of_birth), 10) : null;
 
     // Criação do usuário
     const userData = {
@@ -387,8 +394,8 @@ const loginUser = async (req, res) => {
     const user = await User.findOne({ 
       where: { 
         [Op.or]: [
-          { email: req.body.emailOrPhone }, 
-          { contact_phone: req.body.emailOrPhone }
+          { email: email }, 
+          { contact_phone: email }
         ] 
       } 
     });

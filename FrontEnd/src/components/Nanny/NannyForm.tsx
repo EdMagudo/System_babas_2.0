@@ -76,59 +76,64 @@ const NannyRegistrationForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     // Calcular a idade e verificar se é maior de idade
     const birthDate = new Date(client.date_of_birth);
     const currentDate = new Date();
-    const age = currentDate.getFullYear() - birthDate.getFullYear();
-    const month = currentDate.getMonth() - birthDate.getMonth();
-
-    if (month < 0 || (month === 0 && currentDate.getDate() < birthDate.getDate())) {
+    let age = currentDate.getFullYear() - birthDate.getFullYear();
+    const monthDiff = currentDate.getMonth() - birthDate.getMonth();
+  
+    if (monthDiff < 0 || (monthDiff === 0 && currentDate.getDate() < birthDate.getDate())) {
       age--;
     }
-
+  
     if (age < 18) {
-      setError(t('NannyRegistrationForm.age_error')); // Tradução para erro de idade
-      setSuccessMessage(""); // Limpa a mensagem de sucesso
+      setError(t("NannyRegistrationForm.age_error"));
+      setSuccessMessage("");
       return;
     }
-
+  
     try {
       const formData = new FormData();
-      formData.append('firstName', client.firstName || '');
-      formData.append('lastName', client.lastName || '');
-      formData.append('email', client.email || '');
-      formData.append('date_of_birth', client.date_of_birth || '');
-      formData.append('country', client.country || '');
-      formData.append('province', client.province || '');
-      formData.append('idNumber', client.idNumber || '');
+      formData.append("firstName", client.firstName || "");
+      formData.append("lastName", client.lastName || "");
+      formData.append("email", client.email || "");
+      formData.append("date_of_birth", client.date_of_birth || "");
+      formData.append("country", client.country || "");
+      formData.append("province", client.province || "");
+      formData.append("idNumber", client.idNumber || "");
+      formData.append("telefone", client.telefone || "");
   
+      // Somente adiciona se o idCopy estiver presente
       if (client.idCopy) {
-        formData.append('idCopy', client.idCopy);
+        formData.append("idCopy", client.idCopy);
       }
-
-      const educationLevel = document.querySelector('select[name="education_level"]')?.value || '';
-      formData.append('education_level', educationLevel);
-
+  
+      const educationLevel =
+        document.querySelector('select[name="education_level"]')?.value || "";
+      formData.append("education_level", educationLevel);
+  
       // Envia ao backend
       const response = await axios.post(`${BASE_URL}/api/user/register`, formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
+        headers: { "Content-Type": "multipart/form-data" },
       });
-
-      if(response.status === 400){
-        setError(response.data.message);
-        return;
-      }else if (response.status === 200){
-        setError(""); // Limpa a mensagem de erro
-        setSuccessMessage(t('NannyRegistrationForm.success_message')); 
-      }
-
+  
+      setError("");
+      setSuccessMessage(t("NannyRegistrationForm.success_message"));
     } catch (error) {
-      console.error('Submission error:', error.response?.data || error.message);
-      setError(t('NannyRegistrationForm.submit_error')); // Tradução de erro ao submeter
-      setSuccessMessage(""); // Limpa a mensagem de sucesso
+      console.error("Submission error:", error.response?.data || error.message);
+      
+      // Trata erro 400 separadamente
+      if (error.response && error.response.status === 400) {
+        setError(error.response.data.message || t("NannyRegistrationForm.submit_error"));
+      } else {
+        setError(t("NannyRegistrationForm.submit_error"));
+      }
+  
+      setSuccessMessage("");
     }
   };
+  
 
   return (
     <div className="max-w-4xl mx-auto p-6 bg-white shadow-2xl rounded-2xl mt-16 mb-8">

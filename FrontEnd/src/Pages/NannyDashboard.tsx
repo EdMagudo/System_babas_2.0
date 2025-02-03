@@ -73,6 +73,27 @@ const NannyDashboard = () => {
     setDocumentFile(e.target.files[0]);
   };
 
+  const handleDocumentSubmit = async (e) => {
+    e.preventDefault();
+    if (!documentFile) return alert("Por favor, selecione um documento");
+    const idUser = localStorage.getItem("SliderService");
+    const docData = new FormData();
+    docData.append("document", documentFile);
+    try {
+      await axios.post(
+        `${BASE_URL}/api/user/uploadDocument/${idUser}`,
+        docData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
+      alert("Documento enviado com sucesso!");
+    } catch (error) {
+      console.error("Erro ao enviar documento:", error);
+      alert("Erro ao enviar documento");
+    }
+  };
+
   const handleProfileSubmit = async (e) => {
     e.preventDefault();
     const idUser = localStorage.getItem("SliderService");
@@ -98,26 +119,7 @@ const NannyDashboard = () => {
     }
   };
 
-  const handleDocumentSubmit = async (e) => {
-    e.preventDefault();
-    if (!documentFile) return alert("Por favor, selecione um documento");
-    const idUser = localStorage.getItem("SliderService");
-    const docData = new FormData();
-    docData.append("document", documentFile);
-    try {
-      await axios.post(
-        `${BASE_URL}/api/user/uploadDocument/${idUser}`,
-        docData,
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-        }
-      );
-      alert("Documento enviado com sucesso!");
-    } catch (error) {
-      console.error("Erro ao enviar documento:", error);
-      alert("Erro ao enviar documento");
-    }
-  };
+  
 
   const formatEducationLevel = (level: string) => {
     return level
