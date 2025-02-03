@@ -6,7 +6,7 @@ import bcrypt from "bcrypt";
 import axios from 'axios';
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
-const BASE_URL = process.env.REACT_APP_BASE_URL;
+const BASE_URL = "http://localhost:3005";;
 
 const generateRandomPassword = () => {
   const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
