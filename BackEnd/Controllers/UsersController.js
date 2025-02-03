@@ -389,8 +389,9 @@ const createNannyUser = async (req, res) => {
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
+
   try {
-    // Busca o usuário pelo email
+    // Busca o usuário pelo email ou telefone
     const user = await User.findOne({ 
       where: { 
         [Op.or]: [

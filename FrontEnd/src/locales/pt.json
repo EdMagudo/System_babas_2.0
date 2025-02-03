@@ -76,7 +76,7 @@
     "title": "Entrar",
     "email": {
       "label": "E-mail",
-      "placeholder": "seu@email.com"
+      "placeholder": "seu@email.com ou telefone"
     },
     "password": {
       "label": "Senha",
