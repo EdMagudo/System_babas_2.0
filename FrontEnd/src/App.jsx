@@ -32,8 +32,8 @@ function App() {
             <Route path="/register-nanny" element={<NannyForm />} />
             <Route path="/contact-us" element={<ContactUs />} />
             <Route path="/sign-in" element={<LoginPage />} />
-            <Route path="/client-dashboard" element={<ClientDashboard />} />
-            <Route path="/nanny-dashboard" element={<NannyDashboard />} />
+            <Route path="/Painel-cliente" element={<ClientDashboard />} />
+            <Route path="/Painel-baba" element={<NannyDashboard />} />
             <Route path="/logout" element={<Logout />} />
             <Route path='/admin' element={<Admin/>}/>
             <Route path='/loginAdmin' element={<AdminLogin/>}/>

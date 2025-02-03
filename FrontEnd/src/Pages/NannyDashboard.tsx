@@ -22,7 +22,8 @@ const NannyDashboard = () => {
     languages: [],
     additionalInfo: "",
   });
-   const BASE_URL = "http://localhost:3005";;
+  const BASE_URL = "http://localhost:3005";
+  const [documentFile, setDocumentFile] = useState(null);
 
   // Função para buscar dados do perfil da babá
   const fetchNannyProfile = async () => {
@@ -65,58 +66,56 @@ const NannyDashboard = () => {
   }
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
-
-      setFormData((prev) => ({
-        ...prev,
-        policeClearanceFile: file, // Armazena o arquivo de polícia no estado
-      }));
-    }
+  const handleFileChange = (e) => {
+    setDocumentFile(e.target.files[0]);
   };
 
-   const handleSubmit = async (e) => {
+  const handleProfileSubmit = async (e) => {
     e.preventDefault();
-
-    const submitFormData = new FormData();
-    const id_user = localStorage.getItem("SliderService");
-
-    submitFormData.append("id", id_user);
-    submitFormData.append("jobType", formData.jobType);
-    submitFormData.append("experience", formData.experience);
-    submitFormData.append("policeClearance", formData.policeClearance);
-
-    // Envia o arquivo de polícia se houver
-    if (formData.policeClearanceFile) {
-      submitFormData.append(
-        "policeClearanceFile",
-        formData.policeClearanceFile
-      );
-    }
-
-    submitFormData.append("additionalInfo", formData.additionalInfo);
+    const idUser = localStorage.getItem("SliderService");
+    const submitData = new FormData();
+    submitData.append("id", idUser);
+    submitData.append("jobType", formData.jobType);
+    submitData.append("experience", formData.experience);
+    submitData.append("policeClearance", formData.policeClearance);
+    submitData.append("additionalInfo", formData.additionalInfo);
 
     try {
-      const response = await axios.put(
-        `${BASE_URL}/api/user/updatenannyProfiles/${id_user}`,
-        submitFormData,
+      await axios.put(
+        `${BASE_URL}/api/user/updatenannyProfiles/${idUser}`,
+        formData,
         {
-          headers: { "Content-Type": "multipart/form-data" },
+          headers: { "Content-Type": "application/json" },
         }
       );
-
       alert(t("error-nanny.sucessProfile"));
     } catch (error) {
       console.error("Erro ao atualizar perfil:", error);
       alert(t("error-nanny.updateProfile"));
+    }
+  };
+
+  const handleDocumentSubmit = async (e) => {
+    e.preventDefault();
+    if (!documentFile) return alert("Por favor, selecione um documento");
+    const idUser = localStorage.getItem("SliderService");
+    const docData = new FormData();
+    docData.append("document", documentFile);
+    try {
+      await axios.post(
+        `${BASE_URL}/api/user/uploadDocument/${idUser}`,
+        docData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
+      alert("Documento enviado com sucesso!");
+    } catch (error) {
+      console.error("Erro ao enviar documento:", error);
+      alert("Erro ao enviar documento");
     }
   };
 
@@ -140,54 +139,77 @@ const NannyDashboard = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <p className="font-medium">
-                  {t("profile-nanny.name")}: {nannyProfile.first_name} {nannyProfile.last_name}
+                  {t("profile-nanny.name")}: {nannyProfile.first_name}{" "}
+                  {nannyProfile.last_name}
                 </p>
-                <p>{t("profile-nanny.email")}: {nannyProfile.email}</p>
+                <p>
+                  {t("profile-nanny.email")}: {nannyProfile.email}
+                </p>
                 <p>
                   {t("profile-nanny.location")}: {nannyProfile.province_name},{" "}
                   {nannyProfile.country_name}
                 </p>
               </div>
               <div>
-                <p>{t("profile-nanny.education")}: {nannyProfile.nannyProfile.education_level}</p>
-                <p>{t("profile-nanny.dateOfBirth")}: {nannyProfile.nannyProfile.date_of_birth}</p>
-                <p>{t("profile-nanny.jobType")}: {nannyProfile.nannyProfile.job_type}</p>
+                <p>
+                  {t("profile-nanny.education")}:{" "}
+                  {nannyProfile.nannyProfile.education_level}
+                </p>
+                <p>
+                  {t("profile-nanny.dateOfBirth")}:{" "}
+                  {nannyProfile.nannyProfile.date_of_birth}
+                </p>
+                <p>
+                  {t("profile-nanny.jobType")}:{" "}
+                  {nannyProfile.nannyProfile.job_type}
+                </p>
               </div>
             </div>
 
             {/* Availability & Experience */}
-            <div className="space-y-4 mt-6">
-              <h2 className="text-xl font-semibold text-blue-700">
+            <div className="space-y-6 mt-6 p-6 bg-white shadow-lg rounded-lg">
+              <h2 className="text-2xl font-semibold text-blue-700 border-b pb-2">
                 {t("profile-nanny.availabilityAndExperience")}
               </h2>
-              <div className="space-y-2">
-                <label className="block mb-2">{t("profile-nanny.jobType")}</label>
-                <div className="flex space-x-4">
-                  {["full_time", "temporary"].map((type) => (
-                    <label key={type} className="inline-flex items-center">
+              <div className="space-y-4">
+                <label className="block font-medium text-gray-700">
+                  {t("profile-nanny.jobType")}
+                </label>
+                <div className="flex space-x-6">
+                  {["Full-time", "Part-time", "Full and part-time"].map((type) => (
+                    <label
+                      key={type}
+                      className="inline-flex items-center space-x-2"
+                    >
                       <input
                         type="radio"
                         name="jobType"
                         value={type}
                         checked={formData.jobType === type}
                         onChange={handleChange}
-                        className="form-radio"
+                        className="form-radio text-blue-600 focus:ring-blue-500"
                       />
-                      <span className="ml-2 capitalize">{type.replace("-", " ")}</span>
+                      <span className="capitalize text-gray-800">
+                        {type.replace("-", " ")}
+                      </span>
                     </label>
                   ))}
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <label className="block mb-2">{t("profile-nanny.experience")}</label>
+              <div className="space-y-4">
+                <label className="block font-medium text-gray-700">
+                  {t("profile-nanny.experience")}
+                </label>
                 <select
                   name="experience"
                   value={formData.experience}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border rounded"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
                 >
-                  <option value="">{t("profile-nanny.yearsOfExperience")}</option>
+                  <option value="">
+                    {t("profile-nanny.yearsOfExperience")}
+                  </option>
                   <option value="none">{t("profile-nanny.none")}</option>
                   <option value="1-2">1 - 2 years</option>
                   <option value="3-5">3 - 5 years</option>
@@ -197,65 +219,81 @@ const NannyDashboard = () => {
             </div>
 
             {/* Background Check */}
-            <div className="space-y-4 mt-6">
-              <h2 className="text-xl font-semibold text-blue-700">
+            <div className="space-y-6 mt-6 p-6 bg-white shadow-lg rounded-lg">
+              <h2 className="text-2xl font-semibold text-blue-700 border-b pb-2">
                 {t("profile-nanny.backgroundCheck")}
               </h2>
-              <div className="space-y-2">
-                <label className="block mb-2">
+              <div className="space-y-4">
+                <label className="block font-medium text-gray-700">
                   {t("profile-nanny.policeClearance")}
                 </label>
-                <div className="flex space-x-4">
+                <div className="flex space-x-6">
                   {["yes", "no"].map((option) => (
-                    <label key={option} className="inline-flex items-center">
+                    <label
+                      key={option}
+                      className="inline-flex items-center space-x-2"
+                    >
                       <input
                         type="radio"
                         name="policeClearance"
                         value={option}
                         checked={formData.policeClearance === option}
                         onChange={handleChange}
-                        className="form-radio"
+                        className="form-radio text-blue-600 focus:ring-blue-500"
                       />
-                      <span className="ml-2 capitalize">{option}</span>
+                      <span className="capitalize text-gray-800">{option}</span>
                     </label>
                   ))}
                 </div>
-                <div>
-                  <label className="block mb-2">
-                    {t("profile-nanny.uploadPoliceClearance")}
-                  </label>
-                  <input
-                    type="file"
-                    onChange={handleFileChange}
-                    className="w-full px-3 py-2 border rounded"
-                  />
-                </div>
               </div>
 
-              <div className="space-y-2">
-                <label className="block mb-2">{t("profile-nanny.additionalInfo")}</label>
+              <div className="space-y-4">
+                <label className="block font-medium text-gray-700">
+                  {t("profile-nanny.additionalInfo")}
+                </label>
                 <textarea
                   name="additionalInfo"
                   value={formData.additionalInfo}
                   onChange={handleChange}
                   placeholder={t("profile-nanny.additionalInfo")}
-                  className="w-full px-3 py-2 border rounded"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
                 />
               </div>
             </div>
 
             <button
-              onClick={handleSubmit}
-              className="px-4 py-2 mt-4 bg-green-500 text-white rounded hover:bg-green-600"
+              onClick={handleProfileSubmit}
+              className="w-full px-6 py-3 mt-6 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition"
             >
               {t("profile-nanny.submit")}
             </button>
+
+            {/* Upload Additional Documents */}
+            <div className="space-y-6 mt-6 p-6 bg-white shadow-lg rounded-lg">
+              <h2 className="text-2xl font-semibold text-blue-700 border-b pb-2">
+                {t("profile-nanny.uploadDocuments")}
+              </h2>
+              <div className="space-y-4">
+                <label className="block font-medium text-gray-700">
+                  {t("profile-nanny.uploadAnyDocument")}
+                </label>
+                <input
+                  type="file"
+                  onChange={handleFileChange}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                />
+              </div>
+              <button
+                onClick={handleDocumentSubmit}
+                className="w-full px-6 py-3 mt-4 bg-green-600 text-white font-semibold rounded-lg shadow-md hover:bg-green-700 transition"
+              >
+                {t("profile-nanny.submitDocument")}
+              </button>
+            </div>
           </div>
         );
       case "qualifications":
-        return (
-          <UserQualifications idUser={nannyProfile.user_id} />
-        );
+        return <UserQualifications idUser={nannyProfile.user_id} />;
       case "jobs":
         return <BabysittingRequestManager />;
       default:
@@ -327,7 +365,8 @@ const NannyDashboard = () => {
                     : "hover:bg-gray-100"
                 }`}
               >
-                <Briefcase className="mr-3" /> {t("sidebar-nanny.qualifications")}
+                <Briefcase className="mr-3" />{" "}
+                {t("sidebar-nanny.qualifications")}
               </button>
             </nav>
           </div>
@@ -338,7 +377,9 @@ const NannyDashboard = () => {
               <h1 className="text-3xl font-bold text-blue-700">
                 {t("dashboard-nanny.title", { name: nannyProfile.first_name })}
               </h1>
-              <p className="text-gray-600">{t("dashboard-nanny.description")}</p>
+              <p className="text-gray-600">
+                {t("dashboard-nanny.description")}
+              </p>
             </div>
 
             {renderSection()}

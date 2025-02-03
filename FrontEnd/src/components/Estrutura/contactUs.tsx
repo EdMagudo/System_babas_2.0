@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Mail, Phone, MapPin, Clock, MessageCircle } from 'lucide-react';
-import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 import { useTranslation } from 'react-i18next';
 
 const ContactPage = () => {
@@ -15,11 +14,6 @@ const ContactPage = () => {
   const [errorMessage, setErrorMessage] = useState('');
   
   const BASE_URL = "http://localhost:3005";
-
-  const location = {
-    lat: -25.9659, // Latitude (exemplo de Maputo)
-    lng: 32.5892, // Longitude (exemplo de Maputo)
-  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -203,23 +197,8 @@ const ContactPage = () => {
           </div>
         </div>
 
-        {/* Map Section */}
-        <div className="mt-16 bg-white rounded-2xl shadow-lg p-8">
-          <h2 className="text-2xl font-semibold text-gray-800 mb-6">
-            {t('contactPage.map.title')}
-          </h2>
-          <div className="w-full h-96 bg-gray-200 rounded-lg flex items-center justify-center">
-            <LoadScript googleMapsApiKey="AIzaSyC-iWtYM5-YSJR-9WBwAUUttdhWvHp1XR-s">
-              <GoogleMap
-                mapContainerStyle={{ width: '100%', height: '100%' }}
-                center={location}
-                zoom={14}
-              >
-                <Marker position={location} />
-              </GoogleMap>
-            </LoadScript>
-          </div>
-        </div>
+        
+        
       </div>
     </div>
   );

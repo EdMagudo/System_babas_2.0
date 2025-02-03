@@ -14,6 +14,7 @@ export default (sequelize, DataTypes) => {
         education_level: {
             type: DataTypes.ENUM(
                 'none', 
+                'primary_school',
                 'high_school_student', 
                 'high_school_incomplete', 
                 'high_school_complete', 
@@ -29,7 +30,7 @@ export default (sequelize, DataTypes) => {
         }
         ,
         job_type: {
-            type: DataTypes.ENUM('full_time', 'temporary'),
+            type: DataTypes.ENUM("Full-time", "Part-time", "Full and part-time"),
             allowNull: true
         },
         experience_years: {

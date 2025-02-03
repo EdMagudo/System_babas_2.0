@@ -12,6 +12,7 @@ import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import fs from "fs";
 import path from "path"; // Certifique-se de importar o módulo path
+import { Op } from 'sequelize';
 
 
 const upload = multer({ dest: "uploads/" }); // Define o diretório de destino para o arquivo
@@ -20,13 +21,14 @@ const createUser = async (req, res) => {
 
    try {
     // Verifica se o email ou ID já existe
-    const { email, id_number, first_name, last_name, country_name, province_name } = req.body;
+    const { email, id_number, first_name, last_name, telefone, country_name, province_name } = req.body;
 
-    if (!email || !id_number) {
-      return res.status(400).json({ message: "Email, ID e senha são obrigatórios." });
+    if (!email) {
+      return res.status(400).json({ message: "Email e telefone são obrigatórios." });
     }
 
     const existingUser = await User.findOne({ where: { email } });
+    const existingContact = await User.findOne({ where: {contact_phone}});
     const existingIdNumber = await User.findOne({ where: { id_number } });
 
     if (existingUser) {
@@ -34,13 +36,16 @@ const createUser = async (req, res) => {
     }
 
     if (existingIdNumber) {
-      return res.status(400).json({ message: "O ID já está em uso." });
+      return res.status(400).json({ message: "O numero de Bilhete de identidade já está em uso." });
     }
 
-    // Preparação dos dados do usuário
+    if (existingContact) {
+      return res.status(400).json({ message: "O telefone já está em uso." });
+    }
+
     const userData = {
       email,
-      password_hash: await bcrypt.hash(id_number, 10), // Hash da senha recebida
+      password_hash: await bcrypt.hash(telefone, 10), // Hash da senha recebida
       role: 'client', // Padrão ou conforme enviado
       first_name,
       last_name,
@@ -297,60 +302,68 @@ const deleteUser = async (req, res) => {
 };
 
 const createNannyUser = async (req, res) => {
-
   try {
-    // Verifica se o email ou ID já existe
-    const existingUser = await User.findOne({
-      where: { email: req.body.email },
-    });
-    const existingIdNumber = req.body.idNumber
-      ? await User.findOne({ where: { id_number: req.body.idNumber } })
-      : null;
+    const { firstName, lastName, email, country, province, idNumber, telefone, education_level, date_of_birth } = req.body;
 
-    if (existingUser) {
-      return res.status(400).json({ message: "O email já está em uso." });
+    // Verifica se o email ou ID já existe (apenas se fornecidos)
+    if (email) {
+      const existingUser = await User.findOne({ where: { email } });
+      if (existingUser) {
+        return res.status(400).json({ message: "O email já está em uso." });
+      }
     }
 
-    if (existingIdNumber) {
-      return res.status(400).json({ message: "O ID já está em uso." });
+    if(telefone){
+      const existingTelefone = await User.findOne({ where: { contact_phone: telefone } });
+      if (existingTelefone) {
+        return res.status(400).json({ message: "O Telefone já está em uso." });
+      }
     }
-    const rolee = "nanny";
 
-    const hashedPassword = await bcrypt.hash(req.body.idNumber, 10);
+    if (idNumber) {
+      const existingIdNumber = await User.findOne({ where: { id_number: idNumber } });
+      if (existingIdNumber) {
+        return res.status(400).json({ message: "O Número de Bilhete de Identidade já está em uso." });
+      }
+    }
+
+    // Gera a senha apenas se a data de nascimento for fornecida
+    const hashedPassword = date_of_birth ? await bcrypt.hash(date_of_birth, 10) : null;
+
     // Criação do usuário
     const userData = {
-      first_name: req.body.firstName,
-      last_name: req.body.lastName,
-      email: req.body.email,
-      country_name: req.body.country,
-      province_name: req.body.province,
-      id_number: req.body.idNumber,
+      first_name: firstName,
+      last_name: lastName,
+      email: email || null, // Permite valores nulos
+      country_name: country,
+      province_name: province,
+      id_number: idNumber || null,
       password_hash: hashedPassword,
-      role: rolee,
+      contact_phone: telefone || null,
+      role: "nanny",
     };
 
     const user = await User.create(userData);
 
     // Salvar o arquivo na tabela Files se existir
-    if (req.files && req.files.idCopy && req.files.idCopy[0]) {
+    if (req.files?.idCopy?.[0]) {
       const file = req.files.idCopy[0]; // Obtém o primeiro arquivo do array
 
       const fileData = {
         user_id: user.user_id,
-        file_name: file.originalname, // Nome original do arquivo
+        file_name: file.originalname,
         file_path: file.path.trim().replace(/\s+/g, "-"),
-        file_type: file.mimetype, // Tipo MIME do arquivo
+        file_type: file.mimetype,
       };
 
       await Files.create(fileData);
-    } else {
-      console.log("Arquivo não encontrado.");
     }
+
     // Criar o perfil de nanny associado ao usuário
     const nannyProfileData = {
       user_id: user.user_id,
-      education_level: req.body.education_level,
-      date_of_birth: req.body.date_of_birth,
+      education_level: education_level || null,
+      date_of_birth: date_of_birth || null,
     };
 
     await NannyProfiles.create(nannyProfileData);
@@ -360,20 +373,30 @@ const createNannyUser = async (req, res) => {
       user,
     });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: error.message });
+    console.error("Erro ao criar usuário:", error);
+    res.status(500).json({ error: "Erro interno do servidor" });
   }
 };
+
 
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
   try {
     // Busca o usuário pelo email
-    const user = await User.findOne({ where: { email } });
+    const user = await User.findOne({ 
+      where: { 
+        [Op.or]: [
+          { email: req.body.emailOrPhone }, 
+          { contact_phone: req.body.emailOrPhone }
+        ] 
+      } 
+    });
+    
     if (!user) {
       return res.status(404).json({ message: "Usuário não encontrado" });
     }
+    
 
     // Verificar a senha fornecida com o hash armazenado no banco
     const isPasswordValid = await bcrypt.compare(password, user.password_hash);
@@ -413,26 +436,17 @@ const loginUser = async (req, res) => {
 
 const updatedProfile = async (req, res) => {
   try {
-    // Verifica se um arquivo foi enviado
-    if (req.file) {
-      // Dados do arquivo a serem salvos
-      const fileData = {
-        user_id: req.params.id_user,  // Usando o id do usuário
-        file_name: req.file.originalname,
-        file_path: req.file.path,
-        file_type: req.file.mimetype,
-      };
+    const { id_user } = req.params;
 
-      // Criação do arquivo na base de dados
-      await Files.create(fileData);
-    } else {
-      console.log("Nenhum arquivo enviado.");
+    if (!id_user) {
+      return res.status(400).json({ error: "ID do usuário é obrigatório" });
     }
+    console.log("Entrei: ")
+    console.log(req.body)
 
-    // Atualizar o perfil com os dados fornecidos, se existirem
     const updatedProfileData = {};
 
-    // Atualiza apenas os campos que não estão vazios
+    // Verifica e adiciona apenas os campos fornecidos
     if (req.body.jobType) {
       updatedProfileData.job_type = req.body.jobType;
     }
@@ -446,25 +460,64 @@ const updatedProfile = async (req, res) => {
       updatedProfileData.additional_info = req.body.additionalInfo;
     }
 
-    // Atualiza o perfil se houver dados
-    if (Object.keys(updatedProfileData).length > 0) {
-      const updated = await NannyProfiles.update(updatedProfileData, {
-        where: { nanny_id: req.params.id_user },
-      });
+    // Se nenhum dado for enviado, retorna sem atualizar
+    if (Object.keys(updatedProfileData).length === 0) {
+      return res.status(400).json({ error: "Nenhuma informação para atualizar" });
+    }
 
-      if (updated[0] === 0) {
-        return res.status(404).json({ message: "Perfil não encontrado" });
-      }
+    // Atualiza o perfil
+    const [affectedRows] = await NannyProfiles.update(updatedProfileData, {
+      where: { nanny_id: id_user },
+    });
+
+    if (affectedRows === 0) {
+      return res.status(404).json({ message: "Perfil não encontrado ou sem mudanças" });
     }
 
     return res.status(200).json({
-      message: "Arquivo e dados do perfil (se presentes) salvos com sucesso!",
+      message: "Perfil atualizado com sucesso!",
+      updatedFields: updatedProfileData,
     });
   } catch (error) {
-    console.error("Erro ao criar o arquivo e salvar dados:", error);
-    return res.status(500).json({ error: error.message });
+    console.error("Erro ao atualizar o perfil:", error);
+    return res.status(500).json({ error: "Erro interno do servidor" });
   }
 };
+
+
+const updatedProfileDocument = async (req, res) => {
+  try {
+    const { id_user } = req.params;
+
+    if (!id_user) {
+      return res.status(400).json({ error: "ID do usuário é obrigatório" });
+    }
+
+    if (!req.file) {
+      return res.status(400).json({ error: "Nenhum arquivo enviado" });
+    }
+
+    // Criar entrada no banco de dados
+    const fileData = {
+      user_id: id_user,
+      file_name: req.file.originalname,
+      file_path: req.file.path,
+      file_type: req.file.mimetype,
+    };
+
+    const savedFile = await Files.create(fileData);
+
+    return res.status(200).json({
+      message: "Arquivo salvo com sucesso!",
+      file: savedFile,
+    });
+  } catch (error) {
+    console.error("Erro ao salvar o arquivo:", error);
+    return res.status(500).json({ error: "Erro interno do servidor" });
+  }
+};
+
+
 
 
 
@@ -740,5 +793,6 @@ export default {
   getAllNannyWithRequirement,
   changeStatus,
   saveLocation,
-  savePhone
+  savePhone,
+  updatedProfileDocument
 };

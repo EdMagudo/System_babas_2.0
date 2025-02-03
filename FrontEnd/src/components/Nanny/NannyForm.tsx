@@ -14,6 +14,7 @@ const NannyRegistrationForm = () => {
     idNumber: "",
     idCopy: null,
     education_level: null,
+    telefone:""
   });
 
   const [languages, setLanguages] = useState([]);
@@ -114,8 +115,14 @@ const NannyRegistrationForm = () => {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
 
-      setError(""); // Limpa a mensagem de erro
-      setSuccessMessage(t('NannyRegistrationForm.success_message')); // Tradução de sucesso
+      if(response.status === 400){
+        setError(response.data.message);
+        return;
+      }else if (response.status === 200){
+        setError(""); // Limpa a mensagem de erro
+        setSuccessMessage(t('NannyRegistrationForm.success_message')); 
+      }
+
     } catch (error) {
       console.error('Submission error:', error.response?.data || error.message);
       setError(t('NannyRegistrationForm.submit_error')); // Tradução de erro ao submeter
@@ -197,6 +204,18 @@ const NannyRegistrationForm = () => {
               />
             </div>
             <div>
+              <label className="block mb-2">{t('NannyRegistrationForm.telefone')}</label>
+              <input
+                type="text"
+                id="telefone"
+                placeholder="+xx xxx xxxxxx"
+                value={client.telefone}
+                onChange={handleInputChange}
+                className="w-full px-3 py-2 border rounded"
+                required
+              />
+            </div>
+            <div>
               <label className="block mb-2">{t('NannyRegistrationForm.country')}</label>
               <select
                 id="country"
@@ -235,7 +254,6 @@ const NannyRegistrationForm = () => {
                 value={client.idNumber}
                 onChange={handleInputChange}
                 className="w-full px-3 py-2 border rounded"
-                required
                 pattern="\d{12}[A-Za-z]|[A-Za-z]{2}\d{7}"
                 title={t('NannyRegistrationForm.id_number_title')}
               />
@@ -248,7 +266,7 @@ const NannyRegistrationForm = () => {
                 name="idCopy"
                 onChange={handleFileUpload}
                 className="w-full px-3 py-2 border rounded"
-                required
+                
               />
             </div>
           </div>
@@ -270,6 +288,7 @@ const NannyRegistrationForm = () => {
             >
               <option value="">{t('NannyRegistrationForm.select_education')}</option>
               <option value="none">{t('NannyRegistrationForm.none')}</option>
+              <option value="primary_school">{t('NannyRegistrationForm.primary_school')}</option>
               <option value="high_school_student">{t('NannyRegistrationForm.high_school_student')}</option>
               <option value="high_school_incomplete">{t('NannyRegistrationForm.high_school_incomplete')}</option>
               <option value="high_school_complete">{t('NannyRegistrationForm.high_school_complete')}</option>

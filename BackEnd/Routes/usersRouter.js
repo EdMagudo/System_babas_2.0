@@ -24,7 +24,9 @@ router.put('/uploadProfile/Picture/:user_id', up.single('profilePicture'), users
 router.get("/:user_id/profile-picture", usersController.getUserProfilePicture);
 
 // Rota de atualização de perfil (usando `multer` básico para processar `multipart/form-data`)
-router.put("/updatenannyProfiles/:id_user", upload.single('policeClearanceFile'), usersController.updatedProfile);
+router.put("/updatenannyProfiles/:id_user", usersController.updatedProfile);
+
+router.post("/uploadDocument/:id_user", upload.single('document'), usersController.updatedProfileDocument);
 
 router.post("/getAllNannyWith/Requirement", usersController.getAllNannyWithRequirement)
 

@@ -3,9 +3,9 @@
     "home": "Início",
     "dashboard": "Meu Painel",
     "logout": "Sair",
-    "joinAsNanny": "Juntar-se como Babá",
-    "joinAsClient": "Juntar-se como Cliente",
-    "contactUs": "Fale Conosco",
+    "joinAsNanny": "Babá",
+    "joinAsClient": "Cliente",
+    "contactUs": "Contacte-nos",
     "signIn": "Entrar"
   },
   "footer": {
@@ -90,13 +90,13 @@
     "registrationTitle": "Formulário de Cadastro de Cliente",
     "registrationSubtitle": "Preencha o formulário para começar sua busca",
     "personalInformation": "Informações Pessoais",
-    "firstName": "Primeiro Nome",
-    "lastName": "Último Nome",
+    "firstName": "Nome",
+    "lastName": "Apelido",
     "email": "E-mail",
-    "idNumber": "Número de ID",
+    "idNumber": "Número de Bilhete de Identidade/Passaporte",
     "country": "País",
     "province": "Província",
-    "uploadId": "Carregar Cópia de ID",
+    "uploadId": "Carregar Cópia de Bilhete de Identidade (.pdf)",
     "selectFile": "Selecione um arquivo",
     "namePattern": "O nome deve conter pelo menos 3 letras e apenas caracteres alfabéticos.",
     "idPattern": "O ID deve ter 12 dígitos seguidos de uma letra (BI) ou 2 letras seguidas de 7 números (Passaporte).",
@@ -104,13 +104,15 @@
     "selectProvince": "Selecione uma província",
     "loadingProvinces": "Carregando províncias...",
     "uploadError": "Por favor, faça o upload de um arquivo.",
-    "registrationSuccess": "Cliente registrado com sucesso! Acesse o seu perfil usando o seu email e Id usado cadastro",
+    "registrationSuccess": "Cliente registrado com sucesso! Acesse o seu perfil usando o seu email e numero de telefone usado no cadastro",
     "registrationError": "Erro ao registrar cliente. Tente novamente mais tarde.",
-    "register": "Cadastrar"
+    "register": "Cadastrar",
+    "telefone":"Numero de Telefone"
+
   },
   "expressNannies": {
     "heroTitle": "Express Nannies",
-    "heroDescription": "Bem-vindo ao Express Nannies, sua plataforma confiável para encontrar babás temporárias em Moçambique. Se você é um turista aproveitando uma noite fora, um expatriado precisando de suporte temporário ou um pai cuja babá está indisponível, estamos aqui para proporcionar tranquilidade com cuidadores experientes e verificados.",
+    "heroDescription": "Bem-vindo ao Express Nannies, sua plataforma confiável para encontrar babás em Moçambique. Se você é um turista aproveitando uma noite fora, um expatriado precisando de suporte temporário, mãe ou pai precisando de uma babá, temporária ou a tempo inteiro, estamos aqui para proporcionar tranquilidade com cuidadoras verificadas.",
     "trustedCaregiversTitle": "Nossos Cuidadores Confiáveis",
     "trustedCaregiversDescription": "Descubra nossa comunidade diversificada de babás experientes, prontas para fornecer um cuidado excepcional para seus filhos."
   },
@@ -118,7 +120,7 @@
     "title": "Junte-se à nossa equipe de babás confiáveis",
     "personal_info": "Informações Pessoais",
     "first_name": "Nome",
-    "last_name": "Sobrenome",
+    "last_name": "Apelido",
     "first_name_placeholder": "Nome",
     "last_name_placeholder": "Sobrenome",
     "first_name_title": "O nome deve conter pelo menos 3 letras e apenas caracteres alfabéticos.",
@@ -129,7 +131,7 @@
     "province": "Província",
     "select_country": "Selecione o País",
     "select_province": "Selecione a Província",
-    "id_number": "Número de ID/Passaporte",
+    "id_number": "Número de Bilhete de Identidade/Passaporte",
     "id_number_placeholder": "Número de ID ou Passaporte",
     "id_number_title": "O ID deve conter 12 dígitos seguidos por uma letra (BI) ou 2 letras seguidas por 7 dígitos (Passaporte).",
     "id_copy": "Cópia do ID",
@@ -137,6 +139,7 @@
     "education_level": "Nível de Educação",
     "select_education": "Selecione o Nível de Educação",
     "none": "Nenhum",
+    "primary_school":"Ensino Primário",
     "high_school_student": "Estudante de Ensino Médio",
     "high_school_incomplete": "Ensino Médio Incompleto",
     "high_school_complete": "Ensino Médio Completo",
@@ -146,7 +149,9 @@
     "submit_button": "Enviar Inscrição",
     "age_error": "Você precisa ter 18 anos ou mais para se registrar.",
     "submit_error": "Falha ao enviar inscrição. Tente novamente.",
-    "success_message": "Cadastro realizado com sucesso! Acesse o seu perfil usando o seu email e Id usado no cadastro"
+    "success_message": "Cadastro concluído com sucesso! Acesse seu perfil usando seu e-mail e sua data de nascimento",
+    "telefone":"Numero telefone"
+
   },
   "ClientDashboard": {
     "welcome_message": "Bem-vindo, {{first_name}}!",
@@ -296,7 +301,10 @@
       "submit": "Enviar",
       "none": "Nenhuma",
       "yes": "Sim",
-      "no": "Não"
+      "no": "Não",
+      "uploadDocuments":"Submeta seu documento",
+      "uploadAnyDocument":"Submeta qualquer documento apartir desse campo",
+      "submitDocument":"Enviar documento"
     },
     "sidebar-nanny": {
       "profilePicture": "Foto de Perfil",

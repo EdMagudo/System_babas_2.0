@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 
 const NannyFinderForm = () => {
   const { t } = useTranslation();
-  
+
   const [client, setClient] = useState({
     email: "",
     password_hash: "",
@@ -15,18 +15,19 @@ const NannyFinderForm = () => {
     id_number: "",
     country_name: "",
     province_name: "",
+    telefone: "",
   });
 
-  const [file, setFile] = useState(null); 
-  const [filePreview, setFilePreview] = useState(""); 
-  const [countries, setCountries] = useState([]); 
-  const [provinces, setProvinces] = useState([]); 
-  const [loading, setLoading] = useState(true); 
-  const [loadingProvinces, setLoadingProvinces] = useState(false); 
-  const [error, setError] = useState(""); 
-  const [successMessage, setSuccessMessage] = useState(""); 
+  const [file, setFile] = useState(null);
+  const [filePreview, setFilePreview] = useState("");
+  const [countries, setCountries] = useState([]);
+  const [provinces, setProvinces] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [loadingProvinces, setLoadingProvinces] = useState(false);
+  const [error, setError] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
   const [uploadSuccess, setUploadSuccess] = useState(false);
-   const BASE_URL = "http://localhost:3005";; 
+  const BASE_URL = "http://localhost:3005";
 
   useEffect(() => {
     const fetchCountries = async () => {
@@ -98,22 +99,23 @@ const NannyFinderForm = () => {
     formData.append("country_name", client.country_name);
     formData.append("province_name", client.province_name);
     formData.append("file", file);
+    formData.append("telefone", client.telefone);
 
     try {
-      const response = await axios.post(
-        `${BASE_URL}/api/user`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      const response = await axios.post(`${BASE_URL}/api/user`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
-      setSuccessMessage(t("form.registrationSuccess"));
-      setError("");
-      setUploadSuccess(true);
-      console.log(response.data);
+      if (response.status === 400) {
+        setError(response.data.message);
+        return;
+      } else if (response.status === 200) {
+        setSuccessMessage(t("form.registrationSuccess"));
+        setError("");
+        setUploadSuccess(true);
+      }
     } catch (err) {
       setSuccessMessage("");
       setError(t("form.registrationError"));
@@ -138,7 +140,10 @@ const NannyFinderForm = () => {
           </h3>
           <div className="grid md:grid-cols-2 gap-4">
             <div>
-              <label htmlFor="first_name" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="first_name"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 {t("form.firstName")}
               </label>
               <input
@@ -153,7 +158,10 @@ const NannyFinderForm = () => {
               />
             </div>
             <div>
-              <label htmlFor="last_name" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="last_name"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 {t("form.lastName")}
               </label>
               <input
@@ -168,7 +176,10 @@ const NannyFinderForm = () => {
               />
             </div>
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 {t("form.email")}
               </label>
               <input
@@ -181,7 +192,22 @@ const NannyFinderForm = () => {
               />
             </div>
             <div>
-              <label htmlFor="id_number" className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block mb-2">{t('form.telefone')}</label>
+              <input
+                type="text"
+                id="telefone"
+                placeholder="+xx xxx xxxxxx"
+                value={client.telefone}
+                onChange={handleInputChange}
+                className="w-full px-3 py-2 border rounded"
+                required
+              />
+            </div>
+            <div>
+              <label
+                htmlFor="id_number"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 {t("form.idNumber")}
               </label>
               <input
@@ -196,7 +222,10 @@ const NannyFinderForm = () => {
               />
             </div>
             <div>
-              <label htmlFor="country_name" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="country_name"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 {t("form.country")}
               </label>
               <select
@@ -215,7 +244,10 @@ const NannyFinderForm = () => {
               </select>
             </div>
             <div>
-              <label htmlFor="province_name" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="province_name"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 {t("form.province")}
               </label>
               <select
@@ -241,13 +273,18 @@ const NannyFinderForm = () => {
           </div>
 
           <div className="mt-4">
-            <label htmlFor="idCopy" className="block text-sm font-medium text-gray-700 mb-2">
+            <label
+              htmlFor="idCopy"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
               {t("form.uploadId")}
             </label>
             <div className="flex items-center justify-center w-full">
               <label className="flex flex-col items-center px-4 py-6 bg-gray-50 text-blue-500 rounded-lg tracking-wide uppercase border border-blue cursor-pointer hover:bg-indigo-500 hover:text-white">
                 <Upload className="w-8 h-8" />
-                <span className="mt-2 text-base leading-normal">{t("form.selectFile")}</span>
+                <span className="mt-2 text-base leading-normal">
+                  {t("form.selectFile")}
+                </span>
                 <input
                   type="file"
                   className="hidden"

@@ -82,7 +82,12 @@ app.get("/api/countries", async (req, res) => {
     const response = await axios.get(
       "https://countriesnow.space/api/v0.1/countries/info?returns=name"
     );
-    const countries = response.data.data.map((country) => country.name);
+
+    // Ordenar os países em ordem alfabética
+    const countries = response.data.data
+      .map((country) => country.name)
+      .sort((a, b) => a.localeCompare(b));
+
     res.json(countries);
   } catch (error) {
     console.error("Detailed error:", error.message);
@@ -91,6 +96,7 @@ app.get("/api/countries", async (req, res) => {
       .json({ error: "Error fetching countries", details: error.message });
   }
 });
+
 
 // Route to fetch provinces/states for a specific country
 app.get("/api/provinces/:country", async (req, res) => {

@@ -40,10 +40,10 @@ const LoginPage = () => {
         localStorage.setItem('tokenCData', data.user.province); // userCountry = tokenCData
 
         if (data.user.role === 'client') {
-          navigate('/client-dashboard');
+          navigate('/Painel-cliente');
           window.location.reload();
         } else if (data.user.role === 'nanny') {
-          navigate('/nanny-dashboard');
+          navigate('/Painel-baba');
           window.location.reload();
         }
       } else {

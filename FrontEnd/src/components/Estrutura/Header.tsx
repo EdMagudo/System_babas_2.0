@@ -54,7 +54,7 @@ const Header = () => {
               to="/"
               className="text-2xl font-semibold bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-pink-600"
             >
-              Express Nannies
+              Ola baba
             </Link>
           </div>
 
