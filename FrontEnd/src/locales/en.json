@@ -108,6 +108,7 @@
     "registrationError": "Error registering client. Please try again later.",
     "register": "Register",
     "telefone": "Contact Phone"
+    
   },
   "expressNannies": {
     "heroTitle": "Express Nannies",
@@ -149,7 +150,8 @@
     "submit_button": "Submit Application",
     "age_error": "You must be 18 years or older to register.",
     "submit_error": "Failed to submit registration. Please try again.",
-    "success_message": "Registration completed successfully! Access your profile using your email and your date of birth"
+    "success_message": "Registration completed successfully! Access your profile using your email and your date of birth",
+    "title_2":"Data not currently required"
   },
   "ClientDashboard": {
     "welcome_message": "Welcome, {{first_name}}!",

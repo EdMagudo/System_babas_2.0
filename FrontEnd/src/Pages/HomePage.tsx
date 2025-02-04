@@ -1,14 +1,13 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import image1 from "../assets/black.jpeg";
 import image2 from "../assets/chinese.jpg";
 import image3 from "../assets/mestica.jpeg";
-import image4 from "../assets/white.webp";
-import image5 from "../assets/foto2.jpg";
+import image4 from "../assets/f3.jpeg";
+import image6 from "../assets/f2.jpeg";
 
 const ExpressNanniesHomepage = () => {
   const { t } = useTranslation();
-  const images = [image1, image2, image3, image4, image5]; // Array com as imagens do carrossel
+  const images = [image4, image2, image3, image6]; // Array com as imagens do carrossel
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-rose-50 to-indigo-50">
@@ -24,7 +23,7 @@ const ExpressNanniesHomepage = () => {
         </div>
 
         {/* Image Carousel */}
-        <div className="max-w-6xl mx-auto mb-12 p-4">
+        <div className="max-w-6xl mx-auto mb-12 p-4 flex mr-0  justify-center">
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
             {images.map((image, index) => (
               <div

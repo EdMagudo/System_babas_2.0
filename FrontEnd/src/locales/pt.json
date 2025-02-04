@@ -108,6 +108,7 @@
     "registrationError": "Erro ao registrar cliente. Tente novamente mais tarde.",
     "register": "Cadastrar",
     "telefone":"Numero de Telefone"
+    
 
   },
   "expressNannies": {
@@ -150,7 +151,8 @@
     "age_error": "Você precisa ter 18 anos ou mais para se registrar.",
     "submit_error": "Falha ao enviar inscrição. Tente novamente.",
     "success_message": "Cadastro concluído com sucesso! Acesse seu perfil usando seu e-mail e sua data de nascimento",
-    "telefone":"Numero telefone"
+    "telefone":"Numero telefone",
+    "title2":"Dados não obrigatórios no momento "
 
   },
   "ClientDashboard": {
