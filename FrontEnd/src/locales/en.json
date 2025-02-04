@@ -448,5 +448,32 @@
     "confirmationCancel": "Are you sure you want to cancel this reservation?",
     "invalidValue": "Please enter a valid service value.",
     "requestFor": "Request for"
-  }
+  },
+    "NannyCard": {
+      "profile_of": "Profile of",
+      "currency": "Currency",
+      "daily_salary": "Daily Salary",
+      "monthly_salary": "Monthly Salary",
+      "date_of_birth": "Date of Birth",
+      "no_language_available": "No language available",
+      "view_all_comments": "View All Comments",
+      "contact": "Contact",
+      "comments": "Comments",
+      "rate": "Rate",
+      "no_rating": "No Rating",
+      "no_comments_available": "No comments available",
+      "close": "Close",
+      "children_number": "Number of Children",
+      "start_date": "Start Date",
+      "end_date": "End Date",
+      "notes": "Notes",
+      "notes_placeholder": "Please mention allergies, special requests, or other important information.",
+      "submit_request": "Submit Request",
+      "missing_fields": "Please make sure all required fields are filled in.",
+      "request_success": "Service request successfully sent!",
+      "request_error": "Error sending service request:",
+      "generic_error": "An error occurred while sending the request."
+    }
+    
+  
 }

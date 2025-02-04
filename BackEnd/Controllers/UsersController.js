@@ -12,23 +12,31 @@ import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import fs from "fs";
 import path from "path"; // Certifique-se de importar o módulo path
-import { Op } from 'sequelize';
-
+import { Op } from "sequelize";
 
 const upload = multer({ dest: "uploads/" }); // Define o diretório de destino para o arquivo
 
 const createUser = async (req, res) => {
-
-   try {
+  try {
     // Verifica se o email ou ID já existe
-    const { email, id_number, first_name, last_name, contact_phone, country_name, province_name } = req.body;
+    const {
+      email,
+      id_number,
+      first_name,
+      last_name,
+      contact_phone,
+      country_name,
+      province_name,
+    } = req.body;
 
     if (!email) {
-      return res.status(400).json({ message: "Email e telefone são obrigatórios." });
+      return res
+        .status(400)
+        .json({ message: "Email e telefone são obrigatórios." });
     }
 
     const existingUser = await User.findOne({ where: { email } });
-    const existingContact = await User.findOne({ where: {contact_phone}});
+    const existingContact = await User.findOne({ where: { contact_phone } });
     const existingIdNumber = await User.findOne({ where: { id_number } });
 
     if (existingUser) {
@@ -36,7 +44,9 @@ const createUser = async (req, res) => {
     }
 
     if (existingIdNumber) {
-      return res.status(400).json({ message: "O numero de Bilhete de identidade já está em uso." });
+      return res
+        .status(400)
+        .json({ message: "O numero de Bilhete de identidade já está em uso." });
     }
 
     if (existingContact) {
@@ -46,13 +56,13 @@ const createUser = async (req, res) => {
     const userData = {
       email,
       password_hash: await bcrypt.hash(contact_phone, 10), // Hash da senha recebida
-      role: 'client', // Padrão ou conforme enviado
+      role: "client", // Padrão ou conforme enviado
       first_name,
       last_name,
       id_number,
       country_name,
       province_name,
-      contact_phone
+      contact_phone,
     };
 
     const user = await User.create(userData);
@@ -77,7 +87,6 @@ const createUser = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
-
 
 const getAllUsers = async (req, res) => {
   try {
@@ -109,9 +118,6 @@ const getUserById = async (req, res) => {
       return res.status(400).json({ error: "Missing user_id parameter" });
     }
 
-   // console.log("Fetching user with ID:", userId);
-
-    // Primeiro, buscar o usuário
     const user = await User.findByPk(userId);
 
     if (!user) {
@@ -156,7 +162,6 @@ const getUserById = async (req, res) => {
       languages: languages.map((lang) => lang.language),
     };
 
-   
     return res.status(200).json(userResponse);
   } catch (error) {
     console.error("Error fetching user and nanny profile:", error);
@@ -178,18 +183,12 @@ const getAllNannyWithRequirement = async (req, res) => {
       });
     }
 
-    console.log(
-      "Fetching users with province:",
-      province,
-      "and jobType:",
-      jobType
-    );
-
     // Buscar os usuários com seus perfis e arquivos associados
     const users = await User.findAll({
       where: {
         province_name: province,
         background_check_status: "approved",
+        role: "nanny",
       },
       include: [
         {
@@ -209,10 +208,14 @@ const getAllNannyWithRequirement = async (req, res) => {
               "image/gif",
             ],
           },
-          attributes: ["file_path", "file_type"], // Inclua apenas os atributos necessários
+          attributes: ["file_path", "file_type"],
         },
       ],
     });
+    console.log("Parametros: ");
+    console.log("Provincia: " + province);
+    console.log("Tipo de trabalho: " + jobType);
+    console.log(users);
 
     // Verificar se há resultados
     if (!users || users.length === 0) {
@@ -263,7 +266,6 @@ const getAllNannyWithRequirement = async (req, res) => {
   }
 };
 
-
 const updateUser = async (req, res) => {
   try {
     const [updated] = await User.update(req.body, {
@@ -303,7 +305,17 @@ const formatDateOfBirth = (dob) => {
 };
 const createNannyUser = async (req, res) => {
   try {
-    const { firstName, lastName, email, country, province, idNumber, telefone, education_level, date_of_birth } = req.body;
+    const {
+      firstName,
+      lastName,
+      email,
+      country,
+      province,
+      idNumber,
+      telefone,
+      education_level,
+      date_of_birth,
+    } = req.body;
 
     // Verifica se o email ou ID já existe (apenas se fornecidos)
     if (email) {
@@ -313,22 +325,32 @@ const createNannyUser = async (req, res) => {
       }
     }
 
-    if(telefone){
-      const existingTelefone = await User.findOne({ where: { contact_phone: telefone } });
+    if (telefone) {
+      const existingTelefone = await User.findOne({
+        where: { contact_phone: telefone },
+      });
       if (existingTelefone) {
         return res.status(400).json({ message: "O Telefone já está em uso." });
       }
     }
 
     if (idNumber) {
-      const existingIdNumber = await User.findOne({ where: { id_number: idNumber } });
+      const existingIdNumber = await User.findOne({
+        where: { id_number: idNumber },
+      });
       if (existingIdNumber) {
-        return res.status(400).json({ message: "O Número de Bilhete de Identidade já está em uso." });
+        return res
+          .status(400)
+          .json({
+            message: "O Número de Bilhete de Identidade já está em uso.",
+          });
       }
     }
 
     // Gera a senha apenas se a data de nascimento for fornecida
-    const hashedPassword = date_of_birth ? await bcrypt.hash(formatDateOfBirth(date_of_birth), 10) : null;
+    const hashedPassword = date_of_birth
+      ? await bcrypt.hash(formatDateOfBirth(date_of_birth), 10)
+      : null;
 
     // Criação do usuário
     const userData = {
@@ -378,26 +400,20 @@ const createNannyUser = async (req, res) => {
   }
 };
 
-
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
-
   try {
     // Busca o usuário pelo email ou telefone
-    const user = await User.findOne({ 
-      where: { 
-        [Op.or]: [
-          { email: email }, 
-          { contact_phone: email }
-        ] 
-      } 
+    const user = await User.findOne({
+      where: {
+        [Op.or]: [{ email: email }, { contact_phone: email }],
+      },
     });
-    
+
     if (!user) {
       return res.status(404).json({ message: "Usuário não encontrado" });
     }
-    
 
     // Verificar a senha fornecida com o hash armazenado no banco
     const isPasswordValid = await bcrypt.compare(password, user.password_hash);
@@ -442,8 +458,8 @@ const updatedProfile = async (req, res) => {
     if (!id_user) {
       return res.status(400).json({ error: "ID do usuário é obrigatório" });
     }
-    console.log("Entrei: ")
-    console.log(req.body)
+    console.log("Entrei: ");
+    console.log(req.body);
 
     const updatedProfileData = {};
 
@@ -455,7 +471,8 @@ const updatedProfile = async (req, res) => {
       updatedProfileData.experience_years = req.body.experience;
     }
     if (req.body.policeClearance) {
-      updatedProfileData.has_criminal_record = req.body.policeClearance === "true";
+      updatedProfileData.has_criminal_record =
+        req.body.policeClearance === "true";
     }
     if (req.body.additionalInfo) {
       updatedProfileData.additional_info = req.body.additionalInfo;
@@ -463,7 +480,9 @@ const updatedProfile = async (req, res) => {
 
     // Se nenhum dado for enviado, retorna sem atualizar
     if (Object.keys(updatedProfileData).length === 0) {
-      return res.status(400).json({ error: "Nenhuma informação para atualizar" });
+      return res
+        .status(400)
+        .json({ error: "Nenhuma informação para atualizar" });
     }
 
     // Atualiza o perfil
@@ -472,7 +491,9 @@ const updatedProfile = async (req, res) => {
     });
 
     if (affectedRows === 0) {
-      return res.status(404).json({ message: "Perfil não encontrado ou sem mudanças" });
+      return res
+        .status(404)
+        .json({ message: "Perfil não encontrado ou sem mudanças" });
     }
 
     return res.status(200).json({
@@ -484,7 +505,6 @@ const updatedProfile = async (req, res) => {
     return res.status(500).json({ error: "Erro interno do servidor" });
   }
 };
-
 
 const updatedProfileDocument = async (req, res) => {
   try {
@@ -517,10 +537,6 @@ const updatedProfileDocument = async (req, res) => {
     return res.status(500).json({ error: "Erro interno do servidor" });
   }
 };
-
-
-
-
 
 const changePassword = async (req, res) => {
   try {
@@ -714,9 +730,13 @@ const changeStatus = async (req, res) => {
   const { user_id, status } = req.body;
 
   // Validação do status
-  const allowedStatuses = ['approved', 'pending', 'rejected'];
+  const allowedStatuses = ["approved", "pending", "rejected"];
   if (!allowedStatuses.includes(status)) {
-    return res.status(400).json({ message: 'Status inválido. Use "approved", "pending" ou "rejected".' });
+    return res
+      .status(400)
+      .json({
+        message: 'Status inválido. Use "approved", "pending" ou "rejected".',
+      });
   }
 
   try {
@@ -724,37 +744,37 @@ const changeStatus = async (req, res) => {
     const user = await User.findOne({ where: { user_id } });
 
     if (!user) {
-      return res.status(404).json({ message: 'Usuário não encontrado.' });
+      return res.status(404).json({ message: "Usuário não encontrado." });
     }
 
     user.background_check_status = status;
     await user.save(); // Salva no banco de dados
 
-    res.status(200).json({ message: 'Status atualizado com sucesso!', user });
+    res.status(200).json({ message: "Status atualizado com sucesso!", user });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Erro ao atualizar o status.' });
+    res.status(500).json({ message: "Erro ao atualizar o status." });
   }
 };
 
 const saveLocation = async (req, res) => {
-  console.log(req.body)
+  console.log(req.body);
   try {
     // Busca o usuário no banco de dados
-    const user = await User.findOne({ where:{ user_id: req.params.id_user }  });
+    const user = await User.findOne({ where: { user_id: req.params.id_user } });
 
     if (!user) {
-      return res.status(404).json({ message: 'Usuário não encontrado.' });
+      return res.status(404).json({ message: "Usuário não encontrado." });
     }
 
     user.country_name = req.body.country;
-    user.province_name = req.body.province
+    user.province_name = req.body.province;
     await user.save(); // Salva no banco de dados
 
-    res.status(200).json({ message: 'Location atualizado com sucesso!', user });
+    res.status(200).json({ message: "Location atualizado com sucesso!", user });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Erro ao atualizar o status.' });
+    res.status(500).json({ message: "Erro ao atualizar o status." });
   }
 };
 
@@ -765,19 +785,18 @@ const savePhone = async (req, res) => {
     const user = await User.findOne({ where: { user_id: req.params.id_user } });
 
     if (!user) {
-      return res.status(404).json({ message: 'Usuário não encontrado.' });
+      return res.status(404).json({ message: "Usuário não encontrado." });
     }
 
     user.contact_phone = req.body.phone;
     await user.save(); // Salva no banco de dados
 
-    res.status(200).json({ message: 'Telefone atualizado com sucesso!', user });
+    res.status(200).json({ message: "Telefone atualizado com sucesso!", user });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Erro ao atualizar o telefone.' });
+    res.status(500).json({ message: "Erro ao atualizar o telefone." });
   }
 };
-
 
 export default {
   createUser,
@@ -795,5 +814,5 @@ export default {
   changeStatus,
   saveLocation,
   savePhone,
-  updatedProfileDocument
+  updatedProfileDocument,
 };
