@@ -29,16 +29,17 @@ const Header = () => {
     ],
     client: [
       { name: t('header.home'), path: '/' },
-      { name: t('header.dashboard'), path: '/client-dashboard' },
+      { name: t('header.dashboard'), path: '/Painel-cliente' },
       { name: t('header.logout'), path: '/logout' },
     ],
     nanny: [
       { name: t('header.home'), path: '/' },
-      { name: t('header.dashboard'), path: '/nanny-dashboard' },
+      { name: t('header.dashboard'), path: '/Painel-baba' },
       { name: t('header.logout'), path: '/logout' },
     ],
     admin: [
       { name: t('header.home'), path: '/' },
+      { name: t('header.dashboard'), path: '/admin' },
       { name: t('header.logout'), path: '/logout' },
     ],
   };

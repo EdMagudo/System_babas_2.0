@@ -21,7 +21,7 @@ const Footer = () => {
               <ul className="grid grid-cols-2 gap-4">
                 <li>
                   <a
-                    href="/contact"
+                    href="/contact-us"
                     className="text-slate-600 hover:text-slate-900 transition-colors duration-200 text-sm"
                   >
                     {t("footer.contactUs")}
@@ -38,7 +38,8 @@ const Footer = () => {
                 </li>
                 <li>
                   <a
-                    href="/faqs"
+                    href={termsFile}
+                    download="termos_de_servico.pdf"
                     className="text-slate-600 hover:text-slate-900 transition-colors duration-200 text-sm"
                   >
                     {t("footer.faqs")}
@@ -46,7 +47,8 @@ const Footer = () => {
                 </li>
                 <li>
                   <a
-                    href="/service-fee"
+                    href={termsFile}
+                    download="termos_de_servico.pdf"
                     className="text-slate-600 hover:text-slate-900 transition-colors duration-200 text-sm"
                   >
                     {t("footer.serviceFee")}
@@ -54,7 +56,8 @@ const Footer = () => {
                 </li>
                 <li>
                   <a
-                    href="/places-to-visit"
+                    href={termsFile}
+                    download="termos_de_servico.pdf"
                     className="text-slate-600 hover:text-slate-900 transition-colors duration-200 text-sm"
                   >
                     {t("footer.placesToVisit")}
@@ -62,7 +65,8 @@ const Footer = () => {
                 </li>
                 <li>
                   <a
-                    href="/travel-tips"
+                    href={termsFile}
+                    download="termos_de_servico.pdf"
                     className="text-slate-600 hover:text-slate-900 transition-colors duration-200 text-sm"
                   >
                     {t("footer.travelTips")}

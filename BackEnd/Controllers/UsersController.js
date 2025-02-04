@@ -475,7 +475,7 @@ const updatedProfile = async (req, res) => {
 
     // Atualiza o perfil
     const [affectedRows] = await NannyProfiles.update(updatedProfileData, {
-      where: { nanny_id: id_user },
+      where: { user_id: id_user },
     });
 
     if (affectedRows === 0) {

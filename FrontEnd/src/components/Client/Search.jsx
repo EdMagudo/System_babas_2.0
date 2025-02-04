@@ -185,9 +185,11 @@ const Search = () => {
               required
             >
               <option value="">{t('search.selectAvailability')}</option>
-              <option value="full_time">{t('search.fullTime')}</option>
-              <option value="temporary">{t('search.temporary')}</option>
-            </select>
+              <option value="Full-time">Full-time</option>
+              <option value="Part-time">Part-time</option>
+              <option value="Full and part-time">Full and part-time</option>
+          </select>
+          
           </div>
 
           <div className="col-span-3 mt-4">
