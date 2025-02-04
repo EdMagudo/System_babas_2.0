@@ -196,13 +196,6 @@ const getAllNannyWithRequirement = async (req, res) => {
           model: NannyProfiles,
           as: "nannyProfile",
           where: { job_type: jobType },
-          include: [
-            {
-              model: NannyChildWorkPreference,
-              as: "workPreferences",
-              attributes: ["id_nanny", "work_preference"],
-            },
-          ],
         },
         {
           model: Files,

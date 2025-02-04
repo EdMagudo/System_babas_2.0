@@ -13,7 +13,7 @@ import paypal from "./services/paypal.js"; // Módulo PayPal
 import dotenv from "dotenv";
 import mpesaService from './services/mpesa.js';
 dotenv.config();
-const BASE_URL = process.env.REACT_APP_BASE_URL;
+const BASE_URL = "http://localhost:3005";
 
 const app = express();
 
