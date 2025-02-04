@@ -25,7 +25,15 @@ const NannyDashboard = () => {
   const BASE_URL = "http://localhost:3005";
   
   const [documentFile, setDocumentFile] = useState(null);
-
+   
+   const jobTypes = [
+    { value: "full_time", label: t("profile-nanny.jobType_fulltime") },
+    { value: "temporary", label: t("profile-nanny.jobType_temporary") },
+  ];
+  const getJobTypeLabel = (jobType) => {
+    const jobTypeObj = jobTypes.find((type) => type.value === jobType);
+    return jobTypeObj ? jobTypeObj.label : jobType;
+  };
   // Função para buscar dados do perfil da babá
   const fetchNannyProfile = async () => {
     const idUser = localStorage.getItem("SliderService");
@@ -154,18 +162,10 @@ const NannyDashboard = () => {
                 </p>
               </div>
               <div>
-                <p>
-                  {t("profile-nanny.education")}:{" "}
-                  {nannyProfile.nannyProfile.education_level}
-                </p>
-                <p>
-                  {t("profile-nanny.dateOfBirth")}:{" "}
-                  {nannyProfile.nannyProfile.date_of_birth}
-                </p>
-                <p>
-                  {t("profile-nanny.jobType")}:{" "}
-                  {nannyProfile.nannyProfile.job_type}
-                </p>
+                <p>{t("profile-nanny.education")}: {nannyProfile.nannyProfile.education_level}</p>
+                <p>{t("profile-nanny.dateOfBirth")}: {nannyProfile.nannyProfile.date_of_birth}</p>
+                {/* <p>{t("profile-nanny.jobType")}: {nannyProfile.nannyProfile.job_type}</p> */}
+                <p>{t("profile-nanny.jobType")}: {getJobTypeLabel(nannyProfile.nannyProfile.job_type)}</p>
               </div>
             </div>
 
@@ -210,13 +210,10 @@ const NannyDashboard = () => {
                   onChange={handleChange}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
                 >
-                  <option value="">
-                    {t("profile-nanny.yearsOfExperience")}
-                  </option>
                   <option value="none">{t("profile-nanny.none")}</option>
-                  <option value="1-2">1 - 2 years</option>
-                  <option value="3-5">3 - 5 years</option>
-                  <option value="5+">More than 5 years</option>
+                  <option value="1-2">{t("profile-nanny.value1")}</option>
+                  <option value="3-5">{t("profile-nanny.value2")}</option>
+                  <option value="5+">{t("profile-nanny.value3")}</option>
                 </select>
               </div>
             </div>

@@ -293,7 +293,7 @@ const UserQualifications = ({ idUser }) => {
               required
             >
               <option value="" disabled>
-                Select Country
+              {t("location-nanny.selectCountry")}
               </option>
               {countries.map((country, index) => (
                 <option key={index} value={country}>
@@ -312,7 +312,7 @@ const UserQualifications = ({ idUser }) => {
               required
             >
               <option value="" disabled>
-                Select Province
+              {t("location-nanny.selectProvince")}
               </option>
               {provinces.map((province, index) => (
                 <option key={index} value={province}>
@@ -361,7 +361,7 @@ const UserQualifications = ({ idUser }) => {
               onChange={handleInputChange}
               className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-shadow"
             >
-              <option value="">Select currency</option>
+              <option value="">{t("salaryInformation-nanny.selectCurrency")}</option>
               {currenciesList.map((currency, index) => (
                 <option key={`${currency}-${index}`} value={currency}>
                   {currency}
@@ -379,7 +379,7 @@ const UserQualifications = ({ idUser }) => {
               value={formData.monthlySalary}
               onChange={handleInputChange}
               className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-shadow"
-              placeholder="Enter amount"
+              placeholder={t("salaryInformation-nanny.EnterAmount")}
             />
           </div>
           <div>
@@ -392,7 +392,7 @@ const UserQualifications = ({ idUser }) => {
               value={formData.dailySalary}
               onChange={handleInputChange}
               className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-shadow"
-              placeholder="Enter amount"
+              placeholder={t("salaryInformation-nanny.EnterAmount")}
             />
           </div>
         </div>
@@ -435,7 +435,7 @@ const UserQualifications = ({ idUser }) => {
               onChange={(e) => setSelectedLanguage(e.target.value)}
               className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-shadow"
             >
-              <option value="">Select language</option>
+              <option value=""> {t("languages-nanny.Selectlanguage")}</option>
               {languagesList
                 .filter((lang) => !formData.languages.includes(lang))
                 .map((language, index) => (

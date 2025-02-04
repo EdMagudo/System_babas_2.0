@@ -30,22 +30,20 @@
       "phone": {
         "label": "Telefone",
         "numbers": [
-          "+258 84 123 4567",
-          "+258 86 987 6543"
+          "+258 870705521"
         ]
       },
       "email": {
         "label": "Email",
         "addresses": [
-          "info@expressnannies.co.mz",
-          "support@expressnannies.co.mz"
+         "info@ola-baba.com",
+          "support@ola-baba.com"
         ]
       },
       "location": {
         "label": "Localização do Escritório",
         "details": [
-          "Av. Julius Nyerere, 257",
-          "Maputo, Moçambique"
+          " Mahotas, Maputo, Moçambique"
         ]
       },
       "hours": {
@@ -115,7 +113,7 @@
     "heroTitle": "Express Nannies",
     "heroDescription": "Bem-vindo ao Express Nannies, sua plataforma confiável para encontrar babás em Moçambique. Se você é um turista aproveitando uma noite fora, um expatriado precisando de suporte temporário, mãe ou pai precisando de uma babá, temporária ou a tempo inteiro, estamos aqui para proporcionar tranquilidade com cuidadoras verificadas.",
     "trustedCaregiversTitle": "Nossos Cuidadores Confiáveis",
-    "trustedCaregiversDescription": "Descubra nossa comunidade diversificada de babás experientes, prontas para fornecer um cuidado excepcional para seus filhos."
+    "trustedCaregiversDescription": "Descubra nossa comunidade diversificada de babás confiáveis, prontas para fornecer um cuidado excepcional para seus filhos."
   },
   "NannyRegistrationForm": {
     "title": "Junte-se à nossa equipe de babás confiáveis",
@@ -294,6 +292,8 @@
       "dateOfBirth": "Data de Nascimento",
       "jobType": "Tipo de Trabalho",
       "availabilityAndExperience": "Disponibilidade e Experiência",
+      "jobType_fulltime": "Tempo inteiro",
+      "jobType_temporary": "temporária",
       "experience": "Experiência",
       "yearsOfExperience": "Anos de Experiência",
       "backgroundCheck": "Verificação de Antecedentes",
@@ -302,6 +302,9 @@
       "additionalInfo": "Informações Adicionais",
       "submit": "Enviar",
       "none": "Nenhuma",
+      "value1": "1 - 2 anos",
+      "value2": "3 - 5 anos",
+      "value3": "Mais de 5 anos",
       "yes": "Sim",
       "no": "Não",
       "uploadDocuments":"Submeta seu documento",
@@ -351,12 +354,16 @@
       },
       "location-nanny": {
         "title": "Localização",
+        "selectProvince": "Selecionar uma Província",
+        "selectCountry": "Selecionar um País",
         "countryLabel": "País",
         "provinceLabel": "Província",
         "saveButton": "Salvar"
       },
       "salaryInformation-nanny": {
         "title": "Informações Salariais",
+        "selectCurrency": "Selecione a moeda",
+        "EnterAmount": "Insira o valor",
         "currencyLabel": "Moeda",
         "monthlySalaryLabel": "Salário Mensal",
         "dailySalaryLabel": "Salário Diário",
@@ -365,6 +372,7 @@
       "languages-nanny": {
         "title": "Idiomas",
         "assignedLanguagesLabel": "Idiomas Atribuídos",
+        "Selectlanguage": "selecione o idioma",
         "addLanguageLabel": "Adicionar Idioma",
         "removeButton": "Remover",
         "addButton": "Adicionar Idioma"

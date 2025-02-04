@@ -10,7 +10,7 @@
   },
   "footer": {
     "contactUs": "Contact Us",
-    "terms": "Terms & Conditions",
+    "terms": "Terms & Conditions ",
     "faqs": "FAQs",
     "serviceFee": "Service Fee",
     "placesToVisit": "Places to Visit",
@@ -20,10 +20,55 @@
       "allRightsReserved": "All Rights Reserved."
     }
   },
-  "contactPage": {
-    "header": {
-      "title": "Contact Us",
-      "description": "Have questions about our nanny services in Mozambique? We're here to help you find the perfect childcare solution."
+    "contactPage": {
+      "header": {
+        "title": "Contact Us",
+        "description": "Have questions about our nanny services in Mozambique? We're here to help you find the perfect childcare solution."
+      },
+      "contactInfo": {
+        "title": "Get in Touch",
+        "phone": {
+          "label": "Phone",
+          "numbers": [
+            "+258 87 070 5521"
+          ]
+        },
+        "email": {
+          "label": "Email",
+          "addresses": [
+            "info@ola-baba.com",
+            "support@ola-baba.com"
+          ]
+        },
+        "location": {
+          "label": "Office Location",
+          "details": [
+            " Mahotas, Maputo, Mozambique"
+          ]
+        },
+        "hours": {
+          "label": "Business Hours",
+          "details": [
+            "Monday - Friday: 8:00 AM - 6:00 PM",
+            "Saturday: 9:00 AM - 2:00 PM"
+          ]
+        }
+      },
+      "form": {
+        "title": "Send Us a Message",
+        "fields": {
+          "name": "Your Name",
+          "email": "Email Address",
+          "subject": "Subject",
+          "message": "Message"
+        },
+        "submitButton": "Send Message",
+        "successMessage": "Email sent successfully!",
+        "errorMessage": "Error sending the email. Please try again."
+      },
+      "map": {
+        "title": "Our Location"
+      }
     },
     "contactInfo": {
       "title": "Get in Touch",
@@ -71,7 +116,8 @@
     "map": {
       "title": "Our Location"
     }
-  },
+  }
+
   "loginPage": {
     "title": "Login",
     "email": {
@@ -114,7 +160,7 @@
     "heroTitle": "Express Nannies",
     "heroDescription": "Welcome to Express Nannies, your trusted platform for finding reliable nannies in Mozambique. Whether you're a tourist enjoying a night out, an expat in need of temporary support, or a parent in need of a nanny, being temporary or full-time, we're here to provide peace of mind with vetted, experienced caregivers.",
     "trustedCaregiversTitle": "Our Trusted Caregivers",
-    "trustedCaregiversDescription": "Discover our diverse community of experienced nannies ready to provide exceptional care for your children."
+    "trustedCaregiversDescription": "Discover our diverse community of trusted nannies ready to provide exceptional care for your children."
   },
   "NannyRegistrationForm": {
     "title": "Join Our Trusted Nanny Team",
@@ -278,98 +324,107 @@
     "passwordUpdated": "Password updated successfully!",
     "errorUpdatingPassword": "There was an error updating the password."
   },
-  "dashboard-nanny": {
-    "title": "Welcome, {{name}}!",
-    "description": "Here's an overview of your nanny profile and opportunities."
-  },
-  "profile-nanny": {
-    "personalDetails": "Personal Details",
-    "name": "Name",
-    "email": "Email",
-    "location": "Location",
-    "education": "Education",
-    "dateOfBirth": "Date of Birth",
-    "jobType": "Job Type",
-    "availabilityAndExperience": "Availability & Experience",
-    "experience": "Experience",
-    "yearsOfExperience": "Years of Experience",
-    "backgroundCheck": "Background Check",
-    "policeClearance": "Do you have a police clearance?",
-    "uploadPoliceClearance": "Please upload a copy of your police clearance:",
-    "additionalInfo": "Additional Information",
-    "submit": "Submit",
-    "none": "None",
-    "yes": "Yes",
-    "no": "No",
-    "uploadDocuments": "Submit your document",
-    "uploadAnyDocument": "Submit any document from this field",
-    "submitDocument": "Submit Document"
-  },
-  "sidebar-nanny": {
-    "profilePicture": "Profile Picture",
-    "uploadSuccess": "Profile picture uploaded successfully!",
-    "educationLevel": "Education Level",
-    "dashboard": "Dashboard",
-    "profile": "Profile",
-    "jobs": "Jobs",
-    "qualifications": "Qualifications"
-  },
-  "error-nanny": {
-    "profileFetch": "Error fetching profile. Please try again.",
-    "updateProfile": "Failed to update profile. Please try again.",
-    "sucessProfile": "Sucess profile updated"
-  },
-  "NannyQuickStats": {
-    "professionalOverview": "Professional Overview",
-    "completedJobs": "Completed Jobs",
-    "currency": "Currency",
-    "monthlySalary": "Monthly Salary",
-    "dailySalary": "Daily Salary",
-    "phoneNumber": "Phone Number",
-    "availability": "Availability",
-    "pending": "Pending",
-    "approved": "Approved",
-    "rejected": "Rejected",
-    "professionalSummary": "Professional Summary",
-    "changePassword": "Change Password",
-    "currentPassword": "Current Password",
-    "newPassword": "New Password",
-    "email": "Email",
-    "errorPasswordLength": "The new password must be at least 8 characters long.",
-    "passwordUpdateSuccess": "Password updated successfully.",
-    "passwordUpdateError": "There was an error updating the password. Please try again later."
-  },
-  "contactInformation-nanny": {
-    "title": "Contact Information",
-    "phonePlaceholder": "+1 (555) 000-0000",
-    "saveButton": "Save"
-  },
-  "location-nanny": {
-    "title-nanny": "Location",
-    "countryLabel": "Country",
-    "provinceLabel": "Province",
-    "saveButton": "Save"
-  },
-  "salaryInformation-nanny": {
-    "title": "Salary Information",
-    "currencyLabel": "Currency",
-    "monthlySalaryLabel": "Monthly Salary",
-    "dailySalaryLabel": "Daily Salary",
-    "saveButton": "Save"
-  },
-  "languages-nanny": {
-    "title": "Languages",
-    "assignedLanguagesLabel": "Assigned Languages",
-    "addLanguageLabel": "Add Language",
-    "removeButton": "Remove",
-    "addButton": "Add Language"
-  },
-  "loading-nanny": "Loading...",
-  "messages": {
-    "success": "Information updated successfully",
-    "error": "Failed to update information"
-  },
-  "BabysittingRequestManager": {
+  
+    "dashboard-nanny": {
+      "title": "Welcome, {{name}}!",
+      "description": "Here's an overview of your nanny profile and opportunities."
+    },
+    "profile-nanny": {
+      "personalDetails": "Personal Details",
+      "name": "Name",
+      "email": "Email",
+      "location": "Location",
+      "education": "Education",
+      "dateOfBirth": "Date of Birth",
+      "jobType": "Job Type",
+      "availabilityAndExperience": "Availability & Experience",
+      "experience": "Experience",
+      "jobType_fulltime": "Full time",
+      "jobType_temporary": "Temporary",
+      "yearsOfExperience": "Years of Experience",
+      "backgroundCheck": "Background Check",
+      "policeClearance": "Do you have a police clearance?",
+      "uploadPoliceClearance": "Please upload a copy of your police clearance:",
+      "additionalInfo": "Additional Information",
+      "submit": "Submit",
+      "none": "None",
+      "value1": "1 - 2 years",
+      "value2": "3 - 5 years",
+      "value3": "More than 5 years",
+      "yes": "Yes",
+      "no": "No"
+    },
+    "sidebar-nanny": {
+      "profilePicture": "Profile Picture",
+      "uploadSuccess": "Profile picture uploaded successfully!",
+      "educationLevel": "Education Level",
+      "dashboard": "Dashboard",
+      "profile": "Profile",
+      "jobs": "Jobs",
+      "qualifications": "Qualifications"
+    },
+    "error-nanny": {
+      "profileFetch": "Error fetching profile. Please try again.",
+      "updateProfile": "Failed to update profile. Please try again.",
+      "sucessProfile":"Sucess profile updated"
+    },
+    "NannyQuickStats":
+    {
+      "professionalOverview": "Professional Overview",
+      "completedJobs": "Completed Jobs",
+      "currency": "Currency",
+      "monthlySalary": "Monthly Salary",
+      "dailySalary": "Daily Salary",
+      "phoneNumber": "Phone Number",
+      "availability": "Availability",
+      "pending": "Pending",
+      "approved": "Approved",
+      "rejected": "Rejected",
+      "professionalSummary": "Professional Summary",
+      "changePassword": "Change Password",
+      "currentPassword": "Current Password",
+      "newPassword": "New Password",
+      "email": "Email",
+      "errorPasswordLength": "The new password must be at least 8 characters long.",
+      "passwordUpdateSuccess": "Password updated successfully.",
+      "passwordUpdateError": "There was an error updating the password. Please try again later."
+    },
+    "contactInformation-nanny": {
+      "title": "Contact Information",
+      "phonePlaceholder": "+1 (555) 000-0000",
+      "saveButton": "Save"
+    },
+    "location-nanny": {
+      "title-nanny": "Location",
+      "selectProvince": "Select a province",
+      "selectCountry": "Select a country",
+      "countryLabel": "Country",
+      "provinceLabel": "Province",
+      "saveButton": "Save"
+    },
+    "salaryInformation-nanny": {
+      "title": "Salary Information",
+      "currencyLabel": "Currency",
+      "selectCurrency": "Select currency",
+      "EnterAmount": "Enter amount",
+      "monthlySalaryLabel": "Monthly Salary",
+      "dailySalaryLabel": "Daily Salary",
+      "saveButton": "Save"
+    },
+    "languages-nanny": {
+      "title": "Languages",
+      "assignedLanguagesLabel": "Assigned Languages",
+      "addLanguageLabel": "Add Language",
+      "Selectlanguage": "select language",
+      "removeButton": "Remove",
+      "addButton": "Add Language"
+    },
+    "loading-nanny": "Loading...",
+    "messages": {
+      "success": "Information updated successfully",
+      "error": "Failed to update information"
+    },
+    "BabysittingRequestManager": {
     "title": "Babysitting Service Requests",
     "newRequests": "New Requests",
     "approvedRequests": "Approved Requests",

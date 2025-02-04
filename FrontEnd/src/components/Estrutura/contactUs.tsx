@@ -118,7 +118,7 @@ const ContactPage = () => {
                 </div>
               </div>
 
-              <div className="flex items-start space-x-4">
+              {/* <div className="flex items-start space-x-4">
                 <Clock className="w-6 h-6 text-indigo-600 mt-1" />
                 <div>
                   <h3 className="font-medium text-gray-900">
@@ -132,7 +132,7 @@ const ContactPage = () => {
                     )
                   )}
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
 
