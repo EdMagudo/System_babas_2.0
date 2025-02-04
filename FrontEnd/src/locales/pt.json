@@ -285,6 +285,8 @@
       "dateOfBirth": "Data de Nascimento",
       "jobType": "Tipo de Trabalho",
       "availabilityAndExperience": "Disponibilidade e Experiência",
+      "jobType_fulltime": "Tempo inteiro",
+      "jobType_temporary": "temporária",
       "experience": "Experiência",
       "yearsOfExperience": "Anos de Experiência",
       "backgroundCheck": "Verificação de Antecedentes",
@@ -293,6 +295,9 @@
       "additionalInfo": "Informações Adicionais",
       "submit": "Enviar",
       "none": "Nenhuma",
+      "value1": "1 - 2 anos",
+      "value2": "3 - 5 anos",
+      "value3": "Mais de 5 anos",
       "yes": "Sim",
       "no": "Não"
     },
@@ -339,12 +344,16 @@
       },
       "location-nanny": {
         "title": "Localização",
+        "selectProvince": "Selecionar uma Província",
+        "selectCountry": "Selecionar um País",
         "countryLabel": "País",
         "provinceLabel": "Província",
         "saveButton": "Salvar"
       },
       "salaryInformation-nanny": {
         "title": "Informações Salariais",
+        "selectCurrency": "Selecione a moeda",
+        "EnterAmount": "Insira o valor",
         "currencyLabel": "Moeda",
         "monthlySalaryLabel": "Salário Mensal",
         "dailySalaryLabel": "Salário Diário",
@@ -353,6 +362,7 @@
       "languages-nanny": {
         "title": "Idiomas",
         "assignedLanguagesLabel": "Idiomas Atribuídos",
+        "Selectlanguage": "selecione o idioma",
         "addLanguageLabel": "Adicionar Idioma",
         "removeButton": "Remover",
         "addButton": "Adicionar Idioma"

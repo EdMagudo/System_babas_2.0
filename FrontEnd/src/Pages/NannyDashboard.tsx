@@ -22,8 +22,16 @@ const NannyDashboard = () => {
     languages: [],
     additionalInfo: "",
   });
-   const BASE_URL = "http://localhost:3005";;
-
+   const BASE_URL = "http://localhost:3005";
+   
+   const jobTypes = [
+    { value: "full_time", label: t("profile-nanny.jobType_fulltime") },
+    { value: "temporary", label: t("profile-nanny.jobType_temporary") },
+  ];
+  const getJobTypeLabel = (jobType) => {
+    const jobTypeObj = jobTypes.find((type) => type.value === jobType);
+    return jobTypeObj ? jobTypeObj.label : jobType;
+  };
   // Função para buscar dados do perfil da babá
   const fetchNannyProfile = async () => {
     const idUser = localStorage.getItem("SliderService");
@@ -151,7 +159,8 @@ const NannyDashboard = () => {
               <div>
                 <p>{t("profile-nanny.education")}: {nannyProfile.nannyProfile.education_level}</p>
                 <p>{t("profile-nanny.dateOfBirth")}: {nannyProfile.nannyProfile.date_of_birth}</p>
-                <p>{t("profile-nanny.jobType")}: {nannyProfile.nannyProfile.job_type}</p>
+                {/* <p>{t("profile-nanny.jobType")}: {nannyProfile.nannyProfile.job_type}</p> */}
+                <p>{t("profile-nanny.jobType")}: {getJobTypeLabel(nannyProfile.nannyProfile.job_type)}</p>
               </div>
             </div>
 
@@ -163,35 +172,36 @@ const NannyDashboard = () => {
               <div className="space-y-2">
                 <label className="block mb-2">{t("profile-nanny.jobType")}</label>
                 <div className="flex space-x-4">
-                  {["full_time", "temporary"].map((type) => (
-                    <label key={type} className="inline-flex items-center">
-                      <input
-                        type="radio"
-                        name="jobType"
-                        value={type}
-                        checked={formData.jobType === type}
-                        onChange={handleChange}
-                        className="form-radio"
-                      />
-                      <span className="ml-2 capitalize">{type.replace("-", " ")}</span>
-                    </label>
-                  ))}
+                {jobTypes.map(({ value, label }) => (
+        <label key={value} className="inline-flex items-center">
+          <input
+            type="radio"
+            name="jobType"
+            value={value}
+            checked={formData.jobType === value}
+            onChange={handleChange}
+            className="form-radio"
+          />
+          <span className="ml-2 capitalize">{label}</span>
+        </label>
+      ))}
                 </div>
               </div>
 
               <div className="space-y-2">
-                <label className="block mb-2">{t("profile-nanny.experience")}</label>
+
+                <label className="block mb-2">{t("profile-nanny.yearsOfExperience")}</label>
                 <select
                   name="experience"
                   value={formData.experience}
                   onChange={handleChange}
                   className="w-full px-3 py-2 border rounded"
                 >
-                  <option value="">{t("profile-nanny.yearsOfExperience")}</option>
+
                   <option value="none">{t("profile-nanny.none")}</option>
-                  <option value="1-2">1 - 2 years</option>
-                  <option value="3-5">3 - 5 years</option>
-                  <option value="5+">More than 5 years</option>
+                  <option value="1-2">{t("profile-nanny.value1")}</option>
+                  <option value="3-5">{t("profile-nanny.value2")}</option>
+                  <option value="5+">{t("profile-nanny.value3")}</option>
                 </select>
               </div>
             </div>

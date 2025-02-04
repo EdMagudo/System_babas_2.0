@@ -286,6 +286,8 @@
       "jobType": "Job Type",
       "availabilityAndExperience": "Availability & Experience",
       "experience": "Experience",
+      "jobType_fulltime": "Full time",
+      "jobType_temporary": "Temporary",
       "yearsOfExperience": "Years of Experience",
       "backgroundCheck": "Background Check",
       "policeClearance": "Do you have a police clearance?",
@@ -293,6 +295,9 @@
       "additionalInfo": "Additional Information",
       "submit": "Submit",
       "none": "None",
+      "value1": "1 - 2 years",
+      "value2": "3 - 5 years",
+      "value3": "More than 5 years",
       "yes": "Yes",
       "no": "No"
     },
@@ -338,6 +343,8 @@
     },
     "location-nanny": {
       "title-nanny": "Location",
+      "selectProvince": "Select a province",
+      "selectCountry": "Select a country",
       "countryLabel": "Country",
       "provinceLabel": "Province",
       "saveButton": "Save"
@@ -345,6 +352,8 @@
     "salaryInformation-nanny": {
       "title": "Salary Information",
       "currencyLabel": "Currency",
+      "selectCurrency": "Select currency",
+      "EnterAmount": "Enter amount",
       "monthlySalaryLabel": "Monthly Salary",
       "dailySalaryLabel": "Daily Salary",
       "saveButton": "Save"
@@ -353,6 +362,7 @@
       "title": "Languages",
       "assignedLanguagesLabel": "Assigned Languages",
       "addLanguageLabel": "Add Language",
+      "Selectlanguage": "select language",
       "removeButton": "Remove",
       "addButton": "Add Language"
     },
