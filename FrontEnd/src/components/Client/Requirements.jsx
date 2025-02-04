@@ -17,7 +17,7 @@ const Favorites = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(5);
   const [message, setMessage] = useState({ text: "", type: "" });
-   const BASE_URL = "http://localhost:3005";;
+   const BASE_URL = "https://nanniesfinder.com";;
 
   const fetchRequests = async () => {
     const idUser = localStorage.getItem("SliderService");

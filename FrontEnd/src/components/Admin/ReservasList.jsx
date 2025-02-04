@@ -18,7 +18,7 @@ const ReservationList = () => {
   const [endDate, setEndDate] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
-   const BASE_URL = "http://localhost:3005";;
+   const BASE_URL = "https://nanniesfinder.com";;
 
   useEffect(() => {
     fetch(`${BASE_URL}/api/reservations`)

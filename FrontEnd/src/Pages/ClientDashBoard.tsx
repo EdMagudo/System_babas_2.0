@@ -15,7 +15,7 @@ const ClientDashboard = () => {
   const [clientProfile, setClientProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const userId = localStorage.getItem("SliderService");
-   const BASE_URL = "http://localhost:3005";;
+   const BASE_URL = "https://nanniesfinder.com";;
 
   const [searchParams] = useSearchParams();
 

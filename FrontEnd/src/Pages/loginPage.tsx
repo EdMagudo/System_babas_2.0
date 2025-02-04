@@ -9,7 +9,7 @@ const LoginPage = () => {
     email: '',
     password: '',
   });
-   const BASE_URL = "http://localhost:3005";;
+   const BASE_URL = "https://nanniesfinder.com";;
 
   const [error, setError] = useState(null);
   const navigate = useNavigate();

@@ -18,7 +18,7 @@ const Search = () => {
   const itemsPerPage = 4;
   const [error, setError] = useState(null); 
   
-   const BASE_URL = "http://localhost:3005";;
+   const BASE_URL = "https://nanniesfinder.com";;
 
   const handleInputChange = (e) => {
     const { id, value } = e.target;

@@ -25,7 +25,7 @@ const UserQualifications = ({ idUser }) => {
     contact: false,
     salary: false,
   });
-   const BASE_URL = "http://localhost:3005";;
+   const BASE_URL = "https://nanniesfinder.com";;
   const { t } = useTranslation();
   useEffect(() => {
     const fetchCountries = async () => {

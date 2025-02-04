@@ -13,7 +13,7 @@ const ContactPage = () => {
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   
-  const BASE_URL = "http://localhost:3005";
+  const BASE_URL = "https://nanniesfinder.com";
 
   const handleChange = (e) => {
     const { name, value } = e.target;

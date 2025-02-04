@@ -7,7 +7,7 @@ const MainComponent = () => {
   const [clientes, setClientes] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
 
-   const BASE_URL = "http://localhost:3005";;
+   const BASE_URL = "https://nanniesfinder.com";;
 
   useEffect(() => {
     fetch(`${BASE_URL}/api/user`)

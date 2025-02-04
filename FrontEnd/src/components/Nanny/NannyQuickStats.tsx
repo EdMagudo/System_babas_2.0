@@ -23,7 +23,7 @@ const NannyQuickStats: React.FC<NannyQuickStatsProps> = ({
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [completedJobs, setCompletedJobs] = useState("");
-   const BASE_URL = "http://localhost:3005";;
+   const BASE_URL = "https://nanniesfinder.com";;
 
   // Função para alterar a senha
   const handleSubmit = async (e: React.FormEvent) => {

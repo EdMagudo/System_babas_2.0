@@ -10,7 +10,7 @@ const PaymentList = () => {
   const [error, setError] = useState(null);
   const [totalAmount, setTotalAmount] = useState(0);
 
-   const BASE_URL = "http://localhost:3005";;
+   const BASE_URL = "https://nanniesfinder.com";;
 
   useEffect(() => {
     const fetchPayments = async () => {

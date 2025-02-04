@@ -13,16 +13,18 @@ import paypal from "./services/paypal.js"; // Módulo PayPal
 import dotenv from "dotenv";
 import mpesaService from './services/mpesa.js';
 dotenv.config();
-const BASE_URL = "http://localhost:3005";
+
+const BASE_URL = "https://nanniesfinder.com";
 
 const app = express();
 
 // CORS options
 const corsOptions = {
-  origin: "*", 
+  origin: ["https://nanniesfinder.com", "https://www.nanniesfinder.com"], 
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"],
 };
+
 
 // Middleware
 app.use(cors(corsOptions));

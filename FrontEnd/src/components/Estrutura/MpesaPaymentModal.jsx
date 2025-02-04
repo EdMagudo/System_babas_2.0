@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import mpesa from '../../assets/mpesa.png'
 const MpesaPaymentModal = ({ isOpen, onClose, reservationId, amount }) => {
   const [phoneNumber, setPhoneNumber] = useState('');
-   const BASE_URL = "http://localhost:3005";;
+   const BASE_URL = "https://nanniesfinder.com";;
 
   const handleSubmit = (e) => {
     e.preventDefault();
