@@ -7,9 +7,10 @@ const Footer = () => {
 
   // Define o caminho do arquivo com base no idioma
   const termsFile =
-    i18n.language === "pt"
-      ? "src/terms/TemporaryNannies_Termosecondicoesetc_PT.pdf"
-      : "src/terms/TemporaryNannies_Termosecondicoesetc_EN.pdf";
+  i18n.language === "pt"
+    ? "/terms/TemporaryNannies_Termosecondicoesetc_PT.pdf"
+    : "/terms/TemporaryNannies_Termosecondicoesetc_EN.pdf";
+
 
   return (
     <footer className="bg-gradient-to-r from-slate-50 to-slate-100 py-12 px-6">
