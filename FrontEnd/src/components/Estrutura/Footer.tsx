@@ -8,8 +8,8 @@ const Footer = () => {
   // Define o caminho do arquivo com base no idioma
   const termsFile =
   i18n.language === "pt"
-    ? "/src/assets/terms/TemporaryNannies_Termosecondicoesetc_PT.pdf"
-    : "/src/assets/terms/TemporaryNannies_Termosecondicoesetc_EN.pdf";
+    ? "http://localhost:3005/download/terms/PT"
+    : "http://localhost:3005/download/terms/EN";
 
 
   return (
