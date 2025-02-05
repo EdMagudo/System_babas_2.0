@@ -148,7 +148,7 @@
     "submit_error": "Falha ao enviar inscrição. Tente novamente.",
     "success_message": "Cadastro concluído com sucesso! Acesse seu perfil usando seu e-mail e sua data de nascimento",
     "telefone": "Numero telefone",
-    "title2": "Dados não obrigatórios no momento "
+    "title_2": "Dados não obrigatórios no momento "
   },
   "ClientDashboard": {
     "welcome_message": "Bem-vindo, {{first_name}}!",
