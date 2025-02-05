@@ -443,14 +443,14 @@ const pdfFilePathEN = 'terms/TemporaryNannies_Termosecondicoesetc_EN.pdf';
 const pdfFilePathPT = 'terms/TemporaryNannies_Termosecondicoesetc_PT.pdf';
 
 // Rota 1: Baixar o arquivo específico
-app.get('/download/terms/EN', (req, res) => {
+app.get('/api/download/terms/EN', (req, res) => {
     res.download(pdfFilePathEN, 'TemporaryNannies_Termosecondicoesetc_EN.pdf', (err) => {
         if (err) {
             res.status(500).json({ message: 'Erro ao baixar o arquivo', error: err.message });
         }
     });
 });
-app.get('/download/terms/PT', (req, res) => {
+app.get('/api/download/terms/PT', (req, res) => {
     res.download(pdfFilePathPT, 'TemporaryNannies_Termosecondicoesetc_PT.pdf', (err) => {
         if (err) {
             res.status(500).json({ message: 'Erro ao baixar o arquivo', error: err.message });

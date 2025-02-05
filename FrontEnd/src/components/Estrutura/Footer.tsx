@@ -5,11 +5,13 @@ import { useTranslation } from "react-i18next";
 const Footer = () => {
   const { t, i18n } = useTranslation();
 
+  const BASE_URL = "https://nanniesfinder.com";
+
   // Define o caminho do arquivo com base no idioma
   const termsFile =
   i18n.language === "pt"
-    ? "http://localhost:3005/download/terms/PT"
-    : "http://localhost:3005/download/terms/EN";
+    ? `${BASE_URL}/api/download/terms/PT`
+    : `${BASE_URL}/api/download/terms/EN`;
 
 
   return (
