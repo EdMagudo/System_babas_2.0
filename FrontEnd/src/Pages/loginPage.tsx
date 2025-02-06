@@ -118,14 +118,7 @@ const LoginPage = () => {
             {t('loginPage.button')}
           </button>
 
-          <div className="text-center mt-4">
-            <a
-              href="#"
-              className="text-sm text-blue-600 hover:text-blue-500 hover:underline"
-            >
-              {t('loginPage.forgotPassword')}
-            </a>
-          </div>
+          
         </form>
       </div>
     </div>
