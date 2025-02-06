@@ -353,12 +353,12 @@ const createNannyUser = async (req, res) => {
     const userData = {
       first_name: firstName,
       last_name: lastName,
-      email: email || " ", // Permite valores nulos
+      email: email || " ", 
       country_name: country,
       province_name: province,
-      id_number: idNumber || null,
+      id_number: idNumber || " ",
       password_hash: hashedPassword,
-      contact_phone: telefone || null,
+      contact_phone: telefone || " ",
       role: "nanny",
     };
 
