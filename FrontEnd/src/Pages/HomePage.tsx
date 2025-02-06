@@ -2,12 +2,13 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import image2 from "../assets/chinese.jpg";
 import image3 from "../assets/mestica.jpeg";
-import image4 from "../assets/f3.jpeg";
-import image6 from "../assets/f2.jpeg";
+import image4 from "../assets/foto2.jpg";
+import image1 from "../assets/f1.jpg";
+import image5 from "../assets/f2.jpeg";
 
 const ExpressNanniesHomepage = () => {
   const { t } = useTranslation();
-  const images = [image4, image2, image3, image6]; // Array com as imagens do carrossel
+  const images = [image1, image2, image3, image4, image5]; // Array com as imagens do carrossel
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-rose-50 to-indigo-50">
@@ -22,24 +23,27 @@ const ExpressNanniesHomepage = () => {
           </p>
         </div>
 
-        {/* Image Carousel */}
-        <div className="max-w-6xl mx-auto mb-12 p-4 flex mr-0  justify-center">
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+        {/* Image Grid */}
+        <div className="max-w-6xl mx-auto mb-12 p-4 flex justify-center">
+          <div className="grid w-full grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 place-items-center">
             {images.map((image, index) => (
               <div
                 key={index}
-                className="relative rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300"
+                className={`relative rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 ${
+                  index === 4 ? "hidden md:block" : ""
+                }`}
               >
                 <img
                   src={image}
                   alt={`Happy family ${index + 1}`}
-                  className="w-full h-full object-cover"
+                  className="w-full h-48 object-cover"
                 />
               </div>
             ))}
           </div>
-        </div>
+        </div> {/* <-- Fechamento correto do container das imagens */}
 
+        {/* Trusted Caregivers Section */}
         <div className="text-center mb-8">
           <h2 className="text-2xl md:text-3xl font-semibold text-gray-800 mb-4">
             {t("expressNannies.trustedCaregiversTitle")}
