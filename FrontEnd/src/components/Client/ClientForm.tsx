@@ -214,7 +214,6 @@ const NannyFinderForm = () => {
                 value={client.id_number}
                 onChange={handleInputChange}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500"
-                required
                 pattern="\d{12}[A-Za-z]|[A-Za-z]{2}\d{7}"
                 title={t("form.idPattern")}
               />

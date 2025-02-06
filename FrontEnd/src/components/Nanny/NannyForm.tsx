@@ -285,7 +285,6 @@ const NannyRegistrationForm = () => {
               value={client.email}
               onChange={handleInputChange}
               className="w-full px-3 py-2 mb-3 border rounded"
-              required
             />
           </div>
 

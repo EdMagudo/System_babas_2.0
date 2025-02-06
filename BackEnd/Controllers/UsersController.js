@@ -212,10 +212,6 @@ const getAllNannyWithRequirement = async (req, res) => {
         },
       ],
     });
-    console.log("Parametros: ");
-    console.log("Provincia: " + province);
-    console.log("Tipo de trabalho: " + jobType);
-    console.log(users);
 
     // Verificar se há resultados
     if (!users || users.length === 0) {
