@@ -8,7 +8,7 @@ export default (sequelize, DataTypes) => {
         email: {
             type: DataTypes.STRING(255),
             unique: true,
-            allowNull: false
+            allowNull: true
         },
         password_hash: {
             type: DataTypes.STRING(255),

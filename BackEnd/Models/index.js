@@ -180,8 +180,8 @@ export const initializeDatabase = async () => {
 
     // Sync all models
     await sequelize.sync({ 
-      force: false, // Set to true to drop and recreate tables (careful with production data!)
-      alter: false   // Safely update table schemas
+      force: true, // Set to true to drop and recreate tables (careful with production data!)
+      alter: true   // Safely update table schemas
     });
     console.log('All models synchronized successfully.');
   } catch (error) {
