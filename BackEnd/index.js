@@ -20,7 +20,6 @@ const app = express();
 
 // CORS options
 const corsOptions = {
-  //origin : "*",
   origin: ["https://nanniesfinder.com", "https://www.nanniesfinder.com"], 
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"],
