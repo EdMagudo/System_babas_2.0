@@ -16,7 +16,7 @@ const ProfilePictureUploader: React.FC<ProfilePictureUploaderProps> = ({
   const [imageUrl, setImageUrl] = useState<string>("https://via.placeholder.com/128");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
-   const BASE_URL = "https://nanniesfinder.com";;
+  const BASE_URL = "https://nanniesfinder.com";;
 
   const userId = localStorage.getItem("SliderService");
   useEffect(() => {

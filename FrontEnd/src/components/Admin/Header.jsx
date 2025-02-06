@@ -11,7 +11,7 @@ const Header = () => {
     confirmPassword: "",
   });
 
-   const BASE_URL = "https://nanniesfinder.com";;
+  const BASE_URL = "https://nanniesfinder.com";;
 
   const [passwordVisibility, setPasswordVisibility] = useState({
     currentPassword: false,

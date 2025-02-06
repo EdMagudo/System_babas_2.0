@@ -23,7 +23,7 @@ const Overview = ({ clientProfile, idUser }) => {
   });
   const [saving, setSaving] = useState({ phone: false });
   const [message, setMessage] = useState({ type: "", text: "" });
-  const BASE_URL = "https://nanniesfinder.com";
+ const BASE_URL = "https://nanniesfinder.com";
 
   useEffect(() => {
     const fetchUserProfile = async () => {

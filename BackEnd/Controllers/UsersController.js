@@ -299,6 +299,7 @@ const formatDateOfBirth = (dob) => {
   const year = date.getFullYear();
   return `${day}${month}${year}`;
 };
+
 const createNannyUser = async (req, res) => {
   try {
     const {
@@ -352,7 +353,7 @@ const createNannyUser = async (req, res) => {
     const userData = {
       first_name: firstName,
       last_name: lastName,
-      email: email || null, // Permite valores nulos
+      email: email || " ", // Permite valores nulos
       country_name: country,
       province_name: province,
       id_number: idNumber || null,
@@ -389,12 +390,14 @@ const createNannyUser = async (req, res) => {
     res.status(201).json({
       message: "Usuário e perfil de nanny criados com sucesso!",
       user,
+      nannyProfileData,
     });
   } catch (error) {
     console.error("Erro ao criar usuário:", error);
     res.status(500).json({ error: "Erro interno do servidor" });
   }
 };
+
 
 const loginUser = async (req, res) => {
   const { email, password } = req.body;

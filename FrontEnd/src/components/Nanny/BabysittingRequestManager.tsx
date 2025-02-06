@@ -35,7 +35,7 @@ const BabysittingRequestManager: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [itemsPerPage] = useState<number>(5);
   const { t } = useTranslation();
-   const BASE_URL = "https://nanniesfinder.com";;
+  const BASE_URL = "https://nanniesfinder.com";;
   useEffect(() => {
     fetchReservations();
   }, []);

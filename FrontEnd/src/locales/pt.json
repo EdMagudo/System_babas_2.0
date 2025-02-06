@@ -146,7 +146,7 @@
     "submit_button": "Enviar Inscrição",
     "age_error": "Você precisa ter 18 anos ou mais para se registrar.",
     "submit_error": "Falha ao enviar inscrição. Tente novamente.",
-    "success_message": "Cadastro concluído com sucesso! Acesse seu perfil usando seu e-mail e sua data de nascimento",
+    "success_message": "Cadastro concluído com sucesso! Acesse seu perfil usando seu e-mail ou telefone e sua data de nascimento",
     "telefone": "Numero telefone",
     "title_2": "Dados não obrigatórios no momento "
   },
