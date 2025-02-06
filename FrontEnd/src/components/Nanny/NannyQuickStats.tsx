@@ -197,7 +197,7 @@ const NannyQuickStats: React.FC<NannyQuickStatsProps> = ({
                   <input
                     type="email"
                     id="email"
-                    value={nannyProfile?.email || ""}
+                    value={nannyProfile?.email || nannyProfile?.contact_phone}
                     disabled
                     className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100 text-gray-600"
                   />

@@ -540,11 +540,16 @@ const updatedProfileDocument = async (req, res) => {
 
 const changePassword = async (req, res) => {
   try {
-    console.log(req.body);
-    // Buscar usuário pelo email
+  
     const existingUser = await User.findOne({
-      where: { email: req.body.email },
+      where: {
+        [Op.or]: [
+          { email: req.body.email },
+          { contact_phone: req.body.email }
+        ]
+      }
     });
+    
 
     if (existingUser) {
       // Verificar se a senha atual fornecida corresponde à senha armazenada
@@ -564,7 +569,12 @@ const changePassword = async (req, res) => {
 
         // Atualizar a senha no banco de dados
         await User.update(updatedProfileData, {
-          where: { email: req.body.email },
+          where: {
+            [Op.or]: [
+              { email: req.body.email || null },
+              { contact_phone: req.body.email || null }
+            ]
+          }
         });
 
         // Retornar sucesso
@@ -781,14 +791,27 @@ const saveLocation = async (req, res) => {
 const savePhone = async (req, res) => {
   console.log(req.body);
   try {
+    const { phone } = req.body;
+    const { id_user } = req.params;
+
+    // Verifica se o telefone já está em uso por outro usuário
+    const existingUser = await User.findOne({
+      where: { contact_phone: phone },
+    });
+
+    if (existingUser && existingUser.user_id !== parseInt(id_user, 10)) {
+      return res.status(400).json({ message: "O telefone já está em uso por outro usuário." });
+    }
+
     // Busca o usuário no banco de dados
-    const user = await User.findOne({ where: { user_id: req.params.id_user } });
+    const user = await User.findOne({ where: { user_id: id_user } });
 
     if (!user) {
       return res.status(404).json({ message: "Usuário não encontrado." });
     }
 
-    user.contact_phone = req.body.phone;
+    // Atualiza o telefone do usuário
+    user.contact_phone = phone;
     await user.save(); // Salva no banco de dados
 
     res.status(200).json({ message: "Telefone atualizado com sucesso!", user });
@@ -797,6 +820,7 @@ const savePhone = async (req, res) => {
     res.status(500).json({ message: "Erro ao atualizar o telefone." });
   }
 };
+
 
 export default {
   createUser,

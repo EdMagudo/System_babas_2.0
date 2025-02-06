@@ -147,16 +147,24 @@ const UserQualifications = ({ idUser }) => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
-
-      if (!response.ok) throw new Error("Failed to update information");
-
+  
+      if (!response.ok) {
+        const errorData = await response.json(); // Tenta obter a resposta do servidor
+        throw new Error(errorData.message || "Failed to update information");
+      }
+  
       showMessage("success", "Information updated successfully");
     } catch (error) {
-      showMessage("error", "Failed to update information");
+      if (error.message.includes("Phone number already exists")) {
+        showMessage("warning", "Phone number already exists");
+      } else {
+        showMessage("error", "Failed to update information");
+      }
     } finally {
       setSaving((prev) => ({ ...prev, [section]: false }));
     }
   };
+  
 
   const handleAdd = async (type, value) => {
     try {
