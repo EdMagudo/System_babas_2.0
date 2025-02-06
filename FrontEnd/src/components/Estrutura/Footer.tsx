@@ -41,26 +41,16 @@ const Footer = () => {
                 </li>
                 <li>
                   <a
-                    href={termsFile}
-                    download="termos_de_servico.pdf"
+                    href='/faqs'
                     className="text-slate-600 hover:text-slate-900 transition-colors duration-200 text-sm"
                   >
                     {t("footer.faqs")}
                   </a>
                 </li>
+                
                 <li>
                   <a
-                    href={termsFile}
-                    download="termos_de_servico.pdf"
-                    className="text-slate-600 hover:text-slate-900 transition-colors duration-200 text-sm"
-                  >
-                    {t("footer.serviceFee")}
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href={termsFile}
-                    download="termos_de_servico.pdf"
+                    href='/Mozambique-travel-guide'
                     className="text-slate-600 hover:text-slate-900 transition-colors duration-200 text-sm"
                   >
                     {t("footer.placesToVisit")}
@@ -68,8 +58,7 @@ const Footer = () => {
                 </li>
                 <li>
                   <a
-                    href={termsFile}
-                    download="termos_de_servico.pdf"
+                    href='/travel-tips'
                     className="text-slate-600 hover:text-slate-900 transition-colors duration-200 text-sm"
                   >
                     {t("footer.travelTips")}

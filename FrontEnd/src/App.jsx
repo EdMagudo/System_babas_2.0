@@ -17,6 +17,9 @@ import NannyDashboard from './Pages/NannyDashboard';
 import Admin from './Pages/AdminDashboard'
 
 import AdminLogin from './components/Admin/AdminLogin';
+import MozambiqueTravelGuide from './components/Estrutura/MozambiqueTravelGuide';
+import TravelTips from './components/Estrutura/TravelTips';
+import FAQs from './components/Estrutura/FAQs';
 
 import Error404 from './components/Error404';
 
@@ -38,6 +41,9 @@ function App() {
             <Route path='/admin' element={<Admin/>}/>
             <Route path='/loginAdmin' element={<AdminLogin/>}/>
             <Route path="*" element={<Error404/>} />
+            <Route path="/Mozambique-travel-guide" element={<MozambiqueTravelGuide />} />
+            <Route path="/travel-tips" element={<TravelTips />} />
+            <Route path="/faqs" element={<FAQs />} />
             <Route path="*" element={<h1>404 - Page Not Found</h1>} />
           </Routes>
         </main>

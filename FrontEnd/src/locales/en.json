@@ -473,7 +473,123 @@
       "request_success": "Service request successfully sent!",
       "request_error": "Error sending service request:",
       "generic_error": "An error occurred while sending the request."
-    }
+    },
+
+    
+  "travelGuide": {
+    "places_to_visit_in_mozambique": "Places to Visit in Mozambique",
+    "family_attractions": "Family Attractions",
+    "national_parks": "National Parks",
+    "beaches": "Beaches",
+    "restaurants_in_maputo": "Restaurants in Maputo",
+    "coastal_restaurants": "Coastal Restaurants",
+    "essential_tips": "Essential Tips",
+    "malaria_risk": "Malaria risk is high throughout the year. Consult your doctor before traveling.",
+    "best_climate": "Best climate during the dry season (May to November) - also whale season.",
+    "4x4_rental": "It is recommended to rent a 4x4 for remote travels. Options: domestic flights, buses, taxis.",
+    "tip_standard": "The standard tip is 10% of the service value.",
+    "water": "Drink bottled water or boil tap water before drinking."
+  },
+  
+    "travelTips": {
+      "entryRequirements": {
+        "title": "1. Entry Requirements",
+        "visa": "Visa: Most visitors need a visa. Apply at a Mozambican embassy or obtain a visa on arrival (confirm eligibility in advance). E-visas are available.",
+        "passport": "Passport: Ensure it's valid for at least six months with blank pages.",
+        "vaccinations": "Vaccinations: Yellow fever vaccination is required if coming from an endemic country."
+      },
+      "bestTimeToVisit": {
+        "title": "2. Best Time to Visit",
+        "hotSeason": "Hot season: November to April is the hottest period, with holidays in December and most events held. It is still the best season to visit the beach, swim, enjoy sand, and go for safaris.",
+        "coldSeason": "Cold season: May to October offers pleasant weather, ideal for surfing and community work."
+      },
+      "currencyAndPayments": {
+        "title": "3. Currency and Payments",
+        "currency": "Currency: Mozambican Metical (MZN), USD, and South African Rand are accepted.",
+        "payment": "Payment: Credit cards are accepted in hotels and some restaurants, but cash is essential in rural areas.",
+        "atms": "ATMs: Available in cities but scarce in remote areas."
+      },
+      "language": {
+        "title": "4. Language",
+        "text": "Portuguese is the official language, and basic knowledge or a phrasebook helps in local interactions. English is spoken in tourist areas."
+      },
+      "safetyAndSecurity": {
+        "title": "5. Safety and Security",
+        "political": "Check travel advisories, especially for northern Mozambique due to insurgencies.",
+        "pettyCrime": "Be vigilant in urban areas like Maputo and avoid displaying valuables.",
+        "healthAndSafety": "Drink bottled water, use mosquito repellent, and consider malaria prophylaxis."
+      },
+      "transport": {
+        "title": "6. Transport",
+        "flights": "Domestic airlines connect all major cities.",
+        "roadTravel": "Roads can be poor; a 4x4 is recommended for rural areas.",
+        "publicTransport": "Chapas (minibuses) are common but not always safe. Opt for private taxis or Yango (like Uber)."
+      },
+      "topDestinations": {
+        "title": "7. Top Destinations",
+        "destinations": [
+          "Maputo: Vibrant capital with rich culture and cuisine.",
+          "Maputo National Park: Ideal for wildlife safaris and turtle nesting.",
+          "Tofo Beach: Famous for diving and swimming with whale sharks.",
+          "Bazaruto Archipelago: Stunning beaches and marine life.",
+          "Gorongosa National Park: Ideal for safaris and nature hikes.",
+          "Ilha de Moçambique: UNESCO World Heritage site with colonial charm."
+        ]
+      },
+      "foodAndDrinks": {
+        "title": "8. Food and Drinks",
+        "seafood": "Don't miss fresh prawns, calamari, and fish.",
+        "localDishes": "Try matapa (cassava leaves in peanut sauce) and peri-peri chicken.",
+        "drinks": "Laurentina and 2M are popular local beers; R&R (Rum and Raspberry) is a must-try cocktail."
+      },
+      "cultureAndEtiquette": {
+        "title": "9. Culture and Etiquette",
+        "respectTraditions": "Dress modestly in rural areas. Fancy dress is acceptable in cities.",
+        "greetings": "A handshake is common. Learn simple Portuguese greetings for a warm welcome.",
+        "photography": "Ask for permission before taking photos of people."
+      },
+      "activitiesToConsider": {
+        "title": "10. Activities to Consider",
+        "diving": "Bazaruto, Ponta de Ouro, and Tofo offer world-class diving and snorkeling.",
+        "islandHopping": "Sail on a dhow in the Quirimbas Archipelago.",
+        "culturalTours": "Explore Ilha de Moçambique’s colonial history.",
+        "safari": "Visit Maputo National Park for a wild safari experience."
+      },
+      "usefulContacts": {
+        "title": "Useful Contacts in Maputo",
+        "emergency": "Emergency: 112",
+        "police": "Police: +258 82 6331808",
+        "hospitals": [
+          "Hospital Central de Maputo (Public): 21 32 50 00",
+          "Hospital José Macamo (Public): 21 40 00 45/6",
+          "Hospital Geral de Mavalane (Public): 21 46 01 03/4",
+          "Hospital Privado de Maputo",
+          "Instituto do Coração (ICOR)"
+        ],
+        "other": {
+          "airport": "Aeroporto: 21 46 58 27/8",
+          "LAM": "LAM: 21 46 50 74/9",
+          "firefighters": "Firefighters: 21 32 22 22 / 800 19 81 98"
+        }
+      }
+    },
+    "faq": {
+    "title": "Frequently Asked Questions (FAQs)",
+    "q1": "How do I know the nannies are trustworthy?",
+    "a1": "All our nannies undergo thorough background checks and provide references. Nonetheless, we always advise clients to also interview the nannies and if need be do a background check including visiting their family houses.",
+    "q2": "Can I book a nanny for the same day?",
+    "a2": "Yes, if nannies are available, you can book for the same day through our platform.",
+    "q3": "What happens if I need to cancel?",
+    "a3": "You can cancel up to 24 hours before your booking for a 50% refund or up to 48 hours for a full refund.",
+    "q4": "How do I make payments?",
+    "a4": "We accept direct bank transfers, deposits, credit cards, PayPal, and mobile payments.",
+    "q5": "How much does the service cost?",
+    "a5": "We charge a 10% service fee. Nannies propose their own fee varying from 500Mts to 1800Mts/day and 3,000Mts to 10,000Mts/month. This depends on nannies' background and clients' expectations.",
+    "q6": "Who pays for part-time nanny’s accommodation and meals?",
+    "a6": "The client is responsible for both accommodation and meals of the nanny during the contract period."
+  }
+  
+  
     
   
 }

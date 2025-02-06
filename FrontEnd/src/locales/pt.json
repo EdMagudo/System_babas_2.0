@@ -429,5 +429,119 @@
     "request_success": "Solicitação de serviço enviada com sucesso!",
     "request_error": "Erro ao enviar solicitação de serviço:",
     "generic_error": "Ocorreu um erro ao enviar a solicitação."
+  },
+  "travelGuide": {
+    "places_to_visit_in_mozambique": "Lugares para Visitar em Moçambique",
+    "family_attractions": "Atrações para Família",
+    "national_parks": "Parques Nacionais",
+    "beaches": "Praias",
+    "restaurants_in_maputo": "Restaurantes em Maputo",
+    "coastal_restaurants": "Restaurantes Costeiros",
+    "essential_tips": "Dicas Essenciais",
+    "malaria_risk": "Risco de malária é alto durante todo o ano. Consulte seu médico antes de viajar.",
+    "best_climate": "Melhor clima durante a estação seca (maio a novembro) - também temporada de baleias.",
+    "4x4_rental": "Recomendado alugar um 4x4 para viagens remotas. Opções: voos domésticos, ônibus, táxis.",
+    "tip_standard": "Gorjeta padrão é 10% do valor do serviço.",
+    "water": "Beba água engarrafada ou ferva a água da torneira antes de beber."
+  },
+  
+    "travelTips": {
+      "entryRequirements": {
+        "title": "1. Requisitos de Entrada",
+        "visa": "Visto: A maioria dos visitantes precisa de visto. Solicite no consulado de Moçambique ou obtenha visto na chegada (confirme a elegibilidade com antecedência). Vistos eletrônicos estão disponíveis.",
+        "passport": "Passaporte: Verifique se é válido por pelo menos seis meses e se tem páginas em branco.",
+        "vaccinations": "Vacinas: A vacina contra febre amarela é obrigatória se vier de um país endêmico."
+      },
+      "bestTimeToVisit": {
+        "title": "2. Melhor Época para Visitar",
+        "hotSeason": "Época quente: De novembro a abril é a época mais quente, com feriados em dezembro e muitos eventos. É uma boa época para ir à praia, nadar, aproveitar a areia e fazer safáris.",
+        "coldSeason": "Época fria: De maio a outubro, o clima é ameno, ideal para surfe e trabalho comunitário."
+      },
+      "currencyAndPayments": {
+        "title": "3. Moeda e Pagamentos",
+        "currency": "Moeda: Metical Moçambicano (MZN), USD e Rand Sul-Africano são aceitos.",
+        "payment": "Pagamento: Cartões de crédito são aceitos em hotéis e alguns restaurantes, mas o pagamento em dinheiro é essencial nas áreas rurais.",
+        "atms": "Caixas eletrônicos: Disponíveis nas cidades, mas escassos em áreas remotas."
+      },
+      "language": {
+        "title": "4. Língua",
+        "text": "O português é a língua oficial, e o conhecimento básico ou um livro de frases ajuda nas interações locais. O inglês é falado nas áreas turísticas."
+      },
+      "safetyAndSecurity": {
+        "title": "5. Segurança e Proteção",
+        "political": "Verifique os avisos de viagem, especialmente para o norte de Moçambique devido a insurgências.",
+        "pettyCrime": "Seja vigilante em áreas urbanas como Maputo e evite exibir objetos de valor.",
+        "healthAndSafety": "Beba água engarrafada, use repelente contra mosquitos e considere o uso de profilaxia para malária."
+      },
+      "transport": {
+        "title": "6. Transporte",
+        "flights": "Companhias aéreas domésticas conectam todas as grandes cidades.",
+        "roadTravel": "As estradas podem estar em más condições; recomenda-se um 4x4 para áreas rurais.",
+        "publicTransport": "Chapas (minibuses) são comuns, mas nem sempre seguras. Opte por táxis privados ou Yango (semelhante ao Uber)."
+      },
+      "topDestinations": {
+        "title": "7. Destinos Principais",
+        "destinations": [
+          "Maputo: Capital vibrante com rica cultura e gastronomia.",
+          "Parque Nacional de Maputo: Ideal para safáris e ninhos de tartarugas.",
+          "Praia de Tofo: Famosa para mergulho e natação com tubarões-baleia.",
+          "Arquipélago de Bazaruto: Praias deslumbrantes e vida marinha.",
+          "Parque Nacional de Gorongosa: Ideal para safáris e trilhas na natureza.",
+          "Ilha de Moçambique: Patrimônio Mundial da UNESCO com charme colonial."
+        ]
+      },
+      "foodAndDrinks": {
+        "title": "8. Comida e Bebidas",
+        "seafood": "Não perca camarões frescos, lula e peixe.",
+        "localDishes": "Experimente matapa (folhas de mandioca com molho de amendoim) e frango peri-peri.",
+        "drinks": "Laurentina e 2M são cervejas locais populares; R&R (Rum e Framboesa) é um coquetel imperdível."
+      },
+      "cultureAndEtiquette": {
+        "title": "9. Cultura e Etiqueta",
+        "respectTraditions": "Vista-se modestamente em áreas rurais. Nas cidades, use roupas mais sofisticadas.",
+        "greetings": "Um aperto de mão é comum. Aprenda cumprimentos simples em português para uma recepção calorosa.",
+        "photography": "Peça permissão antes de tirar fotos das pessoas."
+      },
+      "activitiesToConsider": {
+        "title": "10. Atividades a Considerar",
+        "diving": "Bazaruto, Ponta de Ouro e Tofo oferecem experiências de mergulho e snorkel de classe mundial.",
+        "islandHopping": "Navegue em um dhow no Arquipélago de Quirimbas.",
+        "culturalTours": "Explore a história colonial na Ilha de Moçambique.",
+        "safari": "Visite o Parque Nacional de Maputo para uma experiência selvagem."
+      },
+      "usefulContacts": {
+        "title": "Contatos Úteis em Maputo",
+        "emergency": "Emergência: 112",
+        "police": "Polícia: +258 82 6331808",
+        "hospitals": [
+          "Hospital Central de Maputo (Público): 21 32 50 00",
+          "Hospital José Macamo (Público): 21 40 00 45/6",
+          "Hospital Geral de Mavalane (Público): 21 46 01 03/4",
+          "Hospital Privado de Maputo",
+          "Instituto do Coração (ICOR)"
+        ],
+        "other": {
+          "airport": "Aeroporto: 21 46 58 27/8",
+          "LAM": "LAM: 21 46 50 74/9",
+          "firefighters": "Bombeiros: 21 32 22 22 / 800 19 81 98"
+        }
+      }
+    },
+    "faq": {
+    "title": "Perguntas Frequentes (FAQs)",
+    "q1": "Como posso saber se as babás são confiáveis?",
+    "a1": "Todas as nossas babás passam por rigorosas verificações de antecedentes e fornecem referências. No entanto, sempre aconselhamos os clientes a também entrevistar as babás e, se necessário, fazer uma verificação de antecedentes, incluindo visitar as casas de suas famílias.",
+    "q2": "Posso reservar uma babá para o mesmo dia?",
+    "a2": "Sim, se as babás estiverem disponíveis, você pode fazer a reserva para o mesmo dia através da nossa plataforma.",
+    "q3": "O que acontece se eu precisar cancelar?",
+    "a3": "Você pode cancelar até 24 horas antes da sua reserva para um reembolso de 50% ou até 48 horas para um reembolso integral.",
+    "q4": "Como faço os pagamentos?",
+    "a4": "Aceitamos transferências bancárias diretas, depósitos, cartões de crédito, PayPal e pagamentos móveis.",
+    "q5": "Quanto custa o serviço?",
+    "a5": "Cobramos uma taxa de serviço de 10%. As babás propõem suas próprias taxas, variando de 500Mts a 1800Mts/dia e 3.000Mts a 10.000Mts/mês. Isso depende da experiência da babá e das expectativas do cliente.",
+    "q6": "Quem paga pela acomodação e alimentação da babá part-time?",
+    "a6": "O cliente é responsável pela acomodação e alimentação da babá durante o período do contrato."
   }
+  
+  
 }
