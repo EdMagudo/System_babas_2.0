@@ -101,6 +101,7 @@ const UserQualifications = ({ idUser }) => {
     fetchData();
   }, [idUser]);
 
+  
   const handleSave = async (section, data) => {
     setSaving((prev) => ({ ...prev, [section]: true }));
     try {
@@ -109,16 +110,25 @@ const UserQualifications = ({ idUser }) => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
-
-      if (!response.ok) throw new Error("Failed to update information");
-
-      showMessage("success", "Information updated successfully");
+  
+      const responseData = await response.json();
+  
+      if (response.status === 200 || response.status === 201) {
+        showMessage("success", "Location updated successfully!");
+      } else if (response.status === 400) {
+        showMessage("warning", responseData.message || "Invalid data provided.");
+      } else if (response.status === 404) {
+        showMessage("error", "User not found.");
+      } else {
+        throw new Error(responseData.message || "Failed to update information.");
+      }
     } catch (error) {
-      showMessage("error", "Failed to update information");
+      showMessage("error", error.message || "An error occurred while updating location.");
     } finally {
       setSaving((prev) => ({ ...prev, [section]: false }));
     }
   };
+  
 
   const handleSaveM = async (section, data) => {
     setSaving((prev) => ({ ...prev, [section]: true }));
@@ -148,18 +158,19 @@ const UserQualifications = ({ idUser }) => {
         body: JSON.stringify(data),
       });
   
-      if (!response.ok) {
-        const errorData = await response.json(); // Tenta obter a resposta do servidor
-        throw new Error(errorData.message || "Failed to update information");
-      }
+      const responseData = await response.json(); // Converte a resposta para JSON
   
-      showMessage("success", "Information updated successfully");
-    } catch (error) {
-      if (error.message.includes("Phone number already exists")) {
-        showMessage("warning", "Phone number already exists");
+      if (response.status === 200 || response.status === 201) {
+        showMessage("success", "Phone number updated successfully!"); // Mensagem de sucesso
+      } else if (response.status === 400 && responseData.message.includes("telefone já está em uso")) {
+        showMessage("warning", "Phone number already exists."); // Telefone já em uso
+      } else if (response.status === 404) {
+        showMessage("error", "User not found."); // Usuário não encontrado
       } else {
-        showMessage("error", "Failed to update information");
+        showMessage("error", "Failed to update phone number."); // Erro genérico
       }
+    } catch (error) {
+      showMessage("error", "An error occurred while updating the phone number."); // Erro na requisição
     } finally {
       setSaving((prev) => ({ ...prev, [section]: false }));
     }

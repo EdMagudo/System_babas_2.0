@@ -18,7 +18,6 @@ const upload = multer({ dest: "uploads/" }); // Define o diretório de destino p
 
 const createUser = async (req, res) => {
   try {
-    // Verifica se o email ou ID já existe
     const {
       email,
       id_number,
@@ -29,64 +28,67 @@ const createUser = async (req, res) => {
       province_name,
     } = req.body;
 
-    if (!email) {
-      return res
-        .status(400)
-        .json({ message: "Email e telefone são obrigatórios." });
+    // Verifica se os campos obrigatórios estão preenchidos
+    if (!email || !contact_phone) {
+      return res.status(400).json({ message: "Email e telefone são obrigatórios." });
     }
 
-    const existingUser = await User.findOne({ where: { email } });
-    const existingContact = await User.findOne({ where: { contact_phone } });
-    const existingIdNumber = await User.findOne({ where: { id_number } });
+    // Define a condição para a consulta ao banco
+    const queryConditions = [{ email }, { contact_phone }];
+    if (id_number) {
+      queryConditions.push({ id_number }); // Só verifica se foi fornecido
+    }
+
+    // Busca por um usuário que já tenha email, telefone ou (se informado) id_number
+    const existingUser = await User.findOne({
+      where: { [Op.or]: queryConditions },
+    });
 
     if (existingUser) {
-      return res.status(400).json({ message: "O email já está em uso." });
+      if (existingUser.email === email) {
+        return res.status(400).json({ message: "O email já está em uso." });
+      }
+      if (existingUser.contact_phone === contact_phone) {
+        return res.status(400).json({ message: "O telefone já está em uso." });
+      }
+      if (id_number && existingUser.id_number === id_number) {
+        return res.status(400).json({ message: "O número de Bilhete de Identidade já está em uso." });
+      }
     }
 
-    if (existingIdNumber) {
-      return res
-        .status(400)
-        .json({ message: "O numero de Bilhete de identidade já está em uso." });
-    }
+    // Criptografa a senha usando o telefone como base
+    const hashedPassword = await bcrypt.hash(contact_phone, 10);
 
-    if (existingContact) {
-      return res.status(400).json({ message: "O telefone já está em uso." });
-    }
-
-    const userData = {
+    // Cria o usuário
+    const user = await User.create({
       email,
-      password_hash: await bcrypt.hash(contact_phone, 10), // Hash da senha recebida
-      role: "client", // Padrão ou conforme enviado
+      password_hash: hashedPassword,
+      role: "client",
       first_name,
       last_name,
-      id_number,
+      id_number: id_number || null, // Se não for informado, salva como null
       country_name,
       province_name,
       contact_phone,
-    };
+    });
 
-    const user = await User.create(userData);
-
-    // Salvar o arquivo, se enviado
+    // Se houver um arquivo enviado, salva os dados na tabela Files
     if (req.file) {
-      const fileData = {
+      await Files.create({
         user_id: user.user_id,
-        file_name: req.file.originalname, // Nome original do arquivo
-        file_path: req.file.path, // Caminho do arquivo salvo
-        file_type: req.file.mimetype, // Tipo MIME do arquivo
-      };
-
-      await Files.create(fileData);
+        file_name: req.file.originalname,
+        file_path: req.file.path,
+        file_type: req.file.mimetype,
+      });
     }
 
-    res.status(201).json({
-      message: "Usuário criado com sucesso!",
-      user,
-    });
+    res.status(201).json({ message: "Usuário criado com sucesso!", user });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error("Erro ao criar usuário:", error);
+    res.status(500).json({ message: "Erro ao criar usuário.", error: error.message });
   }
 };
+
 
 const getAllUsers = async (req, res) => {
   try {
@@ -768,53 +770,62 @@ const changeStatus = async (req, res) => {
 };
 
 const saveLocation = async (req, res) => {
-  console.log(req.body);
   try {
-    // Busca o usuário no banco de dados
-    const user = await User.findOne({ where: { user_id: req.params.id_user } });
+    const id_user = parseInt(req.params.id_user, 10);
+    const { country, province } = req.body;
 
-    if (!user) {
-      return res.status(404).json({ message: "Usuário não encontrado." });
+    if (!country || !province) {
+      return res.status(400).json({ message: "Country and province are required." });
     }
 
-    user.country_name = req.body.country;
-    user.province_name = req.body.province;
-    await user.save(); // Salva no banco de dados
+    // Atualiza diretamente no banco de dados
+    const [updated] = await User.update(
+      { country_name: country, province_name: province },
+      { where: { user_id: id_user } }
+    );
 
-    res.status(200).json({ message: "Location atualizado com sucesso!", user });
+    if (!updated) {
+      return res.status(404).json({ message: "User not found." });
+    }
+
+    res.status(200).json({ message: "Location updated successfully!" });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Erro ao atualizar o status." });
+    res.status(500).json({ message: "Error updating location." });
   }
 };
+
 
 const savePhone = async (req, res) => {
   console.log(req.body);
   try {
     const { phone } = req.body;
-    const { id_user } = req.params;
+    const id_user = parseInt(req.params.id_user, 10);
+
+    if (!phone || isNaN(id_user)) {
+      return res.status(400).json({ message: "Dados inválidos." });
+    }
 
     // Verifica se o telefone já está em uso por outro usuário
     const existingUser = await User.findOne({
       where: { contact_phone: phone },
     });
 
-    if (existingUser && existingUser.user_id !== parseInt(id_user, 10)) {
+    if (existingUser && existingUser.user_id !== id_user) {
       return res.status(400).json({ message: "O telefone já está em uso por outro usuário." });
     }
 
-    // Busca o usuário no banco de dados
-    const user = await User.findOne({ where: { user_id: id_user } });
+    // Busca o usuário e atualiza diretamente
+    const [updated] = await User.update(
+      { contact_phone: phone },
+      { where: { user_id: id_user } }
+    );
 
-    if (!user) {
+    if (!updated) {
       return res.status(404).json({ message: "Usuário não encontrado." });
     }
 
-    // Atualiza o telefone do usuário
-    user.contact_phone = phone;
-    await user.save(); // Salva no banco de dados
-
-    res.status(200).json({ message: "Telefone atualizado com sucesso!", user });
+    res.status(200).json({ message: "Telefone atualizado com sucesso!" });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Erro ao atualizar o telefone." });

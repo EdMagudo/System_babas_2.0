@@ -48,7 +48,7 @@ Your account has been successfully created. Your initial password is: ${randomPa
 Please change your password as soon as possible for security reasons.
 
 Best regards,
-NannyExpress`
+Ola Baba`
       };
 
       // Enviar a solicitação POST para a rota /send-email
@@ -141,7 +141,7 @@ Your new password is ${newPassword}
 If you did not make this change, please contact support immediately.
 
 Best regards,
-NannyExpress`
+Ola Baba`
       };
 
       // Enviar a solicitação POST para a rota /send-email
