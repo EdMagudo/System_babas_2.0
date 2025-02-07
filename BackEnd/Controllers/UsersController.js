@@ -771,7 +771,7 @@ const changeStatus = async (req, res) => {
 
 const saveLocation = async (req, res) => {
   try {
-    const id_user = parseInt(req.params.id_user, 10);
+    const id_user = req.params.id_user;
     const { country, province } = req.body;
 
     if (!country || !province) {
@@ -785,7 +785,7 @@ const saveLocation = async (req, res) => {
     );
 
     if (!updated) {
-      return res.status(404).json({ message: "User not found." });
+      return res.status(404).json({ message: "No Change" });
     }
 
     res.status(200).json({ message: "Location updated successfully!" });
