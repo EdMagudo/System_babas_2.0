@@ -25,7 +25,7 @@ const UserQualifications = ({ idUser }) => {
     contact: false,
     salary: false,
   });
-  const BASE_URL = "https://nanniesfinder.com";;
+  const BASE_URL = "https://nanniesfinder.com";
   const { t } = useTranslation();
   useEffect(() => {
     const fetchCountries = async () => {
@@ -105,7 +105,7 @@ const UserQualifications = ({ idUser }) => {
   const handleSave = async (section, data) => {
     setSaving((prev) => ({ ...prev, [section]: true }));
     try {
-      const response = await fetch(`${BASE_URL}/user/saveLocation/${idUser}`, {
+      const response = await fetch(`${BASE_URL}/api/user/saveLocation/${idUser}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
@@ -301,6 +301,7 @@ const UserQualifications = ({ idUser }) => {
             {t("location-nanny.saveButton")}
           </button>
         </div>
+
         <div className="flex gap-4">
           <div className="w-full">
             <label className="block mb-2">{t("location-nanny.countryLabel")}</label>
