@@ -36,7 +36,7 @@ const NannyCard = ({
       const province = localStorage.getItem("tokenPrData");
   
       const address = `${country}, ${province}`;
-      const nanny_email = nanny.email;
+      const nanny_email = nanny.email || nanny.contact_phone;
       const nanny_Id = nanny.user_id;
 
       console.log("Client ID:", clientId);
