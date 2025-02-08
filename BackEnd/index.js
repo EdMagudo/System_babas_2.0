@@ -287,7 +287,7 @@ app.get("/api/complete-order", async (req, res) => {
     await updatePromise;
 
     // Redirect to success page
-    res.redirect(`${BASE_URL}/client-dashboard?reservationId=${reservationId}`);
+    res.redirect(`${BASE_URL}/Painel-cliente?reservationId=${reservationId}`);
     
   } catch (error) {
     console.error("Error completing payment:", error);
@@ -406,7 +406,7 @@ app.post("/api/mpesa/pay", async (req, res) => {
     // Verificação do sucesso do pagamento
     if (result.success) {
       // Redireciona para a rota de sucesso com o ID da reserva
-      return res.redirect(`${BASE_URL}/client-dashboard?reservationId=${reservationId}`);
+      return res.redirect(`${BASE_URL}/Painel-cliente?reservationId=${reservationId}`);
     } else {
       // Retorna erro se o pagamento falhar
       return res.status(400).json({
