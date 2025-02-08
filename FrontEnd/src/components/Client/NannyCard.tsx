@@ -39,13 +39,6 @@ const NannyCard = ({
       const nanny_email = nanny.email || nanny.contact_phone;
       const nanny_Id = nanny.user_id;
 
-      console.log("Client ID:", clientId);
-    console.log("Email:", email);
-    console.log("Address:", address);
-    console.log("Nanny Email:", nanny_email);
-    console.log("Nanny ID:", nanny_Id);
-    console.log("Start Date:", startDate);
-    console.log("End Date:", endDate);
   
       if (!clientId || !email || !address || !startDate || !endDate || !nanny_email) {
         alert(t("NannyCard.missing_fields"));

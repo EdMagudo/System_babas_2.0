@@ -231,7 +231,7 @@ const getAllNannyWithRequirement = async (req, res) => {
       });
 
       userResponses.push({
-        user_id: user.user_id,
+        user_id: user.nannyProfile.nanny_id,
         first_name: user.first_name,
         email: user.email || user.contact_phone,
         country: user.country_name,

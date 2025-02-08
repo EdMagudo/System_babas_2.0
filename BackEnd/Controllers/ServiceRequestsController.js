@@ -174,42 +174,44 @@ const rejectRequest = async (req, res) => {
 
 const approvedRequest = async (req, res) => {
   console.log('Data:', req.body);
-  const { id } = req.params; // Obtenha o ID da requisição a partir dos parâmetros
+  const { id } = req.params; // Obtém o ID da requisição
+
   try {
-    // Encontre a solicitação pelo ID e atualize o status para 'rejected'
-    const updatedRows = await ServiceRequest.update(
+    // Atualiza o status da solicitação para 'approved'
+    const [updatedRows] = await ServiceRequest.update(
       { status: 'approved' },
       { where: { request_id: id } }
     );
 
-    if (updatedRows[0] === 0) {
+    if (updatedRows === 0) {
       return res.status(404).json({ message: 'Request not found' });
     }
 
-    const approvedRequest = await ServiceRequest.findOne({
-      where: { request_id: id },
-    });
+    // Busca a requisição aprovada
+    const approvedRequest = await ServiceRequest.findOne({ where: { request_id: id } });
 
     if (!approvedRequest) {
       return res.status(404).json({ message: 'Request not found after update' });
     }
 
-    // Crie uma reserva automaticamente com os detalhes da solicitação
+    // Cria automaticamente uma reserva com os detalhes da solicitação
     const newReservation = await Reservation.create({
       request_id: approvedRequest.request_id,
-      nanny_id : approvedRequest.nanny_id,
-      client_id:req.body.client_id,
-      value: req.body.value || 0, // Use o valor fornecido ou 0 como padrão
+      nanny_id: approvedRequest.nanny_id,
+      client_id: req.body.client_id,
+      value: req.body.value ?? 0, // Garante que value tenha um valor padrão
       status: 'confirmed',
-      booking_date:approvedRequest.start_date, //
+      booking_date: approvedRequest.start_date,
     });
-    res.status(200).json({
+
+    return res.status(200).json({
       message: 'Request approved and reservation created successfully',
       reservation: newReservation,
     });
+
   } catch (error) {
-    console.error('Error rejecting request:', error);
-    res.status(500).json({ message: 'Error rejecting request' });
+    console.error('Error approving request:', error);
+    return res.status(500).json({ message: 'Error approving request' });
   }
 };
 
