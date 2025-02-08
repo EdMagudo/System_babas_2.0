@@ -233,7 +233,7 @@ const getAllNannyWithRequirement = async (req, res) => {
       userResponses.push({
         user_id: user.user_id,
         first_name: user.first_name,
-        email: user.email,
+        email: user.email || user.contact_phone,
         country: user.country_name,
         province: user.province_name,
         dob: user.dob,
