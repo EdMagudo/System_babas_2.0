@@ -3,6 +3,7 @@ import db from "../Models/index.js";
 import { Sequelize } from 'sequelize';
 const ServiceRequest = db.Service_Requests;
 const Reservation = db.Reservations;
+const nannyProfiles = db.Nanny_Profiles;
 
 const createRequest = async (req, res) => {
   try {
@@ -194,10 +195,11 @@ const approvedRequest = async (req, res) => {
       return res.status(404).json({ message: 'Request not found after update' });
     }
 
-    // Cria automaticamente uma reserva com os detalhes da solicitação
+    const nanny = await nannyProfiles.findOne({ where: { user_id:approvedRequest.nanny_id}});
+
     const newReservation = await Reservation.create({
       request_id: approvedRequest.request_id,
-      nanny_id: approvedRequest.nanny_id,
+      nanny_id: nanny.nanny_id,
       client_id: req.body.client_id,
       value: req.body.value ?? 0, // Garante que value tenha um valor padrão
       status: 'confirmed',
