@@ -1,5 +1,6 @@
 import { Sequelize } from "sequelize";
 import db from "../Models/index.js";  // Importando os modelos, incluindo Reviews
+import NannyProfilesModel from "../Models/NannyProfilesModel.js";
 const { Op } = Sequelize;
 const Reviews = db.Reviews;
 
@@ -120,9 +121,11 @@ const getAllComments = async (req, res) => {
   try {
     const revieweeId = req.params.user_id;
 
+    const nanyid = await NannyProfiles.findOne({where :{user_id: revieweeId}});
+
     // Buscando os comentários de um usuário específico (reviewee_id)
     const comments = await Reviews.findAll({
-      where: { reviewee_id: revieweeId },
+      where: { reviewee_id: nanyid.nanny_id },
       attributes: ['review_text', 'rating'], // Pega o texto da revisão e a nota
     });
 
