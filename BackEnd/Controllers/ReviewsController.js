@@ -3,6 +3,7 @@ import db from "../Models/index.js";  // Importando os modelos, incluindo Review
 import NannyProfilesModel from "../Models/NannyProfilesModel.js";
 const { Op } = Sequelize;
 const Reviews = db.Reviews;
+const NannyProfiles = db.Nanny_Profiles;
 
 const createReview = async (req, res) => {
   try {
@@ -126,7 +127,7 @@ const getAllComments = async (req, res) => {
     // Buscando os comentários de um usuário específico (reviewee_id)
     const comments = await Reviews.findAll({
       where: { reviewee_id: nanyid.nanny_id },
-      attributes: ['review_text', 'rating'], // Pega o texto da revisão e a nota
+      attributes: ['review_text', 'rating'],
     });
 
     if (comments.length === 0) {
