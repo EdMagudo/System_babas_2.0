@@ -21,7 +21,6 @@ const createReservation = async (req, res) => {
 
 const getAllReservations = async (req, res) => {
   try {
-    console.log("Fetching all reservations with service request and user data");
 
     // Fetching all reservations, including service request and client data
     const reservations = await Reservations.findAll({
@@ -103,9 +102,10 @@ const deleteReservation = async (req, res) => {
 
 const getAllReservationsForNanny = async (req, res) => {
   try {
-    console.log("Fetching all reservations with service request and user data");
+   
+    const idnanny = await NannyProfiles.findOne({where: {user_id: req.params.nanny_id}})
 
-    // Fetching all reservations, including service request and client data
+    
     const reservations = await Reservations.findAll({
       include: [
         {
@@ -119,7 +119,7 @@ const getAllReservationsForNanny = async (req, res) => {
           ],
         },
       ],
-      where: { nanny_id: req.params.nanny_id }, // Corrected syntax
+      where: { nanny_id: idnanny.nanny_id }, // Corrected syntax
       order: [["booking_date", "ASC"]], // Sorting by booking date in ascending order
     });
 
