@@ -6,7 +6,7 @@ import bcrypt from "bcrypt";
 import axios from 'axios';
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
-const BASE_URL = "https://nanniesfinder.com";;
+const BASE_URL = "https://ola-baba.com";;
 
 const generateRandomPassword = () => {
   const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -48,7 +48,7 @@ Your account has been successfully created. Your initial password is: ${randomPa
 Please change your password as soon as possible for security reasons.
 
 Best regards,
-Ola Baba`
+Olá Babá`
       };
 
       // Enviar a solicitação POST para a rota /send-email
@@ -141,7 +141,7 @@ Your new password is ${newPassword}
 If you did not make this change, please contact support immediately.
 
 Best regards,
-Ola Baba`
+Olá Babá`
       };
 
       // Enviar a solicitação POST para a rota /send-email

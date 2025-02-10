@@ -14,13 +14,13 @@ import dotenv from "dotenv";
 import mpesaService from './services/mpesa.js';
 dotenv.config();
 
-const BASE_URL = "https://nanniesfinder.com";
+const BASE_URL = "https://ola-baba.com";
 
 const app = express();
 
 // CORS options
 const corsOptions = {
-  origin: ["https://nanniesfinder.com", "https://www.nanniesfinder.com"], 
+  origin: ["https://ola-baba.com", "https://www.ola-baba.com"], 
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"],
 };

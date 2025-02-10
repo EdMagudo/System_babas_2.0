@@ -24,7 +24,7 @@ const Reservations = () => {
   const [selectedReservation, setSelectedReservation] = useState(null);
   const { t } = useTranslation();
   
-  const BASE_URL = "https://nanniesfinder.com";;
+  const BASE_URL = "https://ola-baba.com";;
 
   const handleMpesaPayment = (reservation) => {
     setSelectedReservation(reservation);

@@ -10,7 +10,7 @@ const AdminLogin = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
- const BASE_URL = "https://nanniesfinder.com";;
+ const BASE_URL = "https://ola-baba.com";;
 
   const validateEmail = (email) => {
     const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;

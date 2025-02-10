@@ -18,7 +18,7 @@ const ReservationList = () => {
   const [endDate, setEndDate] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
-  const BASE_URL = "https://nanniesfinder.com";;
+  const BASE_URL = "https://ola-baba.com";;
 
   useEffect(() => {
     fetch(`${BASE_URL}/api/reservations`)
@@ -37,7 +37,8 @@ const ReservationList = () => {
 
   const fetchNannyNames = async (reservations) => {
     const names = {};
-    const emails = {}; // For storing nanny emails
+    const emails = {}; 
+    
     for (const reservation of reservations) {
       const nannyId = reservation.nanny_id;
       if (!names[nannyId]) {
@@ -45,7 +46,7 @@ const ReservationList = () => {
           const response = await fetch(`${BASE_URL}/api/user/${nannyId}`);
           const data = await response.json();
           names[nannyId] = `${data.first_name} ${data.last_name}`;
-          emails[nannyId] = data.email;
+          emails[nannyId] = data.email || data.contact_phone;
         } catch (error) {
           console.error(`Error fetching nanny name for ID ${nannyId}:`, error);
         }

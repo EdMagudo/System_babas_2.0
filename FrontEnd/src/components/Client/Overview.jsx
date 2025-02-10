@@ -23,7 +23,7 @@ const Overview = ({ clientProfile, idUser }) => {
   });
   const [saving, setSaving] = useState({ phone: false });
   const [message, setMessage] = useState({ type: "", text: "" });
- const BASE_URL = "https://nanniesfinder.com";
+ const BASE_URL = "https://ola-baba.com";
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -139,6 +139,7 @@ const Overview = ({ clientProfile, idUser }) => {
 
       if (response.status === 200) {
         setMessage({ type: "success", text: t("overview.passwordUpdated") });
+        alert ( t("overview.passwordUpdated"));
       }
     } catch (error) {
       console.error("Error updating password:", error);

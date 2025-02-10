@@ -12,7 +12,7 @@ const Dashboard = () => {
     satisfacaoClientes: "0%",
   });
 
-  const BASE_URL = "https://nanniesfinder.com";;
+  const BASE_URL = "https://ola-baba.com";;
 
   useEffect(() => {
     const fetchData = async () => {

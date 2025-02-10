@@ -10,7 +10,7 @@ const PaymentList = () => {
   const [error, setError] = useState(null);
   const [totalAmount, setTotalAmount] = useState(0);
 
-  const BASE_URL = "https://nanniesfinder.com";;
+  const BASE_URL = "https://ola-baba.com";;
 
   useEffect(() => {
     const fetchPayments = async () => {

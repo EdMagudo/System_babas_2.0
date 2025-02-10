@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 const Footer = () => {
   const { t, i18n } = useTranslation();
 
- const BASE_URL = "https://nanniesfinder.com";
+ const BASE_URL = "https://ola-baba.com";
 
   // Define o caminho do arquivo com base no idioma
   const termsFile =

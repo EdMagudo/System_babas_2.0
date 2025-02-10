@@ -24,7 +24,7 @@ const NannyRegistrationForm = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(""); // Mensagem de erro
   const [successMessage, setSuccessMessage] = useState(""); // Mensagem de sucesso
- const BASE_URL = "https://nanniesfinder.com";
+ const BASE_URL = "https://ola-baba.com";
 
   // Calcular a data máxima para a data de nascimento (18 anos atrás)
   const today = new Date();

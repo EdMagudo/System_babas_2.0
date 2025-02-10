@@ -14,7 +14,7 @@ const NannyCard = ({
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [notes, setNotes] = useState('');
-  const BASE_URL = "https://nanniesfinder.com";;
+  const BASE_URL = "https://ola-baba.com";;
 
   const openModal = async () => {
     setShowModal(true);

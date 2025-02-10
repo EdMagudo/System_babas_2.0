@@ -18,7 +18,7 @@ const Search = () => {
   const itemsPerPage = 4;
   const [error, setError] = useState(null); 
   
-  const BASE_URL = "https://nanniesfinder.com";;
+  const BASE_URL = "https://ola-baba.com";;
 
   const handleInputChange = (e) => {
     const { id, value } = e.target;
