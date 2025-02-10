@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import Logo from '../../assets/LOGO_OLA BABA__.jpg';
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -50,7 +51,8 @@ const Header = () => {
     <header className="bg-gradient-to-r from-purple-50 to-pink-50 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          <div className="flex-shrink-0">
+        <div className="flex-shrink-0 flex items-center space-x-2">
+        <img src={Logo} alt="Olá Babá Logo" className="w-10 h-10 rounded-full" />
             <Link
               to="/"
               className="text-2xl font-semibold bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-pink-600"
