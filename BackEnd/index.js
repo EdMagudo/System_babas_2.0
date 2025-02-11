@@ -193,16 +193,18 @@ app.get("/api/languages", (req, res) => {
 app.post("/api/send-email", async (req, res) => {
   const { name, email, subject, message } = req.body;
   const transporter = nodemailer.createTransport({
-    service: "gmail",
+    host: "smtp.hostinger.com", // Servidor SMTP da Hostinger
+    port: 465, // Porta para conexão segura (SSL)
+    secure: true, // Usa SSL
     auth: {
-      user: "ediltonmagudo@gmail.com",
-      pass: "unom owtx nfvr faqj", // Use a senha de aplicativo para segurança
+      user: "info@ola-baba.com", // Seu email completo
+      pass: "Phredze#2020", 
     },
   });
 
   const mailOptions = {
-    from: email,
-    to: "ediltonmagudo@gmail.com",
+    from: email, // O email que será usado como remetente
+    to: "info@ola-baba.com", // O email que receberá as mensagens
     subject: subject,
     text: `Mensagem de ${name} (${email}):\n\n${message}`,
   };
