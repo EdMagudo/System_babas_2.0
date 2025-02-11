@@ -203,7 +203,7 @@ app.post("/api/send-email", async (req, res) => {
   });
 
   const mailOptions = {
-    from: email, // O email que será usado como remetente
+    from: "info@ola-baba.com", // O email que será usado como remetente
     to: "info@ola-baba.com", // O email que receberá as mensagens
     subject: subject,
     text: `Mensagem de ${name} (${email}):\n\n${message}`,
