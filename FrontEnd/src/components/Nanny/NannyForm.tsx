@@ -126,6 +126,7 @@ const NannyRegistrationForm = () => {
       );
 
       setError("");
+      alert(t("NannyRegistrationForm.success_message"))
       setSuccessMessage(t("NannyRegistrationForm.success_message"));
     } catch (error) {
       console.error("Submission error:", error.response?.data || error.message);
@@ -136,6 +137,7 @@ const NannyRegistrationForm = () => {
           error.response.data.message || t("NannyRegistrationForm.submit_error")
         );
       } else {
+        alert(t("NannyRegistrationForm.submit_error"))
         setError(t("NannyRegistrationForm.submit_error"));
       }
 
@@ -178,7 +180,6 @@ const NannyRegistrationForm = () => {
                 onChange={handleInputChange}
                 className="w-full px-3 py-2 border rounded"
                 required
-                pattern="[A-Za-z]{3,}"
                 title={t("NannyRegistrationForm.first_name_title")}
               />
             </div>
@@ -194,7 +195,6 @@ const NannyRegistrationForm = () => {
                 onChange={handleInputChange}
                 className="w-full px-3 py-2 border rounded"
                 required
-                pattern="[A-Za-z]{3,}"
                 title={t("NannyRegistrationForm.last_name_title")}
               />
             </div>

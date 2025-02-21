@@ -108,12 +108,14 @@ const NannyFinderForm = () => {
 
       setError("");
       setUploadSuccess(true);
+      alert(t("form.registrationSuccess"))
       setSuccessMessage(t("form.registrationSuccess"));
     } catch (err) {
       // Se houver resposta do backend, pega a mensagem
       if (err.response) {
         setError(err.response.data.message || t("form.registrationError"));
       } else {
+        alert(t("form.registrationError"))
         setError(t("form.registrationError"));
       }
       setSuccessMessage("");
@@ -151,7 +153,7 @@ const NannyFinderForm = () => {
                 onChange={handleInputChange}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500"
                 required
-                pattern="[A-Za-z]{3,}"
+                
                 title={t("form.namePattern")}
               />
             </div>
@@ -169,7 +171,7 @@ const NannyFinderForm = () => {
                 onChange={handleInputChange}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500"
                 required
-                pattern="[A-Za-z]{3,}"
+                
                 title={t("form.namePattern")}
               />
             </div>

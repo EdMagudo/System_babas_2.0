@@ -17,7 +17,7 @@
     "placesToVisit": "Places to Visit",
     "travelTips": "Travel Tips",
     "copyright": {
-      "text": "&copy; 2024 Express Nanny.",
+      "text": "© 2024 Olá Babá.",
       "allRightsReserved": "All Rights Reserved."
     }
   },
@@ -37,8 +37,7 @@
       "email": {
         "label": "Email",
         "addresses": [
-          "info@ola-baba.com",
-          "support@ola-baba.com"
+          "info@ola-baba.com"
         ]
       },
       "location": {
@@ -178,7 +177,7 @@
     "id_number": "ID/Passport",
     "id_number_placeholder": "ID or Passport Number",
     "id_number_title": "The ID must contain 12 digits followed by a letter (BI) or 2 letters followed by 7 digits (Passport).",
-    "id_copy": "ID Copy",
+    "id_copy": "Upload Copy of Identity Card (.pdf)",
     "education": "Education & Qualifications",
     "education_level": "Education Level",
     "select_education": "Select Education Level",
