@@ -153,7 +153,6 @@ const NannyFinderForm = () => {
                 onChange={handleInputChange}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500"
                 required
-                
                 title={t("form.namePattern")}
               />
             </div>
@@ -171,7 +170,6 @@ const NannyFinderForm = () => {
                 onChange={handleInputChange}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500"
                 required
-                
                 title={t("form.namePattern")}
               />
             </div>
